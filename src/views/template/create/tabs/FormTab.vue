@@ -4,12 +4,12 @@
     :style="{height: height + 'px'}"
   >
     <!-- 左侧：菜单栏部分 -->
-    <div class="flex-shrink-0 w-[300px] bg-white p-5 space-y-10">
+    <div class="flex-shrink-0 w-[300px] bg-white p-5 space-y-10 shadow-xl">
       <!-- 基础控件 -->
-      <div>
-        <p class="text-sm text-gray-500 pb-4">基础控件</p>
+      <div class="space-y-4">
+        <p class="text-sm text-gray-600">基础控件</p>
         <draggable
-          :list="menu1"
+          :list="baseComponents"
           :sort="false"
           animation=200
           :group="{ name: 'people', pull: 'clone', put: false }"
@@ -19,142 +19,117 @@
           class="grid grid-cols-2 gap-4"
         >
           <template #item="{element}">
-            <button 
-              class="w-full h-10 bg-gray-100 text-sm rounded hover:font-bold"
-            >
-              {{ element.name }}
-            </button>
-          </template>
-        </draggable>
-      </div>
-      <!-- 增强控件 -->
-      <div>
-        <p class="text-sm text-gray-500 pb-4">增强控件</p>
-        <draggable
-          :list="menu2"
-          :sort="false"
-          animation=200
-          :group="{ name: 'people', pull: 'clone', put: false }"
-          item-key="name"
-          ghost-class="ghost"
-          chosen-class="chosen"
-          class="grid grid-cols-2 gap-4"
-        >
-          <template #item="{element}">
-            <button 
-              class="w-full h-10 bg-gray-100 text-sm rounded hover:font-bold"
-            >
+            <button class="w-full h-10 bg-gray-100 text-sm rounded shadow hover:shadow-md hover:font-bold">
               {{ element.name }}
             </button>
           </template>
         </draggable>
       </div>
     </div>
-    <!-- 中间：表单生成部分 -->
+    <!-- 中间：表单渲染区 -->
     <div class="w-[800px] mx-auto py-4">
-      <div class="w-full h-full rounded-xl bg-white">
-        <div class="h-10 rounded-t-xl bg-gray-300 px-6 flex items-center space-x-3">
-          <div v-for="i in 3" :key="i" class="w-3 h-3 bg-gray-500 rounded-full" />
-        </div>
-        <div class="p-3">
-          <draggable
-            :list="list"
-            group="people"
-            item-key="name"
-            ghost-class="ghost"
-            chosen-class="chosen"
-            class="w-full overflow-y-scroll border-dotted border-2 rounded-xl p-4"
-            :style="{height: height-100 + 'px'}"
-            @add="addList"
-            @choose="chooseList"
-            @update="updateList"
-          >
+      <base-pc-mockup>
+        <draggable
+          :list="formList"
+          group="people"
+          item-key="name"
+          ghost-class="ghost"
+          chosen-class="chosen"
+          class="w-full overflow-y-scroll rounded-xl space-y-2 pl-2 pr-1 py-4 bg-gray-50/20"
+          :style="{height: height-100 + 'px'}"
+          @add="addList"
+          @choose="chooseList"
+          @update="updateList"
+        >
           <template #header>
-            <div v-if="list.length === 0" class="text-gray-400">点击或拖拽左侧控件至此处</div>
+            <div v-if="formList.length === 0" class="text-gray-400">点击或拖拽左侧控件至此处</div>
           </template>
-            <template #item="{element, index}">
-              <div class="space-y-4">
-                <div
-                  class="flex p-3 rounded cursor-pointer"
-                  :class="{'border border-primary relative' : active === index}"
-                >
-                  <p class="flex-shrink-0 w-28 text-sm leading-8">{{ element.name }}：</p>
-                  <!-- 单行输入框 -->
-                  <div v-if="element.id === 1" class="w-full">
-                    <n-input placeholder="请输入" readonly />
-                  </div>
-                  <!-- 多行输入框 -->
-                  <div v-if="element.id === 2" class="w-full">
-                    <n-input placeholder="请输入" type="textarea" readonly />
-                  </div>
-                  <!-- 删除按钮 -->
-                  <div 
-                    v-show="active === index"
-                    class="absolute -top-2 -right-2 w-4 h-4 bg-primary text-white rounded-lg transition hover:scale-125"
-                    @click="removeItem(index)"
-                  >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4">
-                      <path fill-rule="evenodd" d="M5.47 5.47a.75.75 0 011.06 0L12 10.94l5.47-5.47a.75.75 0 111.06 1.06L13.06 12l5.47 5.47a.75.75 0 11-1.06 1.06L12 13.06l-5.47 5.47a.75.75 0 01-1.06-1.06L10.94 12 5.47 6.53a.75.75 0 010-1.06z" clip-rule="evenodd" />
-                    </svg>
-                  </div>
-                </div>
+          <template #item="{element, index}">
+            <div 
+              class="px-4 py-2 cursor-pointer border rounded"
+              :class="active === index ? 'border-primary relative' : 'border-white'"
+            >
+              <!-- 删除按钮 -->
+              <div 
+                v-show="active === index"
+                class="absolute bottom-1 right-1 w-6 h-6 rounded bg-primary/80 hover:bg-primary py-1 text-white z-20"
+                @click="removeItem(index)"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 mx-auto">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
+                </svg>
               </div>
-            </template>
-          </draggable>
-        </div>
-      </div>
+              <form-item :element="element" />
+            </div>
+          </template>
+        </draggable>
+      </base-pc-mockup>
     </div>
-    <!-- 右侧仪表盘 -->
+    <!-- 右侧：属性编辑区 -->
     <div 
-      class="absolute right-0 h-full bg-white transition-all duration-300"
-      :class="list.length === 0 || active === null ? 'w-0' : 'w-[300px]'"
+      class="absolute right-0 h-full shadow-xl bg-white transition-all duration-300 overflow-y-scroll pb-4"
+      :class="formList.length === 0 || active === null ? 'w-0' : 'w-[300px]'"
     >
-      333
+      <div v-if="formList.length > 0 && active !== null" class="p-4">
+        <form-config :list="formList" :active="active" />
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
 import draggable from 'vuedraggable'
-const height = document.documentElement.clientHeight - 161
-const menu1 = [
-  { name: '单行输入框', id: 1 },
-  { name: '多行输入框', id: 2 },
-  { name: '单选框', id: 3 },
-  { name: '多选框', id: 4 },
-  { name: '日期', id: 5 },
-  { name: '日期区间', id: 6 },
-  { name: '省市区', id: 7 },
-  { name: '说明文字', id: 8 },
-]
-const menu2 = [
-  { name: '图片上传', id: 9 },
-  { name: '文件上传', id: 10 },
-  { name: '成员选择', id: 11 },
-]
-const list = ref([])
-// const active = ref(0)
+import FormItem from '../components/FormItem.vue'
+import FormConfig from '../components/FormConfig.vue'
 
+const height = document.documentElement.clientHeight - 161
+
+// 左侧：菜单栏部分——基础控件
+const baseComponents = ref([
+  {type: 'input', name: '单行输入框', options: {name: '单行文本', placeholder: '请输入', desc: '', required: false}},
+  {type: 'textarea', name: '多行输入框', options: {name: '多行文本', placeholder: '请输入', desc: '', required: false}},
+  {type: 'inputNumber', name: '数字输入框', options: {name: '数字文本', placeholder: '请输入', desc: '', required: false}},
+  {type: 'select', name: '选择器', options: {name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+  {type: 'radio', name: '单选框组', options: {name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+  {type: 'checkbox', name: '多选框组', options: {name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+])
+// 左侧：菜单栏部分——增强控件
+const proComponents = ref([
+
+])
+
+// 中间：组件渲染区
+const formList = ref([])
 // 当前选中的
 const active = ref(null)
-
 // 删除一个内容
 const removeItem = function(index) {
-  list.value.splice(index, 1)
+  formList.value.splice(index, 1)
   active.value = null
 }
-// 添加单元的回调函数
+// 添加单元的回调函数 [要么从0开始，要么变成你的指数]
 const addList = function({newIndex}) {
-  active.value = list.value.length === 1 ? 0 : newIndex
+  active.value = formList.value.length === 1 ? 0 : newIndex
 }
-// 选则单元时的回调函数
+// 选择单元时的回调函数 [你选择的如果不是我，我就要成为你的选择]
 const chooseList = function({oldIndex}) {
   if(active.value !== oldIndex ) active.value = oldIndex
 }
-// 排序发生变化时的回调函数
+// 排序发生变化时的回调函数 [就是要紧紧追随你的脚步]
 const updateList = function({newIndex}) {
   active.value = newIndex
 }
+// 骚操作，谁来解释一下，what？？？[只是为了菜单栏数据保持不变 // 你变了，而我又回到了原点]
+watch(formList.value, value => {
+  baseComponents.value = [
+    {type: 'input', name: '单行输入框', options: {name: '单行文本', placeholder: '请输入文本', desc: '', required: false}},
+    {type: 'textarea', name: '多行输入框', options: {name: '多行文本', placeholder: '请输入文本', desc: '', required: false}},
+    {type: 'inputNumber', name: '数字输入框', options: {name: '数字文本', placeholder: '请输入', desc: '', required: false}},
+    {type: 'select', name: '选择器', options: {name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
+    {type: 'radio', name: '单选框组', options: {name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
+    {type: 'checkbox', name: '多选框组', options: {name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
+  ]
+})
 </script>
 
 <style>
@@ -162,6 +137,6 @@ const updateList = function({newIndex}) {
   @apply bg-red-100 rounded-md
 }
 .chosen {
-  @apply border border-primary rounded-md
+  @apply border border-primary rounded
 }
 </style>
