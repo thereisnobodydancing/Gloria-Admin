@@ -92,6 +92,7 @@ const baseComponents = ref([
   {type: 'select', name: '选择器', options: {name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
   {type: 'radio', name: '单选框组', options: {name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
   {type: 'checkbox', name: '多选框组', options: {name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+  {type: 'datePicker', name: '日期选择器', options: {name: '选择日期',type: 'date', desc: '', required: false}},
 ])
 // 左侧：菜单栏部分——增强控件
 const proComponents = ref([
@@ -128,6 +129,7 @@ watch(formList.value, value => {
     {type: 'select', name: '选择器', options: {name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
     {type: 'radio', name: '单选框组', options: {name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
     {type: 'checkbox', name: '多选框组', options: {name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
+    {type: 'datePicker', name: '日期选择器', options: {name: '选择日期',type: 'date', desc: '', required: false}},
   ]
 })
 </script>

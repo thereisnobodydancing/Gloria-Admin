@@ -27,11 +27,11 @@
     </template>
     <!-- 选择器 -->
     <template v-if="element.type==='select'">
-      <n-select v-model:value="value" :options="element.options.list" />
+      <n-select :options="element.options.list" />
     </template>
     <!-- 单选框组 -->
     <template v-if="element.type==='radio'">
-      <n-radio-group v-model:value="value" name="radiogroup" class="leading-8">
+      <n-radio-group name="radiogroup" class="leading-8">
         <n-space>
           <n-radio v-for="item in element.options.list" :key="item.value" :value="item.value">
             {{ item.label }}
@@ -41,13 +41,21 @@
     </template>
     <!-- 多选框组 -->
     <template v-if="element.type==='checkbox'">
-      <n-checkbox-group v-model:value="cities" class="mt-1">
+      <n-checkbox-group class="mt-1">
         <n-space item-style="display: flex;">
           <n-checkbox v-for="item in element.options.list" :key="item.value" :value="item.value">
             {{ item.label }}
           </n-checkbox>
         </n-space>
       </n-checkbox-group>
+    </template>
+    <!-- 日期选择器 -->
+    <template v-if="element.type==='datePicker'">
+      <n-date-picker 
+        :type="element.options.type" 
+        :start-placeholder="datePlaceholder[element.options.type] ? datePlaceholder[element.options.type].start : null" 
+        :end-placeholder="datePlaceholder[element.options.type] ? datePlaceholder[element.options.type].end : null"
+      />
     </template>
   </div>
 </template>
@@ -56,4 +64,13 @@
 const props = defineProps({
   element: Object
 })
+
+// 日期选择器有关范围的 placeholder
+const datePlaceholder = {
+  daterange: { start: '开始日期', end: '结束日期' },
+  datetimerange: { start: '开始日期时间', end: '结束日期时间' },
+  monthrange: { start: '开始月份', end: '结束月份' },
+  yearrange: { start: '开始年份', end: '结束年份' },
+  quarterrange: { start: '开始季度', end: '结束季度' },
+}
 </script>

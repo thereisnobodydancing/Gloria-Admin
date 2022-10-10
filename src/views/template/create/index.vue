@@ -1,7 +1,6 @@
 <template>
   <div class="w-full h-full bg-white">
-    <n-tabs 
-      animated
+    <n-tabs
       default-value="form" 
       justify-content="center" 
       tab-style="padding: 12px 16px"
