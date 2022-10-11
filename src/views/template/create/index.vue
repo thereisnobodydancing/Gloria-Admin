@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full bg-white">
     <n-tabs
-      default-value="form" 
+      default-value="flow" 
       justify-content="center" 
       tab-style="padding: 12px 16px"
       type="line" 

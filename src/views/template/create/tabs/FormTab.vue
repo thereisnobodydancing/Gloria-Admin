@@ -1,6 +1,6 @@
 <template>
   <div 
-    class="flex bg-gray-200 space-x-20" 
+    class="flex bg-gray-200 space-x-20 relative" 
     :style="{height: height + 'px'}"
   >
     <!-- 左侧：菜单栏部分 -->
@@ -19,7 +19,10 @@
           class="grid grid-cols-2 gap-4"
         >
           <template #item="{element}">
-            <button class="w-full h-10 bg-gray-100 text-sm rounded shadow hover:shadow-md hover:font-bold">
+            <button 
+              class="w-full h-10 bg-gray-100 text-sm rounded shadow hover:shadow-md hover:font-bold"
+              @click="selMenu(element)"
+            >
               {{ element.name }}
             </button>
           </template>
@@ -30,6 +33,7 @@
     <div class="w-[800px] mx-auto py-4">
       <base-pc-mockup>
         <draggable
+          id="formId"
           :list="formList"
           group="people"
           item-key="name"
@@ -79,6 +83,7 @@
 
 <script setup>
 import draggable from 'vuedraggable'
+import { nanoid } from  'nanoid'
 import FormItem from '../components/FormItem.vue'
 import FormConfig from '../components/FormConfig.vue'
 
@@ -86,13 +91,13 @@ const height = document.documentElement.clientHeight - 161
 
 // 左侧：菜单栏部分——基础控件
 const baseComponents = ref([
-  {type: 'input', name: '单行输入框', options: {name: '单行文本', placeholder: '请输入', desc: '', required: false}},
-  {type: 'textarea', name: '多行输入框', options: {name: '多行文本', placeholder: '请输入', desc: '', required: false}},
-  {type: 'inputNumber', name: '数字输入框', options: {name: '数字文本', placeholder: '请输入', desc: '', required: false}},
-  {type: 'select', name: '选择器', options: {name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-  {type: 'radio', name: '单选框组', options: {name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-  {type: 'checkbox', name: '多选框组', options: {name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-  {type: 'datePicker', name: '日期选择器', options: {name: '选择日期',type: 'date', desc: '', required: false}},
+  {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false}},
+  {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false}},
+  {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false}},
+  {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+  {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+  {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+  {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false}},
 ])
 // 左侧：菜单栏部分——增强控件
 const proComponents = ref([
@@ -103,6 +108,16 @@ const proComponents = ref([
 const formList = ref([])
 // 当前选中的
 const active = ref(null)
+// 点击左侧菜单
+const selMenu = function(item) {
+  formList.value.push(item)
+  formList.value[formList.value.length - 1].options.id = `${formList.value[formList.value.length - 1].type}_${nanoid()}`
+  active.value = formList.value.length - 1
+  const centerHTML = document.querySelector('#formId')
+  nextTick(() => {
+    centerHTML.scrollTop = centerHTML.scrollHeight
+  })
+}
 // 删除一个内容
 const removeItem = function(index) {
   formList.value.splice(index, 1)
@@ -110,26 +125,28 @@ const removeItem = function(index) {
 }
 // 添加单元的回调函数 [要么从0开始，要么变成你的指数]
 const addList = function({newIndex}) {
-  active.value = formList.value.length === 1 ? 0 : newIndex
+  const index = formList.value.length === 1 ? 0 : newIndex
+  if(!formList.value[index].options.id) formList.value[index].options.id = `${formList.value[index].type}_${nanoid()}`
+  active.value = index
 }
-// 选择单元时的回调函数 [你选择的如果不是我，我就要成为你的选择]
+// 选择单元时的回调函数 [如果你的身边没有我，我就跌跌撞撞奔向你]
 const chooseList = function({oldIndex}) {
   if(active.value !== oldIndex ) active.value = oldIndex
 }
-// 排序发生变化时的回调函数 [就是要紧紧追随你的脚步]
+// 排序发生变化时的回调函数 [无论你走到哪里，我都不离不弃]
 const updateList = function({newIndex}) {
   active.value = newIndex
 }
-// 骚操作，谁来解释一下，what？？？[只是为了菜单栏数据保持不变 // 你变了，而我又回到了原点]
+// 骚操作，谁来解释一下，what？？？[只是为了菜单栏数据保持不变 // 我奔向你，却被莫名推回了原点、、该死的程序员，这是违背原则的操作啊~~]
 watch(formList.value, value => {
   baseComponents.value = [
-    {type: 'input', name: '单行输入框', options: {name: '单行文本', placeholder: '请输入文本', desc: '', required: false}},
-    {type: 'textarea', name: '多行输入框', options: {name: '多行文本', placeholder: '请输入文本', desc: '', required: false}},
-    {type: 'inputNumber', name: '数字输入框', options: {name: '数字文本', placeholder: '请输入', desc: '', required: false}},
-    {type: 'select', name: '选择器', options: {name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
-    {type: 'radio', name: '单选框组', options: {name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
-    {type: 'checkbox', name: '多选框组', options: {name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], required: false}},
-    {type: 'datePicker', name: '日期选择器', options: {name: '选择日期',type: 'date', desc: '', required: false}},
+    {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false}},
+    {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false}},
+    {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false}},
+    {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+    {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+    {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
+    {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false}},
   ]
 })
 </script>
