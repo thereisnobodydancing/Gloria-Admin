@@ -86,6 +86,7 @@ import draggable from 'vuedraggable'
 import { nanoid } from  'nanoid'
 import FormItem from '../components/FormItem.vue'
 import FormConfig from '../components/FormConfig.vue'
+import useTemplateStore from '/src/store/template.js'
 
 const height = document.documentElement.clientHeight - 161
 
@@ -104,19 +105,18 @@ const proComponents = ref([
 
 ])
 
-// 中间：组件渲染区
-const formList = ref([])
+// 中间：组件渲染区 const formList = ref([])
+const { formList }  = toRefs(useTemplateStore())
 // 当前选中的
 const active = ref(null)
 // 点击左侧菜单
 const selMenu = function(item) {
   formList.value.push(item)
   formList.value[formList.value.length - 1].options.id = `${formList.value[formList.value.length - 1].type}_${nanoid()}`
+  initComponents()
   active.value = formList.value.length - 1
   const centerHTML = document.querySelector('#formId')
-  nextTick(() => {
-    centerHTML.scrollTop = centerHTML.scrollHeight
-  })
+  nextTick(() => centerHTML.scrollTop = centerHTML.scrollHeight)
 }
 // 删除一个内容
 const removeItem = function(index) {
@@ -127,6 +127,7 @@ const removeItem = function(index) {
 const addList = function({newIndex}) {
   const index = formList.value.length === 1 ? 0 : newIndex
   if(!formList.value[index].options.id) formList.value[index].options.id = `${formList.value[index].type}_${nanoid()}`
+  initComponents()
   active.value = index
 }
 // 选择单元时的回调函数 [如果你的身边没有我，我就跌跌撞撞奔向你]
@@ -137,8 +138,8 @@ const chooseList = function({oldIndex}) {
 const updateList = function({newIndex}) {
   active.value = newIndex
 }
-// 骚操作，谁来解释一下，what？？？[只是为了菜单栏数据保持不变 // 我奔向你，却被莫名推回了原点、、该死的程序员，这是违背原则的操作啊~~]
-watch(formList.value, value => {
+// 【生命归还】
+const initComponents = function() {
   baseComponents.value = [
     {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false}},
     {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false}},
@@ -148,7 +149,7 @@ watch(formList.value, value => {
     {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
     {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false}},
   ]
-})
+}
 </script>
 
 <style>

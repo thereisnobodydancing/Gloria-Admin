@@ -45,7 +45,7 @@
           </div>
         </div>
         <!-- 线 -->
-        <flow-line :active="index" @add="addNode" />
+        <flow-line :active="index" />
       </div>
       <!-- 流程结束 -->
       <div class="w-56 h-20 bg-white rounded-md cursor-not-allowed">
@@ -82,30 +82,13 @@
 </template>
 
 <script setup>
-import { nanoid } from  'nanoid'
+// import { nanoid } from  'nanoid'
+import useTemplateStore from '/src/store/template.js'
 import FlowLine from '../components/FlowLine.vue'
 
 const height = document.documentElement.clientHeight - 161
-const process = ref([
-  { 
-    nodeId: `Activity_${nanoid()}`,  // 节点id
-    nodeName: '提交',                // 节点名称
-    nodeType: '0',                  // 节点类型
-    showMask: false,                // 是否显示删除遮罩 【原创】
-    nodeText: '提交人：全员可提交',   // 节点文字部分 【原创】
-    approvalMethod: '',             // 多人审批方法（或签 会签）
-    approvalUser: '',               // 审批人（自选 、指定）
-    approvals: '',                  // 节点指定审批人
-    formReadPerm: '',               // 表单查看全限
-    formUpdatePerm: ''              // 表单编辑权限
-  }
-])
+const { process }  = toRefs(useTemplateStore())
 const active = ref(null)
-
-// 新增节点
-const addNode = function(nodeData, index) {
-  process.value.splice(index + 1, 0, nodeData)
-}
 // 删除节点
 const removeNode = function(index) {
   process.value.splice(index, 1)
@@ -113,7 +96,6 @@ const removeNode = function(index) {
 
 // 选择节点
 const selNode = function(index) {
-  console.log(index)
   active.value = index
 }
 </script>

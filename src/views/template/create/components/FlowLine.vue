@@ -65,16 +65,20 @@
 
 <script setup>
 // 审批人 1， 办理人2， 抄送人 3
-import {nanoid} from  'nanoid'
+import { nanoid } from  'nanoid'
+import { debounce } from 'lodash'
+import useTemplateStore from '/src/store/template.js'
+
+const { process }  = toRefs(useTemplateStore())
 
 const props = defineProps({
   active: Number
 })
-const emit = defineEmits(['add'])
 
 const showPopover = ref(false)
-// 添加节点
-const addNode = function(type, name, nodeText) {
+
+// 添加节点(防抖)
+const addNode = debounce((type, name, nodeText) => {
   showPopover.value = false
   let nodeObj = {
     nodeId: `Activity_${nanoid()}`, // 节点id
@@ -88,6 +92,13 @@ const addNode = function(type, name, nodeText) {
     formReadPerm: '',               // 表单查看全限
     formUpdatePerm: ''              // 表单编辑权限
   }
-  emit('add', nodeObj, props.active)
-}
+  process.value.splice(props.active + 1, 0, nodeObj)
+}, 300, {
+  leading: true,  // 延长开始后调用
+	trailing: false  // 延长结束前调用
+})
+
+onUnmounted(() => {
+  addNode.cancel()
+})
 </script>
