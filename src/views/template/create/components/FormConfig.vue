@@ -23,7 +23,7 @@
               type="textarea" 
               :autosize="{minRows: 1}"
               placeholder="请输入" 
-              maxlength="30" 
+              maxlength="30"
               show-count 
               clearable 
             />

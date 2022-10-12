@@ -56,7 +56,7 @@ import FlowTab from './tabs/FlowTab.vue'
     @apply p-0
   }
   .n-tabs .n-tabs-nav-scroll-wrapper {
-    @apply px-6 border-b
+    @apply border-b
   }
   .n-tabs-nav-scroll-content {
     border-bottom: none !important

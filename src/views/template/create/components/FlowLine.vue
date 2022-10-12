@@ -21,7 +21,7 @@
           <!-- 审批人 -->
           <button 
             class="w-full h-full rounded-md bg-gray-100 px-2 flex items-center space-x-2.5 shadow hover:shadow-md"
-            @click="addNode('1', '审批人')"
+            @click="addNode('1', '审批人', '请设置审批人')"
           >
             <div class="w-8 h-8 bg-white rounded-md py-1 shadow">
               <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" class="text-orange-500 w-5 h-5 mx-auto"><path d="M32 512h448v-64H32v64zm384-256h-66.56c-16.26 0-29.44-13.18-29.44-29.44v-9.46c0-27.37 8.88-53.41 21.46-77.72c9.11-17.61 12.9-38.39 9.05-60.42c-6.77-38.78-38.47-70.7-77.26-77.45C212.62-9.04 160 37.33 160 96c0 14.16 3.12 27.54 8.69 39.58C182.02 164.43 192 194.7 192 226.49v.07c0 16.26-13.18 29.44-29.44 29.44H96c-53.02 0-96 42.98-96 96v32c0 17.67 14.33 32 32 32h448c17.67 0 32-14.33 32-32v-32c0-53.02-42.98-96-96-96z" fill="currentColor"></path></svg>
@@ -31,7 +31,7 @@
           <!-- 抄送人 -->
           <button 
             class="w-full h-full rounded-md bg-gray-100 px-2 flex items-center space-x-2.5 shadow hover:shadow-md"
-            @click="addNode('3', '抄送人')"
+            @click="addNode('3', '抄送人', '请设置抄送人')"
           >
             <div class="w-8 h-8 bg-white rounded-md py-1.5 shadow">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-blue-500 mx-auto">
@@ -43,7 +43,7 @@
           <!-- 办理人 -->
           <button 
             class="w-full h-full rounded-md bg-gray-100 px-2 flex items-center space-x-2.5 shadow hover:shadow-md"
-            @click="addNode('2', '办理人')"
+            @click="addNode('2', '办理人', '请设置办理人')"
           >
             <div class="w-8 h-8 bg-white rounded-md py-1.5 shadow">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-primary mx-auto">
@@ -74,15 +74,17 @@ const emit = defineEmits(['add'])
 
 const showPopover = ref(false)
 // 添加节点
-const addNode = function(type, name) {
+const addNode = function(type, name, nodeText) {
   showPopover.value = false
   let nodeObj = {
     nodeId: `Activity_${nanoid()}`, // 节点id
     nodeName: name,                 // 节点名称
     nodeType: type,                 // 节点类型
     showMask: false,                // 是否显示删除遮罩
+    nodeText: nodeText,             // 节点文字部分
     approvalMethod: '',             // 多人审批方法（或签 会签）
-    approvalUser: '',               // 审批人（自选 、指定）
+    approvalUser: '',               // 审批人（自选 、指定、角色、主管……）
+    approvals: '',                  // 节点指定审批人
     formReadPerm: '',               // 表单查看全限
     formUpdatePerm: ''              // 表单编辑权限
   }

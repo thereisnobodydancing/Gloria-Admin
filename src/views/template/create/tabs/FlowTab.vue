@@ -10,7 +10,7 @@
         <div 
           class="w-56 h-20 rounded-md group relative cursor-pointer"
           :class="[{
-            'bg-gray-600 hover:shadow-lg': item.nodeType === '0',
+            'bg-gray-600 cursor-not-allowed': item.nodeType === '0',
             'bg-orange-500 hover:shadow-lg hover:shadow-orange-500/20': item.nodeType === '1',
             'bg-primary hover:shadow-lg hover:shadow-primary/20': item.nodeType === '2',
             'bg-blue-500 hover:shadow-lg hover:shadow-blue-500/20': item.nodeType === '3',
@@ -38,8 +38,8 @@
             </div>
           </div>
           <div class="pl-3 text-sm text-gray-600 leading-[3.25rem] flex items-center bg-white rounded-b-md">
-            <p class="line-1">提交人：全员可提交</p>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-auto flex-shrink-0 w-6 h-4">
+            <p :class="{'text-gray-400': !item.approvalUser}">{{ item.nodeText }}</p>
+            <svg v-if="index > 0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-auto flex-shrink-0 w-6 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
           </div>
@@ -56,15 +56,27 @@
     <!-- 右侧：编辑区域 -->
     <div 
       class="absolute right-0 h-full w-full bg-gray-900/20"
-      :class="active === null ? 'hidden' : 'block'"
+      :class="!active ? 'hidden' : 'block'"
       @click="active = null"
     >
     </div>
     <div 
-      class="absolute right-0 h-full shadow-xl bg-white transition-all duration-300 overflow-y-scroll pb-4 z-10"
-      :class="active === null ? 'w-0' : 'w-[25rem]'"
+      class="absolute right-0 h-full shadow-xl bg-white transition-all duration-300 overflow-y-scroll z-10"
+      :class="!active ? 'w-0 opacity-0' : 'w-[25rem] opacity-100'"
     >
-      333
+      <div v-if="active" class="p-5">
+        <p class="text-lg font-bold line-1">{{ process[active].nodeName }}</p>
+        <n-tabs default-value="setUser" type="line" animated class="mt-4">
+          <n-tab-pane name="setUser" :tab="`设置${process[active].nodeName}`">
+            <div class="p-4">
+              33
+            </div>
+          </n-tab-pane>
+          <n-tab-pane name="formRole" tab="表单操作权限">
+            表单操作权限
+          </n-tab-pane>
+        </n-tabs>
+      </div>
     </div>
   </div>
 </template>
@@ -76,12 +88,14 @@ import FlowLine from '../components/FlowLine.vue'
 const height = document.documentElement.clientHeight - 161
 const process = ref([
   { 
-    nodeId: `Activity_${nanoid()}`, // 节点id
-    nodeName: '提交',               // 节点名称
+    nodeId: `Activity_${nanoid()}`,  // 节点id
+    nodeName: '提交',                // 节点名称
     nodeType: '0',                  // 节点类型
-    showMask: false,                // 是否显示删除遮罩
+    showMask: false,                // 是否显示删除遮罩 【原创】
+    nodeText: '提交人：全员可提交',   // 节点文字部分 【原创】
     approvalMethod: '',             // 多人审批方法（或签 会签）
     approvalUser: '',               // 审批人（自选 、指定）
+    approvals: '',                  // 节点指定审批人
     formReadPerm: '',               // 表单查看全限
     formUpdatePerm: ''              // 表单编辑权限
   }
@@ -99,6 +113,7 @@ const removeNode = function(index) {
 
 // 选择节点
 const selNode = function(index) {
+  console.log(index)
   active.value = index
 }
 </script>
