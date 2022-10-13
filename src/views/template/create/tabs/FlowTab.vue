@@ -7,7 +7,7 @@
     <div class="w-full h-full p-8 flex flex-col items-center overflow-y-scroll">
       <div v-for="(item, index) in process" :key="index">
         <!-- 节点 -->
-        <div 
+        <div
           class="w-56 h-20 rounded-md group relative cursor-pointer"
           :class="[{
             'bg-gray-600 cursor-not-allowed': item.nodeType === '0',
@@ -37,7 +37,10 @@
               </svg>
             </div>
           </div>
-          <div class="pl-3 text-sm text-gray-600 leading-[3.25rem] flex items-center bg-white rounded-b-md">
+          <div 
+            class="pl-3 text-sm text-gray-600 leading-[3.25rem] flex items-center bg-white rounded-b-md"
+            :class="{'justify-center': item.nodeType === '0'}"
+          >
             <p :class="{'text-gray-400': !item.approvalUser}">{{ item.nodeText }}</p>
             <svg v-if="index > 0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-auto flex-shrink-0 w-6 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />

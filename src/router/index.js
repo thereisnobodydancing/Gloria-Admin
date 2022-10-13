@@ -54,11 +54,10 @@ const router = createRouter({
   routes,
 })
 
-// router.beforeEach((to,from,next) => {
-//   if(to.path === '/login') return next()
-//   if(!window.sessionStorage.getItem("token")) return next('/login')
-//   if(!to.meta.common && !JSON.parse(window.sessionStorage.getItem('sr'))[to.meta.name]) return next('/404')
-//   next()
-// })
+router.beforeEach((to,from,next) => {
+  if(to.path === '/login') return next()
+  if(!window.sessionStorage.getItem("token")) return next('/login')
+  next()
+})
 
 export default router
