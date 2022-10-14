@@ -51,7 +51,6 @@
               <p class="ml-2.5 text-xs mr-3">{{ item.name }}</p>
               <!-- clear -->
               <svg
-                v-if="submitOptions.length > 1"
                 xmlns="http://www.w3.org/2000/svg" 
                 viewBox="0 0 20 20" 
                 fill="currentColor" 
@@ -63,7 +62,10 @@
             </div>
             <!-- 添加 -->
             <div class="mb-1.5">
-              <button class="w-8 h-8 border rounded text-gray-500 hover:border-primary hover:text-primary" @click="showSubmitUserModal">
+              <button 
+                class="w-8 h-8 border rounded text-gray-500 hover:border-primary hover:text-primary" 
+                @click="showSubmitUserModal"
+              >
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5 mx-auto">
                   <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
                 </svg>
@@ -127,5 +129,6 @@ const removeSubmitOption = function(key, id, index) {
   submitKeys.value.splice(submitKeys.value.indexOf(key), 1)
   submitUsers.value.splice(submitUsers.value.indexOf(id), 1)
   submitOptions.value.splice(index, 1)
+  if(submitOptions.value.length === 0) submitType.value = 'all'
 }
 </script>
