@@ -1,4 +1,5 @@
 <template>
+  {{ useTemplate }}
   <div>
     <p>名字</p>
     {{ name }}

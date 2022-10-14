@@ -89,7 +89,7 @@
 import useTemplateStore from '/src/store/template.js'
 import FlowLine from '../components/FlowLine.vue'
 
-const height = document.documentElement.clientHeight - 161
+const height = document.documentElement.clientHeight - 155
 const { process }  = toRefs(useTemplateStore())
 const active = ref(null)
 // 删除节点

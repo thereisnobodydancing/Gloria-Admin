@@ -25,7 +25,7 @@ const themeOverrides = {
     primaryColorPressed: '#FF432A'
   },
 }
-const fangdou = debounce(() => { location. reload() }, 300, {
+const fangdou = debounce(() => { location.reload() }, 300, {
   leading: true,  // 延长开始后调用
 	trailing: false  // 延长结束前调用
 })
@@ -45,8 +45,10 @@ onUnmounted(() => {
 
 <style>
 html { overflow-y: overlay }
+
 ::-webkit-scrollbar { @apply w-1.5 }
 ::-webkit-scrollbar-thumb { @apply bg-gray-300 w-2 rounded-lg cursor-pointer }
+
 .n-tree-node-content {
   @apply h-8 !important
 }

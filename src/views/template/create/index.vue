@@ -31,28 +31,36 @@
       </n-tab-pane>
       <template #suffix>
         <div class="px-4 py-3 text-right space-x-2">
-          <n-button @click="showCreateGroupModal">新建分组</n-button>
+          <n-button @click="clearTemplate">重置</n-button>
           <n-button type="primary">保存模板</n-button>
         </div>
       </template>
     </n-tabs>
   </div>
-  <!-- 新建分组 -->
-  <create-group-modal ref="createGroupRef" />
 </template>
 
 <script setup>
 import useTemplateStore from '/src/store/template.js'
+import { useDialog, useMessage } from 'naive-ui'
 import BaseTab from './tabs/BaseTab.vue'
 import FormTab from './tabs/FormTab.vue'
 import FlowTab from './tabs/FlowTab.vue'
-
-/****** 新建分组 ******/
+// 重置模板
 const useTemplate = useTemplateStore()
-const { groupList }  = toRefs(useTemplate)
-const createGroupRef = ref()
-const showCreateGroupModal = function() {
-  createGroupRef.value.showModal()
+const message = useMessage()
+const dialog = useDialog()
+const clearTemplate = function() {
+  dialog.warning({
+    title: '提示',
+    content: '你确定要重置已填写的模板吗？',
+    positiveText: '确定',
+    negativeText: '不确定',
+    onPositiveClick: () => {
+      useTemplate.$reset()
+      message.success('重置模板成功')
+    },
+    onNegativeClick: () => {}
+  })
 }
 </script>
 
