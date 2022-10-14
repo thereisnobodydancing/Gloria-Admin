@@ -30,12 +30,12 @@ export default defineStore('template', () => {
     id,           // 模板id
     groupId,      // 分组id
     name,         // 模板名称
-    templateAdministrators, // 模板管理员
     remark,       // 备注
     submitType,   // 谁可以发起（全员all，指定人员select）
     submitUsers,  // 指定提交的人员
     submitOptions,
     submitKeys,
+    templateAdministrators, // 模板管理员
     formList,     // 表单
     process       // 节点
   }
