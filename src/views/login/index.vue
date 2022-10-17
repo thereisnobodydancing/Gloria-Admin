@@ -125,7 +125,6 @@
 
 <script setup>
 import api from '/src/api/index.js'
-import { useRouter } from 'vue-router'
 import { useMessage } from 'naive-ui'
 
 const message = useMessage()

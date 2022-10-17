@@ -24,7 +24,10 @@
             </template>
           </n-input>
           <!-- 树列表 -->
-          <div class="mt-4 w-full h-[530px] overflow-y-scroll">
+          <div 
+            class="mt-4 w-full h-[530px] overflow-y-scroll"
+            :class="{'flex items-center justify-center': modal.options.length === 0}"
+          >
             <n-tree
               :checked-keys="select.keys"
               :show-irrelevant-nodes="modal.showIrrelevantNodes"
@@ -42,8 +45,8 @@
         </div>
         <!-- right -->
         <div class="flex-shrink-0 w-1/2 min-h-full px-5 pb-5 space-y-4">
-          <p v-if="props.multiple" class="text-sm">已选择（{{ select.options.length }}）</p>
-          <p v-else class="text-sm">{{ props.rightTitle }}</p>
+          <p v-if="props.rightTitle" class="text-sm">{{ props.rightTitle }}</p>
+          <p v-else class="text-sm">已选择（{{ select.options.length }} {{ props.max ? `/${props.max}` : '' }}）</p>
           <div class="w-full h-[490px] overflow-y-scroll">
             <div 
               v-if="select.options.length > 0"
@@ -52,7 +55,8 @@
               <div
                 v-for="(item, index) in select.options"
                 :key="index"
-                class="mb-2.5 mr-2.5 h-[34px] rounded bg-gray-100 flex items-center px-1 cursor-default"
+                class="mb-2.5 mr-2.5 h-[34px] rounded bg-gray-100 flex items-center pl-1 cursor-default"
+                :class="whiteList.includes(item.id) ? 'pr-2.5' : 'pr-1'"
               >
                 <!-- 头像 -->
                 <div 
@@ -68,6 +72,7 @@
                 <p class="ml-2.5 text-xs">{{ item.name }}</p>
                 <!-- clear -->
                 <svg 
+                  v-if="!whiteList.includes(item.id)"
                   xmlns="http://www.w3.org/2000/svg" 
                   viewBox="0 0 20 20" 
                   fill="currentColor" 
@@ -113,16 +118,15 @@ const props = defineProps({
     type: String,
     default: '添加成员'
   },
-  multiple: {
-    type: Boolean,
-    default: true
+  max: {
+    type: Number,
+    default: null
   },
   rightTitle: {
     type: String,
-    default: '选择一位部门负责人'
-  }
+    default: ''
+  },
 })
-
 const modal = reactive({
   show: false,
   options: [],
@@ -142,20 +146,23 @@ const getOptions = function() {
     modal.options = res.data.data
   })
 }
+// 白名单id
+const whiteList = ref([])
 
 // 弹出Modal
-const showModal = function(options=[], keys=[], ids=[]) {
+const showModal = function(options=[], keys=[], ids=[], wList = []) {
   getOptions()
-  modal.btnDisabled = props.multiple ? options.length === 0 : options.length !== 1
+  modal.btnDisabled = props.max ? options.length > props.max : options.length === 0
   select.options = options
   select.keys = keys.length > 0 ? keys : []
   select.ids = ids.length > 0 ? ids : []
+  whiteList.value = wList
   modal.show = true
 }
 
 // 	节点勾选项发生变化时的回调函数
 const handleChedkedKeysChange = function(keys, option) {
-  modal.btnDisabled = props.multiple ? option.length === 0 : option.length !== 1
+  modal.btnDisabled = props.max ? option.length > props.max : option.length === 0
   select.options = option
   select.keys = option.map(item => { if(item.type === 'user') return item.key })
   select.ids = option.map(item => { if(item.type === 'user') return item.id })
@@ -166,7 +173,7 @@ const removeOption = function(key, id, index) {
   select.keys.splice(select.keys.indexOf(key), 1)
   select.ids.splice(select.ids.indexOf(id), 1)
   select.options.splice(index, 1)
-  modal.btnDisabled = props.multiple ? select.options.length === 0 : select.options.length !== 1
+  modal.btnDisabled = props.max ? select.options.length > props.max : select.options.length === 0
 }
 
 // 初始化数据

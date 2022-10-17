@@ -86,9 +86,11 @@ const addNode = debounce((type, name, nodeText) => {
     nodeType: type,                 // 节点类型
     showMask: false,                // 是否显示删除遮罩
     nodeText: nodeText,             // 节点文字部分
-    approvalMethod: '',             // 多人审批方法（或签 会签）
-    approvalUser: '',               // 审批人（自选 、指定、角色、主管……）
-    approvals: '',                  // 节点指定审批人
+    approvalMethod: 0,              // 多人审批方法（或签 会签）
+    approvalUser: 0,                // 审批人（自选 、指定、角色、主管……）
+    approvals: [],                  // 节点指定审批人
+    approvalOptions: [],
+    approvalKeys: [],
     formReadPerm: '',               // 表单查看全限
     formUpdatePerm: ''              // 表单编辑权限
   }

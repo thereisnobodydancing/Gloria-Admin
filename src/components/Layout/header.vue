@@ -29,7 +29,6 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router'
 import logoImg from '/src/assets/logo.png'
 import { NIcon } from "naive-ui"
 import { HomeOutline as HomeOutIcon, LogOutOutline as LogOutIcon } from "@vicons/ionicons5"

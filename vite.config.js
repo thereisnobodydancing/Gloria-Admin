@@ -14,7 +14,7 @@ export default defineConfig({
     viteCompression(),
     AutoImport({
       imports: [
-        'vue',
+        'vue', 'vue-router',
         {
           'naive-ui': ['useDialog', 'useMessage', 'useNotification', 'useLoadingBar'],
         },

@@ -57,37 +57,26 @@
       </div>
     </div>
     <!-- 右侧：编辑区域 -->
+    <!-- 遮罩 -->
     <div 
       class="absolute right-0 h-full w-full bg-gray-900/20"
       :class="!active ? 'hidden' : 'block'"
       @click="active = null"
-    >
-    </div>
+    />
+    <!-- 内容 -->
     <div 
       class="absolute right-0 h-full shadow-xl bg-white transition-all duration-300 overflow-y-scroll z-10"
       :class="!active ? 'w-0 opacity-0' : 'w-[25rem] opacity-100'"
     >
-      <div v-if="active" class="p-5">
-        <p class="text-lg font-bold line-1">{{ process[active].nodeName }}</p>
-        <n-tabs default-value="setUser" type="line" animated class="mt-4">
-          <n-tab-pane name="setUser" :tab="`设置${process[active].nodeName}`">
-            <div class="p-4">
-              33
-            </div>
-          </n-tab-pane>
-          <n-tab-pane name="formRole" tab="表单操作权限">
-            表单操作权限
-          </n-tab-pane>
-        </n-tabs>
-      </div>
+      <flow-edit :active="active" />
     </div>
   </div>
 </template>
 
 <script setup>
-// import { nanoid } from  'nanoid'
 import useTemplateStore from '/src/store/template.js'
 import FlowLine from '../components/FlowLine.vue'
+import FlowEdit from '../components/FlowEdit.vue'
 
 const height = document.documentElement.clientHeight - 155
 const { process }  = toRefs(useTemplateStore())
@@ -96,7 +85,6 @@ const active = ref(null)
 const removeNode = function(index) {
   process.value.splice(index, 1)
 }
-
 // 选择节点
 const selNode = function(index) {
   active.value = index

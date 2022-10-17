@@ -21,7 +21,7 @@
             <n-input 
               v-model:value="props.list[props.active].options.placeholder" 
               type="textarea" 
-              :autosize="{minRows: 1}"
+              :autosize="{minRows: 3}"
               placeholder="请输入" 
               maxlength="30"
               show-count 
@@ -79,7 +79,7 @@
           <n-input
             v-model:value="props.list[props.active].options.desc" 
             type="textarea" 
-            :autosize="{minRows: 3}"
+            :autosize="{minRows: 5}"
             placeholder="请输入" 
             maxlength="50" 
             show-count 

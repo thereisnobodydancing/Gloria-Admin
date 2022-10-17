@@ -1,7 +1,7 @@
 <template>
   <div class="w-full h-full bg-white">
     <n-tabs
-      default-value="base" 
+      default-value="flow" 
       justify-content="center" 
       tab-style="padding: 12px 16px"
       type="line" 
@@ -9,8 +9,8 @@
     >
       <template #prefix>
         <div class="px-4 py-3">
-          <div class="h-8 flex items-center cursor-pointer">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-5">
+          <div class="h-8 flex items-center cursor-default">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-5 cursor-pointer" @click="$router.back()">
               <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
             </svg>
             <p>新增模板</p>
