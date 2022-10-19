@@ -114,15 +114,13 @@ const clickOverlay = function() {
   setTimeout(() => showEdit.value = false, 250)
 }
 
-const initNodeData = function() {
+const initNodePrem = function() {
   // 有节点数据，没有表单数据
   if(process.value.length > 1 && formList.value.length === 0) {
     process.value.forEach(item => item.formReadPerm = item.formUpdatePerm = '')
   }
   // 有节点数据，有表单数据
   if(initNodeData(process.value.length > 1 && formList.value.length > 0)) {
-    let readArr = formList.value.filter(item => item.options.read === true)
-    let updateArr = formList.value.filter(item => item.options.update === true)
   }
 }
 </script>
