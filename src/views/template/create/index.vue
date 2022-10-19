@@ -1,6 +1,6 @@
 <template>
   <div class="w-full h-full bg-white">
-    {{ warningData.list }}
+    <!-- {{ warningData.list }} -->
     <n-tabs
       v-model:value="tabDefault" 
       justify-content="center" 

@@ -39,13 +39,16 @@ export default defineStore('template', () => {
       approvals: [],                  // 节点指定审批人列表
       approvalOptions: [],
       approvalKeys: [],
-      formReadPerm: '',               // 表单可读权限
-      formUpdatePerm: '',             // 表单编辑权限
-      readCheckAll: true,             // 表单可读全选状态【原创】
-      readChedkIndeterminate: false,  // 表单可读部分选中状态【原创】
-      updateCheckAll: true,           // 表单可编辑全选状态【原创】
-      updateChedkIndeterminate: false,// 表单可编辑部分选中状态【原创】
-      perm: []                        // 表单权限子项  { read：true，update：false }
+      formReadPerm: '',               // 表单可读权限 ids
+      formUpdatePerm: '',             // 表单编辑权限 ids
+      // 流程【原创】
+      prem: {
+        readCheckAll: false,               // 表单可读全选状态
+        readChedkIndeterminate: false,    // 表单可读部分选中状态
+        updateCheckAll: false,            // 表单可编辑全选状态
+        updateChedkIndeterminate: false,  // 表单可编辑部分选中状态
+        list: []                          // { name  /  read  / update }
+      },
     }
   ])
   const approvalsList = ref([

@@ -81,7 +81,9 @@
       class="absolute right-0 h-full shadow-xl bg-white transition-all duration-300 z-10"
       :class="!active ? 'w-0 opacity-0' : 'w-[25rem] opacity-100'"
     >
-      <flow-edit v-if="showEdit" :active="active" />
+      <div v-if="showEdit && active">
+        <flow-edit :active="active" />
+      </div>
       <div v-if="!showEdit && active" class="w-full h-full flex flex-col items-center justify-center bg-gray-900/10">
         <n-spin size="large" />
         <p class="mt-2 text-sm text-gray-500">加载中请稍后……</p>
@@ -106,21 +108,55 @@ const removeNode = function(index) {
 // 选择节点
 const selNode = function(index) {
   active.value = index
-  setTimeout(() => showEdit.value = true, 250)
+  setTimeout(() => showEdit.value = true, 300)
 }
 // 点击遮罩
 const clickOverlay = function() {
   active.value = null
-  setTimeout(() => showEdit.value = false, 250)
+  setTimeout(() => showEdit.value = false, 300)
 }
-
+// 初始化节点的表单操作权限（烧脑啊）
 const initNodePrem = function() {
-  // 有节点数据，没有表单数据
-  if(process.value.length > 1 && formList.value.length === 0) {
-    process.value.forEach(item => item.formReadPerm = item.formUpdatePerm = '')
-  }
-  // 有节点数据，有表单数据
-  if(initNodeData(process.value.length > 1 && formList.value.length > 0)) {
+  // 存在节点
+  if(process.value.length > 1) {
+    // 表单没数据
+    if(formList.value.length === 0) {
+      process.value.forEach(nodeItem => {
+        nodeItem.formReadPerm = nodeItem.formUpdatePerm = ''
+        nodeItem.prem.readCheckAll = nodeItem.prem.readChedkIndeterminate = nodeItem.prem.updateCheckAll = nodeItem.prem.updateChedkIndeterminate = false
+        nodeItem.prem.list = []
+      })
+    }
+    // 表单有数据
+    if(formList.value.length > 0) {
+      process.value.forEach(nodeItem => {
+        let copyPrem = {
+          readCheckAll: true,               // 表单可读全选状态
+          readChedkIndeterminate: false,    // 表单可读部分选中状态
+          updateCheckAll: false,            // 表单可编辑全选状态
+          updateChedkIndeterminate: false,  // 表单可编辑部分选中状态
+          list: []
+        }
+        formList.value.forEach(formItem => {
+          let premData = nodeItem.prem.list.find(item => item.id === formItem.options.id)
+          if(premData) {
+            copyPrem.readCheckAll = nodeItem.prem.readCheckAll
+            copyPrem.readChedkIndeterminate = nodeItem.prem.readChedkIndeterminate
+            copyPrem.updateCheckAll = nodeItem.prem.updateCheckAll
+            copyPrem.updateChedkIndeterminate = nodeItem.prem.updateChedkIndeterminate
+            copyPrem.list.push({ id: formItem.options.id, name: formItem.options.name, required: formItem.options.required, read: premData.read, update: premData.update })
+          }
+          if(!premData) copyPrem.list.push({ id: formItem.options.id, name: formItem.options.name, required: formItem.options.required, read: true, update: false })
+        })
+        nodeItem.prem.readCheckAll = copyPrem.readCheckAll
+        nodeItem.prem.readChedkIndeterminate = copyPrem.readChedkIndeterminate
+        nodeItem.prem.updateCheckAll = copyPrem.updateCheckAll
+        nodeItem.prem.updateChedkIndeterminate = copyPrem.updateChedkIndeterminate
+        nodeItem.prem.list = copyPrem.list
+        nodeItem.formReadPerm = copyPrem.list.map(item => item.id).join(',')
+      })
+    }
   }
 }
+initNodePrem()
 </script>

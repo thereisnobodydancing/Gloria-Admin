@@ -1,6 +1,6 @@
 <!-- 表单编辑区 -->
 <template>
-  <div v-if="props.active" class="p-5 w-full h-full overflow-y-scroll">
+  <div class="p-5 w-full h-full overflow-y-scroll">
     <p class="text-lg font-bold line-1">{{ process[props.active].nodeName }}</p>
     <n-tabs default-value="setUser" type="line" animated class="mt-4">
       <!-- 设置审批人/办理人 -->
@@ -102,9 +102,9 @@
             <div class="w-2/4 px-1">表单字段</div>
             <div class="w-1/4">
               <n-checkbox 
-                v-model:checked="process[props.active].readCheckAll" 
-                :indeterminate="process[props.active].readChedkIndeterminate"
-                :disabled="formList.length === 0"
+                v-model:checked="process[props.active].prem.readCheckAll" 
+                :indeterminate="process[props.active].prem.readChedkIndeterminate"
+                :disabled="process[props.active].prem.list.length === 0"
                 @update:checked="checkedReadAll"
               >
                 只读
@@ -112,9 +112,9 @@
             </div>
             <div class="w-1/4">
               <n-checkbox 
-                v-model:checked="process[props.active].updateCheckAll" 
-                :indeterminate="process[props.active].updateChedkIndeterminate"
-                :disabled="formList.length === 0"
+                v-model:checked="process[props.active].prem.updateCheckAll" 
+                :indeterminate="process[props.active].prem.updateChedkIndeterminate"
+                :disabled="process[props.active].prem.list.length === 0"
                 @update:checked="checkedUpdateAll"
               >
                 编辑
@@ -122,19 +122,19 @@
             </div>
           </div>
             <div 
-              v-for="(item, index) in formList" 
+              v-for="(item, index) in process[props.active].prem.list" 
               :key="index" 
               class="px-4 h-11 border-b border-b-gray-100 flex items-center"
             >
               <p class="w-2/4 line-1">
-                <span v-if="item.options.required" class="text-primary">*</span>
-                <span :class="item.options.required ? 'ml-0.5' : 'ml-1.5'">{{ item.options.name }}</span>
+                <span v-if="item.required" class="text-primary">*</span>
+                <span :class="item.required ? 'ml-0.5' : 'ml-1.5'">{{ item.name }}</span>
               </p>
               <div class="w-1/4">
-                <n-checkbox v-model:checked="item.options.read" @update:checked="checkedRead(item.options.read, index)" />
+                <n-checkbox v-model:checked="item.read" @update:checked="checkedRead(item.read, index)" />
               </div>
               <div class="w-1/4">
-                <n-checkbox v-model:checked="item.options.update" @update:checked="checkedUpdate(item.options.update, index)" />
+                <n-checkbox v-model:checked="item.update" @update:checked="checkedUpdate(item.update, index)" />
               </div>
             </div>
         </div>
@@ -201,47 +201,53 @@ const multipleList = [
 
 
 /**** 表单权限 *****/
-const updateChedked = function(arr) {
-  // 可读
-  let readArr = arr.filter(item => item.options.read === true)
-  process.value[props.active].readCheckAll = readArr.length === formList.value.length
-  process.value[props.active].readChedkIndeterminate = formList.value.length > readArr.length && readArr.length > 0
-  process.value[props.active].formReadPerm = readArr.map(item => item.options.id).join(',')
-  // 可编辑
-  let updateArr = arr.filter(item => item.options.update === true)
-  process.value[props.active].updateCheckAll = updateArr.length === formList.value.length
-  process.value[props.active].updateChedkIndeterminate = formList.value.length > updateArr.length && updateArr.length > 0
-  process.value[props.active].formUpdatePerm = updateArr.map(item => item.options.id).join(',')
-}
-// if(formList.value.length > 0) updateChedked(formList.value)
-// 只读、编辑全选（被动）
-watch(() => formList, newArr => {
-  if(formList.value.length > 0) updateChedked(newArr.value)
+// 监听选择器的变化，实时获取formReadPerm 和 formUpdatePerm
+watch(() => process, newData => {
+  if(formList.value.length > 0) {
+    // read
+    let readArr = newData.value[props.active].prem.list.filter(item => item.read === true)
+    process.value[props.active].formReadPerm = readArr.map(item => item.id).join(',')
+    // update
+    let updateArr = newData.value[props.active].prem.list.filter(item => item.update === true)
+    process.value[props.active].formUpdatePerm = updateArr.map(item => item.id).join(',')
+  }
 }, { deep: true })
 
-// 只读、编辑全选（主动）
+// 只读全选
 const checkedReadAll = function(checked) {
-  process.value[props.active].readChedkIndeterminate = false
-  formList.value.forEach(item => {
-    if(!checked) item.options.update = false
-    item.options.read = checked
+  process.value[props.active].prem.readChedkIndeterminate = false
+  process.value[props.active].prem.list.forEach(item => {
+    if(checked) item.read = true
+    if(!checked) item.read = item.update = process.value[props.active].prem.updateCheckAll = false
   })
 }
+// 编辑全选
 const checkedUpdateAll = function(checked) {
-  process.value[props.active].updateChedkIndeterminate = false
-  formList.value.forEach(item => {
-    if(checked) item.options.read = true
-    item.options.update = checked
+  process.value[props.active].prem.updateChedkIndeterminate = false
+  process.value[props.active].prem.list.forEach(item => {
+    if(checked) item.update = item.read = process.value[props.active].prem.readCheckAll = true
+    if(!checked) item.update = false 
   })
 }
 
 // 点击只读
 const checkedRead = function(checked, index) {
-  if(!checked) formList.value[index].options.update = false
+  if(!checked) process.value[props.active].prem.list[index].update = false
+  updateCheck()
 }
 
 // 点击编辑
 const checkedUpdate = function(checked, index) {
-  if(checked) formList.value[index].options.read = true
+  if(checked) process.value[props.active].prem.list[index].read = true
+  updateCheck()
+}
+
+const updateCheck = function() {
+  let readArr = process.value[props.active].prem.list.filter(item => item.read === true)
+  process.value[props.active].prem.readCheckAll = readArr.length === process.value[props.active].prem.list.length
+  process.value[props.active].prem.readChedkIndeterminate = readArr.length < process.value[props.active].prem.list.length && readArr.length > 0
+  let updateArr = process.value[props.active].prem.list.filter(item => item.update === true)
+  process.value[props.active].prem.updateCheckAll = updateArr.length === process.value[props.active].prem.list.length
+  process.value[props.active].prem.updateChedkIndeterminate = updateArr.length < process.value[props.active].prem.list.length && updateArr.length > 0
 }
 </script>
