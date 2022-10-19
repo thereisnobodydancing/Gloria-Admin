@@ -69,7 +69,7 @@ import { nanoid } from  'nanoid'
 import { debounce } from 'lodash'
 import useTemplateStore from '/src/store/template.js'
 
-const { process }  = toRefs(useTemplateStore())
+const { tabDefault, process, formList }  = toRefs(useTemplateStore())
 
 const props = defineProps({
   active: Number
@@ -79,6 +79,11 @@ const showPopover = ref(false)
 
 // 添加节点(防抖)
 const addNode = debounce((type, name, nodeText) => {
+  // if(formList.value.length === 0) {
+  //   alert('表单至少需要一个控件，请先完成表单再配置流程吧')
+  //   tabDefault.value = 'form'
+  //   return
+  // }
   showPopover.value = false
   let nodeObj = {
     nodeId: `Activity_${nanoid()}`, // 节点id
@@ -87,13 +92,20 @@ const addNode = debounce((type, name, nodeText) => {
     showMask: false,                // 是否显示删除遮罩
     nodeText: nodeText,             // 节点文字部分
     approvalMethod: 0,              // 多人审批方法（或签 会签）
-    approvalUser: 0,                // 审批人（自选 、指定、角色、主管……）
+    approvalUser: 1,                // 审批人（自选 、指定、角色、主管……）
     approvals: [],                  // 节点指定审批人
     approvalOptions: [],
     approvalKeys: [],
-    formReadPerm: '',               // 表单查看全限
-    formUpdatePerm: ''              // 表单编辑权限
+    formReadPerm: '',               // 表单查看全限ids
+    formUpdatePerm: '',             // 表单编辑权限ids
+
+    readCheckAll: true,             // 表单可读全选状态【原创】
+    readChedkIndeterminate: false,  // 表单可读部分选中状态【原创】
+    updateCheckAll: true,           // 表单可编辑全选状态【原创】
+    updateChedkIndeterminate: false,// 表单可编辑部分选中状态【原创】
+    perm: []                        // 表单权限子项  { read：true，update：false }
   }
+  nodeObj.formReadPerm = formList.value.map(item => item.options.id).join(',')
   process.value.splice(props.active + 1, 0, nodeObj)
 }, 300, {
   leading: true,  // 延长开始后调用

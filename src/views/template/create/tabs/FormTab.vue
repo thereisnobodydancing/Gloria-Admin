@@ -92,13 +92,13 @@ const height = document.documentElement.clientHeight - 155
 
 // 左侧：菜单栏部分——基础控件
 const baseComponents = ref([
-  {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false}},
-  {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false}},
-  {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false}},
-  {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-  {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-  {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-  {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false}},
+  {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false }},
+  {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false }},
+  {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false }},
+  {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
+  {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
+  {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
+  {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false }},
 ])
 // 左侧：菜单栏部分——增强控件
 const proComponents = ref([
@@ -130,7 +130,7 @@ const addList = function({newIndex}) {
   initComponents()
   active.value = index
 }
-// 选择单元时的回调函数 [如果你的身边没有我，我就跌跌撞撞奔向你]
+// 选择单元时的回调函数 [如果你的身边没有我，我就奋不顾身奔向你]
 const chooseList = function({oldIndex}) {
   if(active.value !== oldIndex ) active.value = oldIndex
 }
@@ -141,13 +141,13 @@ const updateList = function({newIndex}) {
 // 【生命归还】
 const initComponents = function() {
   baseComponents.value = [
-    {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false}},
-    {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false}},
-    {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false}},
-    {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-    {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-    {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false}},
-    {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false}},
+    {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false }},
+    {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false }},
+    {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false }},
+    {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
+    {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
+    {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
+    {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false }},
   ]
 }
 </script>

@@ -1,7 +1,8 @@
 <template>
   <div class="w-full h-full bg-white">
+    {{ warningData.list }}
     <n-tabs
-      default-value="flow" 
+      v-model:value="tabDefault" 
       justify-content="center" 
       tab-style="padding: 12px 16px"
       type="line" 
@@ -30,7 +31,8 @@
         <flow-tab/>
       </n-tab-pane>
       <template #suffix>
-        <div class="px-4 py-3 text-right space-x-2">
+        <div class="px-4 py-3 text-right space-x-3">
+          <span class="text-sm text-red-500 cursor-pointer">{{ warningData.num }}项不完善</span>
           <n-button @click="clearTemplate">重置</n-button>
           <n-button type="primary">保存模板</n-button>
         </div>
@@ -47,6 +49,7 @@ import FormTab from './tabs/FormTab.vue'
 import FlowTab from './tabs/FlowTab.vue'
 // 重置模板
 const useTemplate = useTemplateStore()
+const { tabDefault, name, groupId, formList, process }  = toRefs(useTemplate)
 const message = useMessage()
 const dialog = useDialog()
 const clearTemplate = function() {
@@ -62,6 +65,28 @@ const clearTemplate = function() {
     onNegativeClick: () => {}
   })
 }
+// 模板错误提示
+const warningData = reactive({
+  num: null,
+  list: []
+})
+
+const updateWarningData = function() {
+  let noReadArr = process.value.filter((item, index) => {
+    if(index > 0) return !item.formReadPerm
+  })
+  warningData.list = [
+    { type: '基础设置', text: '名称为空，请填写', show: !name.value },
+    { type: '基础设置', text: '分组为空，请选择', show: !groupId.value },
+    { type: '表单设计', text: '至少需要一个控件', show: formList.value.length === 0},
+    { type: '流程设计', text: '至少设置一个控件可读', show: noReadArr.length > 0}
+  ]
+  warningData.num = warningData.list.filter(item => item.show === true).length
+}
+updateWarningData()
+watch(() => [name.value, groupId.value, formList.value, process.value], () => {
+  updateWarningData()
+}, { deep: true })
 </script>
 
 <style>

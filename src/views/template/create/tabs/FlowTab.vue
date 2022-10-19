@@ -17,14 +17,7 @@
           }]"
           @click="selNode(index)"
         >
-          <div
-            v-show="item.showMask"
-            class="absolute inset-0 bg-gray-900/60 rounded-md flex items-center justify-center space-x-2"
-            @click.prevent.stop=""
-          >
-            <n-button color="#999999" @click.prevent.stop="item.showMask = false">取消</n-button>
-            <n-button type="primary" @click.prevent.stop="removeNode(index)">删除</n-button>
-          </div>
+          <!-- 头部 -->
           <div class="w-full h-7 rounded-t-md text-xs text-white flex items-center">
             <p class="px-2">{{ item.nodeName }}</p>
             <div 
@@ -37,14 +30,34 @@
               </svg>
             </div>
           </div>
+          <!-- 内容 -->
           <div 
             class="pl-3 text-sm text-gray-600 leading-[3.25rem] flex items-center bg-white rounded-b-md"
             :class="{'justify-center': item.nodeType === '0'}"
           >
-            <p :class="{'text-gray-400': !item.approvalUser}">{{ item.nodeText }}</p>
+            <p :class="{'text-gray-400': item.nodeType === '0'}">
+              {{ item.nodeType === '0' ? `流程开始` : `${item.nodeName}：${approvalsList[item.approvalUser].label}` }}
+            </p>
             <svg v-if="index > 0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-auto flex-shrink-0 w-6 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
             </svg>
+          </div>
+          <!-- 删除遮罩 -->
+          <div
+            v-show="item.showMask"
+            class="absolute inset-0 bg-gray-900/60 rounded-md flex items-center justify-center space-x-2"
+            @click.prevent.stop=""
+          >
+            <n-button color="#999999" @click.prevent.stop="item.showMask = false">取消</n-button>
+            <n-button type="primary" @click.prevent.stop="removeNode(index)">删除</n-button>
+          </div>
+          <!-- 错误提示 -->
+          <div
+            v-if="index > 0 && !item.formReadPerm"
+            class="absolute top-0 -right-44 flex items-center space-x-2"
+          >
+            <div class="w-5 h-5 rounded-full bg-red-500 text-sm text-center text-white font-bold">!</div>
+            <p class="text-sm text-primary">至少设置一个控件可读</p>
           </div>
         </div>
         <!-- 线 -->
@@ -61,14 +74,18 @@
     <div 
       class="absolute right-0 h-full w-full bg-gray-900/20"
       :class="!active ? 'hidden' : 'block'"
-      @click="active = null"
+      @click="clickOverlay"
     />
     <!-- 内容 -->
     <div 
-      class="absolute right-0 h-full shadow-xl bg-white transition-all duration-300 overflow-y-scroll z-10"
+      class="absolute right-0 h-full shadow-xl bg-white transition-all duration-300 z-10"
       :class="!active ? 'w-0 opacity-0' : 'w-[25rem] opacity-100'"
     >
-      <flow-edit :active="active" />
+      <flow-edit v-if="showEdit" :active="active" />
+      <div v-if="!showEdit && active" class="w-full h-full flex flex-col items-center justify-center bg-gray-900/10">
+        <n-spin size="large" />
+        <p class="mt-2 text-sm text-gray-500">加载中请稍后……</p>
+      </div>
     </div>
   </div>
 </template>
@@ -79,8 +96,9 @@ import FlowLine from '../components/FlowLine.vue'
 import FlowEdit from '../components/FlowEdit.vue'
 
 const height = document.documentElement.clientHeight - 155
-const { process }  = toRefs(useTemplateStore())
+const { formList, process, approvalsList }  = toRefs(useTemplateStore())
 const active = ref(null)
+const showEdit = ref(false)
 // 删除节点
 const removeNode = function(index) {
   process.value.splice(index, 1)
@@ -88,5 +106,23 @@ const removeNode = function(index) {
 // 选择节点
 const selNode = function(index) {
   active.value = index
+  setTimeout(() => showEdit.value = true, 250)
+}
+// 点击遮罩
+const clickOverlay = function() {
+  active.value = null
+  setTimeout(() => showEdit.value = false, 250)
+}
+
+const initNodeData = function() {
+  // 有节点数据，没有表单数据
+  if(process.value.length > 1 && formList.value.length === 0) {
+    process.value.forEach(item => item.formReadPerm = item.formUpdatePerm = '')
+  }
+  // 有节点数据，有表单数据
+  if(initNodeData(process.value.length > 1 && formList.value.length > 0)) {
+    let readArr = formList.value.filter(item => item.options.read === true)
+    let updateArr = formList.value.filter(item => item.options.update === true)
+  }
 }
 </script>

@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { nanoid } from  'nanoid'
 const user = JSON.parse(sessionStorage.getItem('user'))
 export default defineStore('template', () => {
+  const tabDefault = ref('base')
   const id = ref('')
   const groupId = ref(null)
   const name = ref('')
@@ -23,7 +24,9 @@ export default defineStore('template', () => {
     }
   ])
   const templateAdministratorKeys = ref([`u${user.id}`])
+
   const formList = ref([])
+
   const process = ref([
     {
       nodeId: `Activity_${nanoid()}`,  // 节点id
@@ -36,11 +39,25 @@ export default defineStore('template', () => {
       approvals: [],                  // 节点指定审批人列表
       approvalOptions: [],
       approvalKeys: [],
-      formReadPerm: '',               // 表单查看全限
-      formUpdatePerm: ''              // 表单编辑权限
+      formReadPerm: '',               // 表单可读权限
+      formUpdatePerm: '',             // 表单编辑权限
+      readCheckAll: true,             // 表单可读全选状态【原创】
+      readChedkIndeterminate: false,  // 表单可读部分选中状态【原创】
+      updateCheckAll: true,           // 表单可编辑全选状态【原创】
+      updateChedkIndeterminate: false,// 表单可编辑部分选中状态【原创】
+      perm: []                        // 表单权限子项  { read：true，update：false }
     }
   ])
+  const approvalsList = ref([
+    {value: 0, label: '指定成员'},
+    {value: 1, label: '发起人自选'},
+    {value: 2, label: '部门主管'},
+    {value: 3, label: '直属上级'},
+    {value: 4, label: '角色'},
+    {value: 5, label: '发起人自己'}
+  ])
   return {
+    tabDefault,
     id,                           // 模板id
     name,                         // 模板名称
     groupId,                      // 分组id
@@ -53,7 +70,8 @@ export default defineStore('template', () => {
     templateAdministratorOptions, // 选择的模板管理员列表（options）[不用提交]
     templateAdministratorKeys,    // 选择的模板管理员列表（keys）[不用提交]
     formList,                     // 表单
-    process                       // 节点
+    process,                      // 节点
+    approvalsList
   }
 },{
   persist: true // 支持持久化
