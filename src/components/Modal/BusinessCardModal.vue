@@ -44,11 +44,11 @@
             <p v-if="employeeInfo.sectorName">
               <span class="w-24 inline-block">所属部门：</span>{{ employeeInfo.sectorName }}
             </p>
-            <!-- 职位 -->
+            <!-- 员工工号 -->
             <p v-if="employeeInfo.workNumber">
               <span class="w-24 inline-block">员工工号：</span>{{ employeeInfo.workNumber }}
             </p>
-            <!-- 职位 -->
+            <!-- 直属主管 -->
             <p v-if="employeeInfo.leader">
               <span class="w-24 inline-block">直属主管：</span>{{ employeeInfo.leader }}
             </p>

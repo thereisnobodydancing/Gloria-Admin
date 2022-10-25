@@ -13,7 +13,7 @@
           class="px-4 py-2 text-sm leading-5 shadow text-white rounded bg-primary hover:opacity-80"
           @click="$router.replace('/')"
         >
-          返回工作台
+          返回首页
         </button>
       </div>
       <div class="max-w-lg">

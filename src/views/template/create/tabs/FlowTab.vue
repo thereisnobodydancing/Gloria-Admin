@@ -10,7 +10,7 @@
         <div
           class="w-56 h-20 rounded-md group relative cursor-pointer"
           :class="[{
-            'bg-gray-600 cursor-not-allowed': item.nodeType === '0',
+            'bg-gray-600 cursor-not-allowed': item.nodeType === '5',
             'bg-orange-500 hover:shadow-lg hover:shadow-orange-500/20': item.nodeType === '1',
             'bg-primary hover:shadow-lg hover:shadow-primary/20': item.nodeType === '2',
             'bg-blue-500 hover:shadow-lg hover:shadow-blue-500/20': item.nodeType === '3',
@@ -33,10 +33,10 @@
           <!-- 内容 -->
           <div 
             class="pl-3 text-sm text-gray-600 leading-[3.25rem] flex items-center bg-white rounded-b-md"
-            :class="{'justify-center': item.nodeType === '0'}"
+            :class="{'justify-center': item.nodeType === '5'}"
           >
-            <p :class="{'text-gray-400': item.nodeType === '0'}">
-              {{ item.nodeType === '0' ? `流程开始` : `${item.nodeName}：${approvalsList[item.approvalUser].label}` }}
+            <p :class="{'text-gray-400': item.nodeType === '5'}">
+              {{ item.nodeType === '5' ? `流程开始` : `${item.nodeName}：${approvalsList[item.approvalUser].label}` }}
             </p>
             <svg v-if="index > 0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="ml-auto flex-shrink-0 w-6 h-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
@@ -53,11 +53,27 @@
           </div>
           <!-- 错误提示 -->
           <div
-            v-if="index > 0 && !item.formReadPerm"
-            class="absolute top-0 -right-44 flex items-center space-x-2"
+            v-if="index > 0"
+            class="absolute top-1 -right-64 w-60 space-y-3"
           >
-            <div class="w-5 h-5 rounded-full bg-red-500 text-sm text-center text-white font-bold">!</div>
-            <p class="text-sm text-primary">至少设置一个控件可读</p>
+            <div v-if="!item.formReadPerm" class="flex items-center space-x-2">
+              <div class="w-4 h-4 rounded-full bg-red-500 text-xs text-center text-white">!</div>
+              <p class="text-xs text-primary">至少设置一个控件可读</p>
+            </div>
+            <div 
+              v-if="item.approvalUser === 0 && item.approvals.length === 0" 
+              class="flex items-center space-x-2"
+            >
+              <div class="w-4 h-4 rounded-full bg-red-500 text-xs text-center text-white">!</div>
+              <p class="text-xs text-primary">至少添加一名成员</p>
+            </div>
+            <div 
+              v-if="item.approvalUser === 4 && item.approvals.length === 0" 
+              class="flex items-center space-x-2"
+            >
+              <div class="w-4 h-4 rounded-full bg-red-500 text-xs text-center text-white">!</div>
+              <p class="text-xs text-primary">至少添加一个角色</p>
+            </div>
           </div>
         </div>
         <!-- 线 -->
@@ -97,7 +113,7 @@ import useTemplateStore from '/src/store/template.js'
 import FlowLine from '../components/FlowLine.vue'
 import FlowEdit from '../components/FlowEdit.vue'
 
-const height = document.documentElement.clientHeight - 155
+const height = document.documentElement.clientHeight - 145
 const { formList, process, approvalsList }  = toRefs(useTemplateStore())
 const active = ref(null)
 const showEdit = ref(false)

@@ -45,7 +45,7 @@
         </div>
         <!-- right -->
         <div class="flex-shrink-0 w-1/2 min-h-full px-5 pb-5 space-y-4">
-          <p v-if="props.rightTitle" class="text-sm">{{ props.rightTitle }}</p>
+          <p v-if="props.rightTitle" class="text-sm">{{ props.rightTitle }} （{{ select.options.length }} {{ props.max ? `/${props.max}` : '' }}）</p>
           <p v-else class="text-sm">已选择（{{ select.options.length }} {{ props.max ? `/${props.max}` : '' }}）</p>
           <div class="w-full h-[490px] overflow-y-scroll">
             <div 

@@ -2,7 +2,7 @@
 <template>
   <div class="p-5 w-full h-full overflow-y-scroll">
     <p class="text-lg font-bold line-1">{{ process[props.active].nodeName }}</p>
-    <n-tabs default-value="setUser" type="line" animated class="mt-4">
+    <n-tabs default-value="setUser" type="line" class="mt-4">
       <!-- 设置审批人/办理人 -->
       <n-tab-pane name="setUser" :tab="`设置${process[props.active].nodeName}`">
         <div class="py-4">

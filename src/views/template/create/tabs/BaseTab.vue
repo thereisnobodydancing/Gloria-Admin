@@ -150,7 +150,7 @@ const {
   templateAdministratorOptions, // 选择的模板管理员列表（options）[不用提交]
   templateAdministratorKeys     // 选择的模板管理员列表（keys）[不用提交]
 }  = toRefs(useTemplate)
-const height = document.documentElement.clientHeight - 155
+const height = document.documentElement.clientHeight - 145
 
 /******** 所在分组 *******/
 const groupList = ref([])

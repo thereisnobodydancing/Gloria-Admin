@@ -88,7 +88,7 @@ import FormItem from '../components/FormItem.vue'
 import FormConfig from '../components/FormConfig.vue'
 import useTemplateStore from '/src/store/template.js'
 
-const height = document.documentElement.clientHeight - 155
+const height = document.documentElement.clientHeight - 145
 
 // 左侧：菜单栏部分——基础控件
 const baseComponents = ref([

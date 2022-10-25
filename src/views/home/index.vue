@@ -1,5 +1,6 @@
 <template>
-  {{ useTemplate }}
+  <div class="p-4">
+    {{ useTemplate }}
   <div>
     <p>名字</p>
     {{ name }}
@@ -17,6 +18,7 @@
     {{ process }}
   </div>
   <n-button @click="useTemplate.$reset()">重置</n-button>
+  </div>
 </template>
 
 <script setup>

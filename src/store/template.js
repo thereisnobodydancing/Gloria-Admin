@@ -2,8 +2,9 @@ import { defineStore } from 'pinia'
 import { nanoid } from  'nanoid'
 const user = JSON.parse(sessionStorage.getItem('user'))
 export default defineStore('template', () => {
-  const tabDefault = ref('base')
+  const tabActive = ref('base')
   const id = ref('')
+  const userId = ref(user.id)
   const groupId = ref(null)
   const name = ref('')
   const remark = ref('')
@@ -31,7 +32,7 @@ export default defineStore('template', () => {
     {
       nodeId: `Activity_${nanoid()}`,  // 节点id
       nodeName: '提交',                // 节点名称
-      nodeType: '0',                  // 节点类型
+      nodeType: '5',                  // 节点类型
       showMask: false,                // 是否显示删除遮罩 【原创】
       nodeText: '流程开始',            // 节点文字部分 【原创】
       approvalMethod: 0,              // 多人审批方法（或签 会签）
@@ -59,9 +60,22 @@ export default defineStore('template', () => {
     {value: 4, label: '角色'},
     {value: 5, label: '发起人自己'}
   ])
+  
+  const startNode = ref({
+    nodeId: 'StartEvent_1',
+    nodeName: '',
+    nodeType: '0',
+  })
+
+  const endNode = ref({
+    nodeId: `Event_${nanoid()}`,
+    nodeName: '',
+    nodeType: '4',
+  })
   return {
-    tabDefault,
+    tabActive,
     id,                           // 模板id
+    userId,
     name,                         // 模板名称
     groupId,                      // 分组id
     remark,                       // 表单说明
@@ -74,7 +88,9 @@ export default defineStore('template', () => {
     templateAdministratorKeys,    // 选择的模板管理员列表（keys）[不用提交]
     formList,                     // 表单
     process,                      // 节点
-    approvalsList
+    approvalsList,
+    startNode,
+    endNode
   }
 },{
   persist: true // 支持持久化

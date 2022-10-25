@@ -18,6 +18,7 @@ const routes= [
     component: Layout,
     redirect: '/home',
     children: [
+
       /** -------首页------- **/
       {
         path: '/home',
@@ -25,6 +26,97 @@ const routes= [
         component:() => import('../views/home/index.vue'),
         meta: { name: 'Home', common: true }
       },
+
+      /** ------组织架构------ **/
+      // 成员与部门
+      {
+        path: '/organization/member',
+        name: 'OrganizationMember',
+        component:() => import('../views/organization/member/index.vue'),
+        meta: { name: 'OrganizationMember'}
+      },
+      // 职位管理
+      {
+        path: '/organization/post',
+        name: 'OrganizationPost',
+        component:() => import('../views/organization/post/index.vue'),
+        meta: { name: 'OrganizationPost'}
+      },
+
+      /** ------权限管理------ **/
+      {
+        path: '/role',
+        name: 'Role',
+        component:() => import('../views/role/index.vue'),
+        meta: { name: 'Role'}
+      },
+      /** ------数据管理------ **/
+      // 假勤数据（Leave）
+      {
+        path: '/data/leave',
+        name: 'DataLeave',
+        component:() => import('../views/data/leave/index.vue'),
+        meta: { name: 'DataLeave'}
+      },
+      // 人事数据（Personnel）
+      {
+        path: '/data/personnel',
+        name: 'DataPersonnel',
+        component:() => import('../views/data/personnel/index.vue'),
+        meta: { name: 'DataPersonnel'}
+      },
+      // 业务数据（Operations）
+      {
+        path: '/data/operations',
+        name: 'DataOperations',
+        component:() => import('../views/data/operations/index.vue'),
+        meta: { name: 'DataOperations'}
+      },
+      // 财务数据（Finance）
+      {
+        path: '/data/finance',
+        name: 'DataFinance',
+        component:() => import('../views/data/finance/index.vue'),
+        meta: { name: 'DataFinance'}
+      },
+      // 行政数据（Administration）
+      {
+        path: '/data/administration',
+        name: 'DataAdministration',
+        component:() => import('../views/data/administration/index.vue'),
+        meta: { name: 'DataAdministration'}
+      },
+      // 其他数据（Other）
+      {
+        path: '/data/other',
+        name: 'DataOther',
+        component:() => import('../views/data/other/index.vue'),
+        meta: { name: 'DataOther'}
+      },
+      /** ------账号管理------ **/
+       {
+        path: '/account',
+        name: 'Account',
+        component:() => import('../views/account/index.vue'),
+        meta: { name: 'Account'}
+      },
+
+      /** ------日志管理------ **/
+      {
+        path: '/log',
+        name: 'Log',
+        component:() => import('../views/log/index.vue'),
+        meta: { name: 'Log'}
+      },
+
+       /** ------公告管理------ **/
+       {
+        path: '/bulletin',
+        name: 'Bulletin',
+        component:() => import('../views/bulletin/index.vue'),
+        meta: { name: 'Bulletin'}
+      },
+
       /** ------模板管理------ **/
       {
         path: '/template',
@@ -38,6 +130,7 @@ const routes= [
         component:() => import('../views/template/create/index.vue'),
         meta: { name: 'Template'}
       },
+
       /** --------404-------- **/
       {
         path: '/:pathMatch(.*)*',

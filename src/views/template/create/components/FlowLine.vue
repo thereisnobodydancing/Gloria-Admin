@@ -69,7 +69,7 @@ import { nanoid } from  'nanoid'
 import { debounce } from 'lodash'
 import useTemplateStore from '/src/store/template.js'
 
-const { tabDefault, process, formList }  = toRefs(useTemplateStore())
+const { tabActive, process, formList }  = toRefs(useTemplateStore())
 const props = defineProps({
   active: Number
 })

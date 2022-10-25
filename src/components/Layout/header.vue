@@ -1,6 +1,6 @@
 
 <template>
-  <div class="fixed top-0 inset-x-0 w-full h-16 bg-white border-b flex items-center px-5 z-50">
+  <div class="flex-shrink-0 w-full h-16 bg-white border-b flex items-center px-5 z-20">
     <!-- logo -->
     <img :src="logoImg" alt="logo" width="101" height="36">
     <!-- avatar -->
