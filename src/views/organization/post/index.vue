@@ -1,11 +1,6 @@
 <template>
-  <div class="w-full h-full bg-white rounded shadow flex flex-col">
-    <!-- title -->
-    <div class="flex-shrink-0 w-full h-16 border-b px-6">
-      <h2 class="text-lg leading-[4rem]">职位管理</h2>
-    </div>
-    <!-- body -->
-    <div class="flex-grow w-full h-full flex">
+  <base-card title="职位管理" :loading="showPageLoading">
+    <div class="w-full h-full flex">
       <!-- 左侧：职位列表 -->
       <div class="flex-shrink-0 w-64 h-full border-r relative">
         <div
@@ -14,9 +9,7 @@
         >
           <div class="px-1.5 pt-2 pb-3 sticky top-0 bg-white z-20">
             <n-input v-model:value="postPattern" placeholder="请输入职位名称" clearable>
-              <template #prefix>
-                <n-icon :component="SearchIcon" />
-              </template>
+              <template #prefix><n-icon :component="SearchIcon" /></template>
             </n-input>
           </div>
           <n-tree 
@@ -27,6 +20,7 @@
             selectable
             :show-irrelevant-nodes="false"
             :pattern="postPattern"
+            :render-prefix="renderPrefix('post')"
             @update:selected-keys="handleUpdateValue"
           >
             <template #empty>
@@ -42,7 +36,7 @@
           </n-tree>
         </div>
         <div class="sticky bottom-0 w-full p-4 bg-white z-20 rounded">
-          <n-button type="primary" size="large" block @click="showPostModal('create', '', null)">新增职位</n-button>
+          <n-button type="primary" size="large" block @click="showPostModal('create')">新增职位</n-button>
         </div>
       </div>
       <!-- 右侧：该职位下的成员 -->
@@ -56,7 +50,7 @@
           <post-empty />
           <p class="mt-4 text-sm text-gray-400">{{ postList.length === 0 ? '先创建一个职位吧' : '选个职位看看吧'}}</p>
           <div v-if="postList.length === 0" class="mt-3">
-            <n-button @click="showPostModal('create', '', null)">+新增职位</n-button>
+            <n-button @click="showPostModal('create')">+新增职位</n-button>
           </div>
         </div>
         <n-spin v-else :show=rightData.showLoading>
@@ -74,17 +68,12 @@
               <!-- search -->
               <div class="w-72">
                 <n-input placeholder="搜索" clearable>
-                  <template #prefix>
-                    <n-icon :component="SearchIcon" />
-                  </template>
+                  <template #prefix><n-icon :component="SearchIcon" /></template>
                 </n-input>
               </div>
               <div class="ml-auto space-x-2">
-                <!-- 添加员工 -->
                 <n-button @click="showAddUserModal">添加员工</n-button>
-                <!-- 修改职位 -->
                 <n-button :disabled="checkList.length === 0" @click="showChangePostModal">修改职位</n-button>
-                <!-- 删除职位 -->
                 <n-button type="primary" @click="removePost">删除职位</n-button>
               </div>
             </div>
@@ -96,7 +85,7 @@
               <user-empty />
               <p class="mt-3 text-sm text-gray-400">该职位暂未添加员工数据</p>
               <div class="mt-4">
-                <n-button>+添加员工</n-button>
+                <n-button @click="showAddUserModal">+添加员工</n-button>
               </div>
             </div>
             <div v-else class="mt-5 space-y-2">
@@ -145,7 +134,7 @@
         </n-spin>
       </div>
     </div>
-  </div>
+  </base-card>
   <!-- 1，新增/编辑职位 -->
   <create-post-modal ref="createPostRef" @refresh="postRefresh" />
   <!-- 2，修改职位 -->
@@ -158,12 +147,13 @@
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
 import { default as SearchIcon } from "@vicons/ionicons5/search"
-import { renderPrefix } from '/src/until/index.js'
+import { renderPrefix } from '/src/until/render.js'
 import { useDialog, useMessage } from 'naive-ui'
 
-const clientHeight = ref(document.documentElement.clientHeight)
 const message = useMessage()
 const dialog = useDialog()
+const clientHeight = ref(document.documentElement.clientHeight)
+const showPageLoading = ref(true)
 
 // 获取职位
 const postList = ref([])
@@ -171,7 +161,7 @@ const postPattern = ref('')
 const getPostList = function() {
   api.get('/position/getCompanyPositionList').then((res) => {
     if(res.data.code === 20000) postList.value = res.data.data
-    postList.value.forEach(item => item.prefix = renderPrefix('post'))
+    setTimeout(() => showPageLoading.value = false, 150)
   })
 }
 getPostList()
@@ -191,10 +181,12 @@ const postRefresh = function(type, name) {
 
 // 点击左侧职位
 const handleUpdateValue = function (keys, option) {
-  rightData.postId = option[0].id
-  rightData.roleName = option[0].roleName     // 获取部门名
-  rightData.showEmpty = false                 // 关闭空状态
-  getUserList(option[0].id)                   // 获取成员列表
+  if(keys.length > 0) {
+    rightData.postId = option[0].id
+    rightData.roleName = option[0].roleName     // 获取部门名
+    rightData.showEmpty = false                 // 关闭空状态
+    getUserList(option[0].id)                   // 获取成员列表
+  }
 }
 
 // 删除职位
@@ -292,14 +284,3 @@ const confirmAddUser = function(select) {
   })
 }
 </script>
-
-<style>
-.n-checkbox {
-  @apply items-center
-}
-
-.n-card>.n-card__content,
-.n-card>.n-card__footer {
-  @apply p-0
-}
-</style>

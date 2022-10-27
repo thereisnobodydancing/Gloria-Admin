@@ -24,9 +24,7 @@ http.interceptors.request.use(
 http.interceptors.response.use(
   res => {
     if(res.data.code === 30000) {
-      if(window.sessionStorage.getItem("token")) {
-        window.sessionStorage.removeItem("token")
-      }
+      window.sessionStorage.removeItem("token")
       alert('登录超时，请重新登录')
       router.push('/login')
       location.reload()

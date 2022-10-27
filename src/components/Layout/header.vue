@@ -32,16 +32,17 @@
 import logoImg from '/src/assets/logo.png'
 import { NIcon } from "naive-ui"
 import { HomeOutline as HomeOutIcon, LogOutOutline as LogOutIcon } from "@vicons/ionicons5"
-import { useDialog } from 'naive-ui'
+import { useDialog, useMessage } from 'naive-ui'
 
 const router = useRouter()
 const dialog = useDialog()
+const message = useMessage()
 const user = JSON.parse(sessionStorage.getItem('user'))
 const renderIcon = function (icon) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
 const options = [
-  { label: '工作台', key: "HomeOut", icon: renderIcon(HomeOutIcon)},
+  { label: '首页', key: "HomeOut", icon: renderIcon(HomeOutIcon)},
   { label: '退出登录', key: "LogOut", icon: renderIcon(LogOutIcon) }
 ]
 // 退出登录
@@ -54,12 +55,13 @@ const LogOut = function() {
     onPositiveClick: () => {
       sessionStorage.removeItem('token')
       router.replace('/login')
-      alert('已成功退出登录')
+      message.success('已成功退出登录')
     },
     onNegativeClick: () => {}
   })
 }
 const handleSelect = function(key) {
+  if(key === 'HomeOut') router.push('/')
   if(key === 'LogOut') LogOut()
 }
 </script>

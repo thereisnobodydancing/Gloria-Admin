@@ -1,6 +1,6 @@
 <template>
   <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 120 120"
-    height="120px" width="120px">
+    :height="`${props.height}px`" :width="`${props.width}px`">
     <title>Blankpage_wdtzsvg</title>
     <defs>
       <linearGradient id="linearGradient-1" y2="14.1046042%" x2="68.6124427%" y1="16.5971959%" x1="34.8533808%">
@@ -106,3 +106,16 @@
     </g>
   </svg>
 </template>
+
+<script setup>
+const props = defineProps({
+  height: {
+    type: Number,
+    default: 120
+  },
+  width: {
+    type: Number,
+    default: 120
+  }
+})
+</script>

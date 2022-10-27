@@ -25,7 +25,7 @@
           label-width="90"
         >
         <n-form-item path="roleName" label="职位名称">
-          <n-input v-model:value="form.roleName" placeholder="请输入职位名称" clearable />
+          <n-input v-model:value="form.roleName" placeholder="请输入职位名称" clearable maxlength="10" show-count />
         </n-form-item>
           <n-form-item>
             <div class="w-full text-right">

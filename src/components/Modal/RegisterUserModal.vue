@@ -208,12 +208,13 @@ const getParentOptions = function(name) {
     if(res.data.code === 20000) parentOptions.value = res.data.data
   })
 }
-// const searchParent = function(name) {
-//   getParentOptions(name)
-// }
 const searchParent = debounce((name) => getParentOptions(name), 300, {
   leading: false,  // 延长开始后调用
 	trailing: true  // 延长结束前调用
+})
+
+onUnmounted(() => {
+  searchParent.cancel()
 })
 
 

@@ -53,13 +53,16 @@ html { overflow-y: overlay }
   @apply h-8 !important
 }
 .n-tree .n-tree-node {
-  @apply items-center
+  @apply items-center !important
 }
 .n-tree .n-tree-node.n-tree-node--disabled .n-tree-node-content {
-  @apply cursor-default text-gray-900
+  @apply cursor-default text-gray-900 !important
+}
+.n-checkbox {
+  @apply items-center !important
 }
 .n-card > .n-card__content, .n-card > .n-card__footer {
-  @apply p-0
+  @apply p-0 !important
 }
 input, button, select, textarea {
   outline: none !important

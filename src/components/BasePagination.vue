@@ -4,22 +4,27 @@
     class="w-full text-center relative"
     :style="{height: props.height + 'px'}"
   >
-    <slot v-if="localList.length > 0" :list="localList" />
+    <div 
+      v-if="localList.length > 0" 
+      :style="{height: props.height + 'px'}"
+    >
+      <slot :list="localList" />
+    </div>
     <div 
       v-if="localList.length === 0 && !loading"
       class="flex items-center justify-center"
-      :style="{height: props.height - 75 + 'px'}"
+      :style="{height: props.height + 'px'}"
     >
       <n-empty size="large" :description="description" />
     </div>
     <div 
       v-if="localList.length > 0"
-      class="bottom-0 z-50 px-7 py-4 w-full flex justify-end bg-white"
+      class="bottom-0 z-50 px-4 pb-4 pt-6 w-full flex justify-end bg-white/80"
       :class="props.useSticky ? 'sticky' : 'absolute'"
     >
-      <n-pagination 
-        v-model:page="currentPage" 
-        :page-count="Math.ceil(total/props.size)" 
+      <n-pagination
+        v-model:page="currentPage"
+        :page-count="Math.ceil(total/props.size)"
         @update:page="handleCurrentChange"
       />
     </div>
@@ -27,8 +32,8 @@
 </template>
 
 <script setup>
-import { pickBy } from 'lodash'
 import api from '/src/api/index.js'
+import { pickBy } from 'lodash'
 
 const  props = defineProps({
   height: {

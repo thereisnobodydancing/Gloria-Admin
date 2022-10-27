@@ -1,11 +1,11 @@
-// 批量修改职位
+<!-- 修改职位 -->
 <template>
   <n-modal
     v-model:show="modal.show"
     :mask-closable="false"
   >
     <n-card
-      :title="modal.type === 'create' ? '新增职位' : '编辑职位'"
+      title="修改职位"
       :bordered="false"
       size="huge"
       role="dialog"

@@ -1,14 +1,9 @@
 <template>
-  <div class="w-full h-full bg-white rounded shadow flex flex-col">
-    <!-- title -->
-    <div class="flex-shrink-0 w-full h-16 border-b px-6">
-      <h2 class="text-lg leading-[4rem]">成员与部门</h2>
-    </div>
-    <!-- body -->
-    <div class="flex-grow w-full h-full flex">
+  <base-card title="成员与部门" :loading="showPageLoading">
+    <div class="w-full h-full flex">
       <!-- 左侧：部门列表 -->
       <div class="flex-shrink-0 w-64 h-full border-r relative">
-        <div 
+        <div
           class="w-full overflow-y-scroll pl-2 pr-1" 
           :style="{ height: `${clientHeight - 225}px` }"
         >
@@ -75,17 +70,12 @@
               <!-- search -->
               <div class="w-72">
                 <n-input placeholder="搜索" clearable>
-                  <template #prefix>
-                    <n-icon :component="SearchIcon" />
-                  </template>
+                  <template #prefix><n-icon :component="SearchIcon" /></template>
                 </n-input>
               </div>
               <div class="ml-auto space-x-2">
-                <!-- 添加员工 -->
                 <n-button @click="addUser('create', '')">添加员工</n-button>
-                <!-- 移除员工 -->
                 <n-button :disabled="checkList.length === 0" @click="showChangeSectorModal">变更部门</n-button>
-                <!-- 删除部门 -->
                 <n-button type="primary" @click="deleteSector">删除部门</n-button>
               </div>
             </div>
@@ -124,13 +114,10 @@
                       v-for="(item, index) in userList" 
                       :key="index"
                       class="w-full h-14 px-4 rounded group flex items-center"
-                      :class="[
-                        item.userState === true ? 'cursor-pointer hover:bg-gray-100' : 'cursor-not-allowed',
-                        { 
-                          'bg-gray-50': item.position.isTop && !item.position.isSectorHead, 
-                          'bg-red-50 hover:bg-primary/10': item.position.isSectorHead
-                        }
-                      ]"
+                      :class="[item.userState === true ? 'cursor-pointer hover:bg-gray-100' : 'cursor-not-allowed',{ 
+                        'bg-gray-50': item.position.isTop && !item.position.isSectorHead, 
+                        'bg-red-50 hover:bg-primary/10': item.position.isSectorHead
+                      }]"
                     >
                       <n-checkbox 
                         :value="item.id" 
@@ -158,8 +145,10 @@
                           </div>
                         </div>
                       </n-checkbox>
-                      <div v-if="item.userState === true" class="ml-auto hidden group-hover:flex items-center text-sm">
-                        <!-- 修改员工信息 -->
+                      <div 
+                        v-if="item.userState === true" 
+                        class="ml-auto hidden group-hover:flex items-center text-sm"
+                      >
                         <!-- 置顶 -->
                         <button 
                           v-if="!item.position.isSectorHead" 
@@ -217,7 +206,7 @@
         </n-spin>
       </div>
     </div>
-  </div>
+  </base-card>
   <!-- 创建部门/编辑部门 -->
   <create-sector-modal ref="createSectorRef" @refresh="sectorRefresh" />
   <!-- 变更部门 -->
@@ -226,19 +215,17 @@
   <register-user-modal ref="addUserRef" @refresh="getUserList(rightData.sectorId)" />
 </template>
 
-
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
 import { default as SearchIcon } from "@vicons/ionicons5/search"
-import { renderPrefix } from '/src/until/index.js'
+import { renderPrefix } from '/src/until/render.js'
 import { useDialog, useMessage } from 'naive-ui'
 
 const message = useMessage()
 const dialog = useDialog()
-// const user = JSON.parse(sessionStorage.getItem('user'))
+const showPageLoading = ref(true)
 const clientHeight = ref(document.documentElement.clientHeight)
-
 
 /***** 左侧——侧边栏部门列表 *****/
 const sectorList = ref([])
@@ -248,28 +235,27 @@ const getSectorList = function () {
   api.get('/addressBook/structure/getSectorList').then((res) => {
     if (res.data.code === 20000 && res.data.data.length > 0) {
       sectorList.value = res.data.data
-      setIcon(sectorList.value, 1)
+      setPrefix(sectorList.value, 1)
     }
+    setTimeout(() => showPageLoading.value = false, 100)
   })
 }
 getSectorList()
 // 为左侧部门列表渲染icon
-const setIcon = function (list, leave) {
-  list.forEach((item, index) => {
-    if (item.list && item.list.length > 0) {
-      item.prefix = leave === 1 ? renderPrefix('sector') : renderPrefix('sector_sub')
-      setIcon(item.list, leave + 1)
-    } else {
-      item.prefix = leave === 1 ? renderPrefix('sector') : renderPrefix('sector_sub')
-    }
+const setPrefix = function (list, leave) {
+  list.forEach(item => {
+    item.prefix = leave === 1 ? renderPrefix('sector') : renderPrefix('sector_sub')
+    if (item.list && item.list.length > 0) setPrefix(item.list, leave + 1)
   })
 }
 // 点击左侧部门
 const handleUpdateValue = function (keys, option) {
-  rightData.sectorId = option[0].sectorId
-  rightData.fullName = option[0].sectorName   // 获取部门名
-  rightData.showEmpty = false                 // 关闭空状态
-  getUserList(option[0].sectorId)             // 获取成员列表
+  if(keys.length > 0) {
+    rightData.sectorId = option[0].sectorId
+    rightData.fullName = option[0].sectorName   // 获取部门名
+    rightData.showEmpty = false                 // 关闭空状态
+    getUserList(option[0].sectorId)             // 获取成员列表
+  }
 }
 
 /***** 右侧——人员列表 *****/
@@ -384,7 +370,7 @@ const addUser = function (type, userId) {
 /****** 操作离职 ******/
 const deleteUser = function (id, name) {
   dialog.warning({
-    title: `你确定要将${name}的账号设为离职吗？`,
+    title: `你确定要将 “${name}” 的账号设为离职吗？`,
     content: '离职后，该帐号将无法访问',
     positiveText: '确定',
     negativeText: '不确定',
@@ -438,14 +424,3 @@ const move = function (id, direct) {
   })
 }
 </script>
-
-<style>
-.n-checkbox {
-  @apply items-center
-}
-
-.n-card>.n-card__content,
-.n-card>.n-card__footer {
-  @apply p-0
-}
-</style>
