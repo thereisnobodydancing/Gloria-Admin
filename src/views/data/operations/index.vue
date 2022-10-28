@@ -1,10 +1,9 @@
 <!-- 业务数据 -->
 <template>
-  <div>
-    业务数据
-  </div>
+  <base-card title="业务数据" :loading="showPageLoading">
+  </base-card>
 </template>
 
 <script setup>
-
+const showPageLoading = ref(false)
 </script>

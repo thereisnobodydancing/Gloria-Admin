@@ -1,6 +1,9 @@
 <!-- 行政数据 -->
 <template>
-  <div>
-    行政数据
-  </div>
+  <base-card title="行政数据" :loading="showPageLoading">
+  </base-card>
 </template>
+
+<script setup>
+const showPageLoading = ref(false)
+</script>

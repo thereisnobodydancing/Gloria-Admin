@@ -14,9 +14,10 @@
             :class="employeeInfo.headshot ? '' : 'py-2 bg-primary'"
           >
             <img v-if="employeeInfo.headshot" :src="employeeInfo.headshot" :alt="employeeInfo.userName" width="72" height="72" class="rounded-2xl">
-            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <div v-else class="text-center text-white text-3xl leading-[3.5rem]">{{ toNameAvatar(employeeInfo.userName) }}</div>
+            <!-- <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-14 w-14 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-            </svg>
+            </svg> -->
           </div>
           <div class="space-y-1.5">
             <p class="text-xl">{{ employeeInfo.userName }}</p>
@@ -37,7 +38,7 @@
               <span class="w-24 inline-block">联系方式：</span>{{ employeeInfo.mobile }}
             </p>
             <!-- 职位 -->
-            <p v-if="employeeInfo.role">
+            <p v-if="employeeInfo.roleName">
               <span class="w-24 inline-block">职位：</span>{{ employeeInfo.roleName }}
             </p>
             <!-- 所属部门 -->
@@ -61,6 +62,8 @@
 
 <script setup>
 import api from '/src/api/index.js'
+import { toNameAvatar } from '/src/until/index.js'
+
 const showModal = ref(false)
 const employeeInfo = ref({})
 const showCard = function(id) {

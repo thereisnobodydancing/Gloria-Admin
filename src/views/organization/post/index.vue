@@ -36,7 +36,7 @@
           </n-tree>
         </div>
         <div class="sticky bottom-0 w-full p-4 bg-white z-20 rounded">
-          <n-button type="primary" size="large" block @click="showPostModal('create')">新增职位</n-button>
+          <n-button type="primary" ghost size="large" block @click="showPostModal('create')">新增职位</n-button>
         </div>
       </div>
       <!-- 右侧：该职位下的成员 -->
@@ -56,13 +56,14 @@
         <n-spin v-else :show=rightData.showLoading>
           <div class="px-8 py-4">
             <div class="flex items-center">
-              <h3 class="text-xl font-bold mr-4">{{ rightData.roleName }}</h3>
-              <button class="flex items-center text-gray-500 hover:text-primary text-sm" @click="showPostModal('edit', rightData.roleName, rightData.postId)">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                </svg>
-                <span class="ml-0.5">编辑职位</span>
-              </button>
+              <h3 class="text-lg mr-2">{{ rightData.roleName }}</h3>
+              <n-dropdown :options="rightData.sectorOptions" placement="bottom-end" trigger="click" @select="SectorSelect">
+                <n-button quaternary size="small">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                  </svg>
+                </n-button>
+              </n-dropdown>
             </div>
             <div class="mt-4 flex items-center">
               <!-- search -->
@@ -73,8 +74,14 @@
               </div>
               <div class="ml-auto space-x-2">
                 <n-button @click="showAddUserModal">添加员工</n-button>
-                <n-button :disabled="checkList.length === 0" @click="showChangePostModal">修改职位</n-button>
-                <n-button type="primary" @click="removePost">删除职位</n-button>
+                <n-button 
+                  :disabled="checkList.length === 0" 
+                  :type="checkList.length === 0 ? 'default' : 'primary'" 
+                  ghost 
+                  @click="showChangePostModal"
+                >
+                  变更职位
+                </n-button>
               </div>
             </div>
             <div 
@@ -89,47 +96,45 @@
               </div>
             </div>
             <div v-else class="mt-5 space-y-2">
-          <div class="w-full h-10 rounded bg-gray-100 flex items-center px-4">
-            <n-checkbox 
-              v-model:checked="checked.state"
-              :indeterminate="checked.indeterminate"
-              class="w-full"
-              @update:checked="checkAll"
-            >
-              已选{{ checkList.length }}个
-            </n-checkbox>
-          </div>
-          <div 
-            class="overflow-y-scroll overflow-x-hidden" 
-            :style="{ height: `${clientHeight - 330}px` }"
-          >
-            <n-checkbox-group 
-              v-model:value="checkList"
-              @update:value="changeCheckbox"
-            >
-              <n-checkbox
-                v-for="(item, index) in userList" 
-                :key="index"
-                :value="item.id"
-                :default-checked="item.checkout"
-                class="w-full h-14 px-4 rounded flex items-center cursor-pointer group hover:bg-gray-100"
+              <div class="w-full h-10 rounded bg-gray-100 flex items-center px-4">
+                <n-checkbox 
+                  v-model:checked="checked.state"
+                  :indeterminate="checked.indeterminate"
+                  class="w-full"
+                  @update:checked="checkAll"
+                >
+                  已选{{ checkList.length }}人（共{{ userList.length }}人）
+                </n-checkbox>
+              </div>
+              <div 
+                class="overflow-y-scroll overflow-x-hidden" 
+                :style="{ height: `${clientHeight - 330}px` }"
               >
-                <div class="flex items-center">
-                  <div 
-                    class="ml-4 flex-shrink-0 w-10 h-10 rounded-md "
-                    :class="item.headshot ? '' : 'bg-primary py-1.5'"
+                <n-checkbox-group 
+                  v-model:value="checkList"
+                  @update:value="changeCheckbox"
+                >
+                  <n-checkbox
+                    v-for="(item, index) in userList" 
+                    :key="index"
+                    :value="item.id"
+                    :default-checked="item.checkout"
+                    class="w-full h-14 px-4 flex items-center cursor-pointer group border-b border-b-gray-100 hover:bg-gray-100"
                   >
-                    <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
-                    <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                    </svg>
-                  </div>
-                  <p class="ml-4 font-bold text-base text-left">{{ item.userName }}</p>
-                </div>
-              </n-checkbox>
-            </n-checkbox-group>
-          </div>
-        </div>
+                    <div class="ml-4 flex items-center space-x-2.5" @click.stop="showCard(item.id)">
+                      <div 
+                        class="flex-shrink-0 w-10 h-10 rounded-md"
+                        :class="item.headshot ? '' : 'bg-primary py-1.5'"
+                      >
+                        <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
+                        <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
+                      </div>
+                      <p class="text-base text-left">{{ item.userName }}</p>
+                    </div>
+                  </n-checkbox>
+                </n-checkbox-group>
+              </div>
+            </div>
           </div>
         </n-spin>
       </div>
@@ -141,13 +146,18 @@
   <change-post-modal ref="changePostRef" @refresh="refreshUserModal" />
   <!-- 3、添加员工 -->
   <add-user-modal ref="addUserRef" @confirm="confirmAddUser" />
+  <!-- 名片 -->
+  <business-card-modal ref="cardRef" />
 </template>
 
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
 import { default as SearchIcon } from "@vicons/ionicons5/search"
-import { renderPrefix } from '/src/until/render.js'
+import { default as EditIcon } from "@vicons/ionicons5/Pencil"
+import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
+import { toNameAvatar } from '/src/until/index.js'
+import { renderPrefix, renderIcon } from '/src/until/render.js'
 import { useDialog, useMessage } from 'naive-ui'
 
 const message = useMessage()
@@ -215,7 +225,11 @@ const rightData = reactive({
   showLoading: false,
   showEmpty: true,
   roleName: '',
-  postId: ''
+  postId: '',
+  sectorOptions: [
+    {label: '编辑职位', key: 'edit', icon: renderIcon(EditIcon)}, 
+    {label: '删除职位', key: 'remove', icon: renderIcon(TrashIcon)}
+  ]
 })
 const userList = ref([])
 // 根据职位id获取人员列表
@@ -226,7 +240,14 @@ const getUserList = function(id) {
     setTimeout(() => rightData.showLoading = false, 100)
   })
 }
-// 选择器相关
+
+// 下拉菜单
+const SectorSelect = function(key) {
+  if(key === 'edit')  showPostModal('edit', rightData.roleName, rightData.postId)
+  if(key === 'remove') removePost()
+}
+
+/***** 选择器相关 *****/
 const checked = reactive({
   state: false,
   indeterminate: false
@@ -282,5 +303,11 @@ const confirmAddUser = function(select) {
     if(res.data.code !== 20000) message.warning(res.data.msg)
     refreshUserModal()
   })
+}
+
+/******** 名片 ********/
+const cardRef = ref()
+const showCard = function(id) {
+  cardRef.value.showCard(id)
 }
 </script>

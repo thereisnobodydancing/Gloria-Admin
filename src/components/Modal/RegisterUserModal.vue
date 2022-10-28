@@ -52,7 +52,7 @@
         </n-form-item>
         <!-- 手机号（必填） -->
         <n-form-item path="mobile" label="手机号">
-          <n-input v-model:value="form.mobile" placeholder="请输入手机号" maxlength="11" clearable />
+          <n-input v-model:value="form.mobile" type="number" placeholder="请输入手机号" maxlength="11" clearable />
         </n-form-item>
         <!-- 上级领导 -->
         <n-form-item path="parentId" label="上级领导">
@@ -161,7 +161,7 @@ const rules = {
   userName: [{required: true, message: "姓名不能为空"}],
   role: [{required: true, message: '职位不能为空'}],
   mobile: [
-    {required: true, message: "手机号不能为空"},
+    { required: true, message: "手机号不能为空" },
     { validator: checkMobile, min: 11, max: 11, message: "手机号格式错误" }
   ],
   landlineNumber: [{required: false}],

@@ -1,4 +1,13 @@
 import { h } from "vue"
+import { NIcon } from "naive-ui"
+
+export const renderIcon = (icon) => {
+  return () => {
+    return h(NIcon, null, {
+      default: () => h(icon)
+    })
+  }
+}
 
 export const renderPrefix = function (type) {
   // 部门
@@ -71,7 +80,7 @@ export const renderPrefix = function (type) {
         xmlns: 'http://www.w3.org/2000/svg',
         fill: 'currentColor',
         viewBox: '0 0 24 24',
-        class: 'w-4 h-4 text-white/70'
+        class: 'w-4 h-4 text-white/80'
       }, [
         h('path', {
           clipRule: 'evenodd',

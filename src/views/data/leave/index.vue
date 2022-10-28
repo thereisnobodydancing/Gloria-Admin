@@ -1,10 +1,9 @@
 <!-- 假勤数据 -->
 <template>
-  <div>
-    假勤数据
-  </div>
+  <base-card title="假勤数据" :loading="showPageLoading">
+  </base-card>
 </template>
 
 <script setup>
-
+const showPageLoading = ref(false)
 </script>

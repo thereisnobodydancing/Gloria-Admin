@@ -3,7 +3,7 @@
     <n-spin :show="props.loading">
       <!-- title -->
       <div class="flex-shrink-0 w-full h-16 border-b px-6 flex items-center">
-        <h2 class="flex-shrink-0 text-lg leading-[4rem]">{{ props.title }}</h2>
+        <h2 class="flex-shrink-0 text-lg font-bold text-gray-900/70 leading-[4rem]">{{ props.title }}</h2>
         <slot name="title-right"></slot>
       </div>
       <!-- body -->

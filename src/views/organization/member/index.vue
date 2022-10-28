@@ -36,7 +36,7 @@
           </n-tree>
         </div>
         <div class="sticky bottom-0 w-full p-4 bg-white z-20 rounded">
-          <n-button type="primary" size="large" block @click="showCreateSectorModal('create')">新建部门</n-button>
+          <n-button type="primary" ghost size="large" block @click="showCreateSectorModal('create')">新建部门</n-button>
         </div>
       </div>
       <!-- 右侧：成员列表 -->
@@ -55,16 +55,14 @@
         <n-spin v-else :show=rightData.showLoading>
           <div class="px-8 py-4">
             <div class="flex items-center">
-              <h3 class="text-xl font-bold mr-4">{{ rightData.fullName }}</h3>
-              <button 
-                class="flex items-center text-gray-500 hover:text-primary text-sm"
-                @click="showCreateSectorModal('edit')"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0115.75 21H5.25A2.25 2.25 0 013 18.75V8.25A2.25 2.25 0 015.25 6H10" />
-                </svg>
-                <span class="ml-0.5">编辑部门</span>
-              </button>
+              <h3 class="text-lg mr-2">{{ rightData.fullName }}</h3>
+              <n-dropdown :options="rightData.sectorOptions" placement="bottom-end" trigger="click" @select="SectorSelect">
+                <n-button quaternary size="small">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                    <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
+                  </svg>
+                </n-button>
+              </n-dropdown>
             </div>
             <div class="mt-4 flex items-center">
               <!-- search -->
@@ -75,8 +73,14 @@
               </div>
               <div class="ml-auto space-x-2">
                 <n-button @click="addUser('create', '')">添加员工</n-button>
-                <n-button :disabled="checkList.length === 0" @click="showChangeSectorModal">变更部门</n-button>
-                <n-button type="primary" @click="deleteSector">删除部门</n-button>
+                <n-button 
+                  :disabled="checkList.length === 0" 
+                  :type="checkList.length === 0 ? 'default' : 'primary'" 
+                  ghost 
+                  @click="showChangeSectorModal"
+                >
+                  变更部门
+                </n-button>
               </div>
             </div>
             <div 
@@ -100,7 +104,7 @@
                     class="flex-grow" 
                     @update:checked="checkAll"
                   >
-                    已选{{ checkList.length }}个
+                    已选{{ checkList.length }}人（共{{ userList.length }}人）
                   </n-checkbox>
                   <div class="ml-auto flex-shrink-0 p-2">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -113,29 +117,32 @@
                     <div 
                       v-for="(item, index) in userList" 
                       :key="index"
-                      class="w-full h-14 px-4 rounded group flex items-center"
-                      :class="[item.userState === true ? 'cursor-pointer hover:bg-gray-100' : 'cursor-not-allowed',{ 
+                      class="w-full h-14 px-4 group flex items-center border-b border-gray-100"
+                      :class="[item.userState === true ? 'cursor-default hover:bg-gray-100' : 'cursor-not-allowed',{ 
                         'bg-gray-50': item.position.isTop && !item.position.isSectorHead, 
                         'bg-red-50 hover:bg-primary/10': item.position.isSectorHead
                       }]"
                     >
+                      <!-- 1-勾选框 -->
                       <n-checkbox 
                         :value="item.id" 
                         :default-checked="item.checkout" 
                         :disabled="!item.userState"
                         class="flex-grow flex items-center"
                       >
-                        <div class="w-full flex items-center">
+                        <!-- 2-信息区 -->
+                        <div 
+                          class="ml-4 flex items-center space-x-2.5 cursor-pointer"
+                          @click.stop="showCard(item.id)"
+                        >
                           <div 
-                            class="ml-4 flex-shrink-0 w-10 h-10 rounded-md "
+                            class="flex-shrink-0 w-10 h-10 rounded-md"
                             :class="item.headshot ? '' : 'bg-primary py-1.5'"
                           >
                             <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
-                            <svg v-else xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 mx-auto text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                              <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
+                            <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
                           </div>
-                          <div class="ml-4">
+                          <div>
                             <div class="flex items-center">
                               <p class="text-base min-w-[40px]">{{ item.userName }}</p>
                               <button v-if="item.position.isSectorHead" class="ml-4 px-1.5 text-white text-xs bg-primary leading-5 rounded">部门负责人</button>
@@ -145,58 +152,25 @@
                           </div>
                         </div>
                       </n-checkbox>
-                      <div 
+                      <!-- 3-操作区 -->
+                      <n-dropdown 
                         v-if="item.userState === true" 
-                        class="ml-auto hidden group-hover:flex items-center text-sm"
+                        trigger="click"
+                        placement="bottom-end" 
+                        :options="userOptions(item)" 
+                        class="ml-auto"
+                        @select="userSelect"
                       >
-                        <!-- 置顶 -->
                         <button 
-                          v-if="!item.position.isSectorHead" 
-                          :disabled="settingTopDisabled"
-                          class="h-8 rounded hover:bg-gray-200 disabled:text-gray-400"
-                          :class="item.position.isTop ? 'w-16' : 'w-12'"
-                          @click="settingTop(item.id, item.position.isTop)"
+                          class="pl-3 pr-1.5 h-8 rounded flex items-center text-sm text-gray-600"
+                          :class="item.position.isSectorHead ? 'hover:bg-gray-400/20' : 'hover:bg-gray-200'"
                         >
-                          {{ item.position.isTop ? '取消置顶' : '置顶' }}
+                          <span>更多</span>
+                          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                            <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
+                          </svg>
                         </button>
-                        <!-- 上移 -->
-                        <n-tooltip v-if="item.position.up && !item.position.isSectorHead" placement="top-start" trigger="hover">
-                          <template #trigger>
-                            <button :disabled="moveDisabled" class="w-8 h-8 rounded hover:bg-gray-200" @click="move(item.id, 'up')">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mx-auto">
-                                <path fill-rule="evenodd" d="M14.77 12.79a.75.75 0 01-1.06-.02L10 8.832 6.29 12.77a.75.75 0 11-1.08-1.04l4.25-4.5a.75.75 0 011.08 0l4.25 4.5a.75.75 0 01-.02 1.06z" clip-rule="evenodd" />
-                              </svg>
-                            </button>
-                          </template>
-                          上移
-                        </n-tooltip>
-                        <!-- 下移 -->
-                        <n-tooltip v-if="item.position.down && !item.position.isSectorHead" placement="top-start" trigger="hover">
-                          <template #trigger>
-                            <button :disabled="moveDisabled" class="w-8 h-8 rounded hover:bg-gray-200" @click="move(item.id, 'down')">
-                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5 mx-auto">
-                                <path fill-rule="evenodd" d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z" clip-rule="evenodd" />
-                              </svg>
-                            </button>
-                          </template>
-                          下移
-                        </n-tooltip>
-                        <button 
-                          class="w-16 h-8 rounded"
-                          :class="item.position.isSectorHead ? 'text-black hover:bg-gray-400/20' : 'hover:bg-gray-200'"
-                          @click="addUser('edit', item.id)"
-                        >
-                          编辑
-                        </button>
-                        <!-- 操作离职 -->
-                        <button 
-                          class="w-20 h-8 rounded text-primary"
-                          :class="item.position.isSectorHead ? 'hover:bg-primary/10' : 'hover:bg-red-100'"
-                          @click="deleteUser(item.id, item.userName)"
-                        >
-                          操作离职
-                        </button>
-                      </div>
+                      </n-dropdown>
                     </div>
                   </n-checkbox-group>
                 </div>
@@ -213,13 +187,18 @@
   <change-sector-modal ref="changeSectorRef" @refresh="getUserList(rightData.sectorId)" />
   <!-- 添加员工/编辑员工 -->
   <register-user-modal ref="addUserRef" @refresh="getUserList(rightData.sectorId)" />
+  <!-- 名片 -->
+  <business-card-modal ref="cardRef" />
 </template>
 
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
 import { default as SearchIcon } from "@vicons/ionicons5/search"
-import { renderPrefix } from '/src/until/render.js'
+import { default as EditIcon } from "@vicons/ionicons5/Pencil"
+import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
+import { toNameAvatar } from '/src/until/index.js'
+import { renderPrefix, renderIcon } from '/src/until/render.js'
 import { useDialog, useMessage } from 'naive-ui'
 
 const message = useMessage()
@@ -264,6 +243,10 @@ const rightData = reactive({
   showEmpty: true,
   sectorId: '',
   fullName: '',
+  sectorOptions: [
+    {label: '编辑部门', key: 'edit', icon: renderIcon(EditIcon)}, 
+    {label: '删除部门', key: 'remove', icon: renderIcon(TrashIcon)}
+  ]
 })
 const userList = ref([])
 const getUserList = function (id) {
@@ -275,6 +258,31 @@ const getUserList = function (id) {
     checkList.value = []
     setTimeout(() => rightData.showLoading = false, 100)
   })
+}
+
+// 下拉菜单
+const SectorSelect = function(key) {
+  if(key === 'edit') showCreateSectorModal('edit')
+  if(key === 'remove') deleteSector()
+}
+
+// 人员操作区
+const userOptions = function({id, userName, position}) {
+  return [
+    {label: '编辑员工', key: 'edit', props: {id, userName, position}, show: true}, 
+    {label: '操作离职', key: 'remove', props: {id, userName, position}, show: true},
+    {label: '上移', key: 'up', props: {id, userName, position}, show: Boolean(!position.isSectorHead && position.up)},
+    {label: '下移', key: 'down', props: {id, userName, position}, show: Boolean(!position.isSectorHead && position.down)},
+    {label: '取消置顶', key: 'cancelTop', props: {id, userName, position}, show: Boolean(!position.isSectorHead && position.isTop)},
+    {label: '置顶', key: 'toTop', props: {id, userName, position}, show: Boolean(!position.isSectorHead && !position.isTop)}
+  ]
+}
+const userSelect = function(key, option) {
+  console.log(key, option)
+  if(key === 'edit') addUser('edit', option.props.id)
+  if(key === 'remove') deleteUser(option.props.id, option.props.userName)
+  if(key === 'up' || key === 'down') move(option.props.id, key)
+  if(key === 'cancelTop' || key === 'toTop') settingTop(option.props.id, option.props.position.isTop)
 }
 
 /*** 选择器相关 ***/
@@ -422,5 +430,11 @@ const move = function (id, direct) {
     getUserList(rightData.sectorId)
     setTimeout(() => moveDisabled.value = false, 200)
   })
+}
+
+/******** 名片 ********/
+const cardRef = ref()
+const showCard = function(id) {
+  cardRef.value.showCard(id)
 }
 </script>

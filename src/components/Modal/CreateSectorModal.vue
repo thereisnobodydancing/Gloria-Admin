@@ -25,7 +25,7 @@
       >
         <!-- 部门名称(必填) -->
         <n-form-item path="sectorName" label="部门名称">
-          <n-input v-model:value="form.sectorName" placeholder="请输入部门名称" clearable />
+          <n-input v-model:value="form.sectorName" placeholder="请输入部门名称" clearable maxlength="12" show-count />
         </n-form-item>
         <!-- 部门负责人 -->
         <n-form-item path="sectorHead" label="部门负责人">
