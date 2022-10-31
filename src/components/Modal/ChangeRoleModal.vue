@@ -1,11 +1,11 @@
-<!-- 变更职位 -->
+<!-- 变更角色 -->
 <template>
   <n-modal
     v-model:show="modal.show"
     :mask-closable="false"
   >
     <n-card
-      title="修改职位"
+      title="变更角色"
       :bordered="false"
       size="huge"
       role="dialog"

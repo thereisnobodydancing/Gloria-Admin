@@ -49,6 +49,8 @@
       </div>
     </div>
   </base-card>
+  <!-- 离职提示 -->
+  <dimission-dialog-modal ref="dimissionDialogRef" @refresh="showTableLoading = true && getAccountList()" />
 </template>
 
 
@@ -180,24 +182,26 @@ const changeAccountState = function(id) {
 }
 
 // 删除账号
+const dimissionDialogRef = ref()
 const removeAccount = function(row) {
-  dialog.warning({
-    title: `你确定要删除 “${row.userName}” 的账号吗？`,
-    content: '删除后，该帐号将无法访问',
-    positiveText: '确定',
-    negativeText: '不确定',
-    onPositiveClick: () => {
-      api.put('/userManage/deleteUser', { userId: row.id }, false, false).then((res) => {
-        if (res.data.code === 20000) {
-          showTableLoading.value = true
-          message.success('删除成功')
-          getAccountList()
-        }
-        if (res.data.code !== 20000) message.warning(res.data.msg)
-      })
-    },
-    onNegativeClick: () => { }
-  })
+  dimissionDialogRef.value.showModal(row.id, row.userName)
+  // dialog.warning({
+  //   title: `你确定要删除 “${row.userName}” 的账号吗？`,
+  //   content: '删除后，该帐号将无法访问',
+  //   positiveText: '确定',
+  //   negativeText: '不确定',
+  //   onPositiveClick: () => {
+  //     api.put('/userManage/deleteUser', { userId: row.id }, false, false).then((res) => {
+  //       if (res.data.code === 20000) {
+  //         showTableLoading.value = true
+  //         message.success('删除成功')
+  //         getAccountList()
+  //       }
+  //       if (res.data.code !== 20000) message.warning(res.data.msg)
+  //     })
+  //   },
+  //   onNegativeClick: () => { }
+  // })
 }
 </script>
 

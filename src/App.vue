@@ -46,7 +46,7 @@ onUnmounted(() => {
 <style>
 html { overflow-y: overlay }
 
-::-webkit-scrollbar { @apply w-1.5 }
+::-webkit-scrollbar { @apply w-1.5 h-2 }
 ::-webkit-scrollbar-thumb { @apply bg-gray-300 w-2 rounded-lg cursor-pointer }
 
 .n-tree-node-content {

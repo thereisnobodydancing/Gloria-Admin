@@ -25,7 +25,7 @@
       >
         <!-- 姓名(必填) -->
         <n-form-item path="userName" label="姓名">
-          <n-input v-model:value="form.userName" placeholder="请输入姓名" clearable />
+          <n-input v-model:value="form.userName" placeholder="请输入姓名" clearable maxlength="5" show-count />
         </n-form-item>
          <!-- 职位(必选) -->
         <n-form-item path="role" label="职位">
@@ -52,7 +52,7 @@
         </n-form-item>
         <!-- 手机号（必填） -->
         <n-form-item path="mobile" label="手机号">
-          <n-input v-model:value="form.mobile" type="number" placeholder="请输入手机号" maxlength="11" clearable />
+          <n-input v-model:value="form.mobile" placeholder="请输入手机号" maxlength="11" clearable />
         </n-form-item>
         <!-- 上级领导 -->
         <n-form-item path="parentId" label="上级领导">

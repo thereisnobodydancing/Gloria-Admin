@@ -57,7 +57,7 @@
           <div class="px-8 py-4">
             <div class="flex items-center">
               <h3 class="text-lg mr-2">{{ rightData.roleName }}</h3>
-              <n-dropdown :options="rightData.sectorOptions" placement="bottom-end" trigger="click" @select="SectorSelect">
+              <n-dropdown :options="rightData.sectorOptions" placement="bottom-end" @select="SectorSelect">
                 <n-button quaternary size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                     <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
@@ -68,7 +68,7 @@
             <div class="mt-4 flex items-center">
               <!-- search -->
               <div class="w-72">
-                <n-input placeholder="搜索" clearable>
+                <n-input v-model:value="searchValue" placeholder="搜索" clearable @update:value="toSearch">
                   <template #prefix><n-icon :component="SearchIcon" /></template>
                 </n-input>
               </div>
@@ -89,9 +89,10 @@
               class="w-full flex flex-col items-center justify-center"
               :style="{ height: `${clientHeight - 330}px` }"
             >
-              <user-empty />
-              <p class="mt-3 text-sm text-gray-400">该职位暂未添加员工数据</p>
-              <div class="mt-4">
+              <user-empty v-if="searchValue.length === 0" />
+              <search-empty v-else :width="250" :height="250" />
+              <p class="mt-3 text-sm text-gray-400">{{ searchValue.length === 0 ? '该部门暂未添加员工数据' : '啥也没搜到' }}</p>
+              <div v-if="searchValue.length === 0" class="mt-4">
                 <n-button @click="showAddUserModal">+添加员工</n-button>
               </div>
             </div>
@@ -118,18 +119,31 @@
                     v-for="(item, index) in userList" 
                     :key="index"
                     :value="item.id"
+                    :disabled="!item.userState"
                     :default-checked="item.checkout"
-                    class="w-full h-14 px-4 flex items-center cursor-pointer group border-b border-b-gray-100 hover:bg-gray-100"
+                    class="w-full h-14 px-4 flex items-center group border-b border-b-gray-100 hover:bg-gray-100"
                   >
-                    <div class="ml-4 flex items-center space-x-2.5" @click.stop="showCard(item.id)">
+                    <div 
+                      class="ml-4 flex items-center cursor-pointer" 
+                      @click.stop="showCard(item.id)"
+                    >
                       <div 
                         class="flex-shrink-0 w-10 h-10 rounded-md"
-                        :class="item.headshot ? '' : 'bg-primary py-1.5'"
+                        :class="{
+                          'bg-primary py-1.5': !item.headshot,
+                          'opacity-60': !item.userState
+                        }"
                       >
                         <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
                         <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
                       </div>
-                      <p class="text-base text-left">{{ item.userName }}</p>
+                      <p class="ml-2.5 text-base text-left">{{ item.userName }}</p>
+                      <button 
+                        v-if="!item.userState" 
+                        class="ml-4 px-1.5 text-white text-xs bg-gray-400/70 leading-5 rounded"
+                      >
+                        已停用
+                      </button>
                     </div>
                   </n-checkbox>
                 </n-checkbox-group>
@@ -153,6 +167,7 @@
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
+import { debounce } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
 import { default as EditIcon } from "@vicons/ionicons5/Pencil"
 import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
@@ -192,6 +207,7 @@ const postRefresh = function(type, name) {
 // 点击左侧职位
 const handleUpdateValue = function (keys, option) {
   if(keys.length > 0) {
+    searchValue.value = ''
     rightData.postId = option[0].id
     rightData.roleName = option[0].roleName     // 获取部门名
     rightData.showEmpty = false                 // 关闭空状态
@@ -233,13 +249,23 @@ const rightData = reactive({
 })
 const userList = ref([])
 // 根据职位id获取人员列表
-const getUserList = function(id) {
+const getUserList = function(id, searchValue='') {
   rightData.showLoading = true
-  api.get('/position/getUserListByPositionId', {position: id}).then((res) => {
+  api.get('/position/getUserListByPositionId', {position: id, keyWord: searchValue}).then((res) => {
     userList.value = res.data.data
+    checked.disabled = res.data.data.filter(item => item.userState).length === 0
+    checked.indeterminate = checked.state = false
+    checkList.value = []
     setTimeout(() => rightData.showLoading = false, 100)
   })
 }
+
+// 搜索
+const searchValue = ref('')
+const toSearch = debounce((searchValue) => getUserList(rightData.postId, searchValue), 300, {
+  leading: false,  // 延长开始后调用
+	trailing: true  // 延长结束前调用
+})
 
 // 下拉菜单
 const SectorSelect = function(key) {
@@ -255,11 +281,13 @@ const checked = reactive({
 const checkList = ref([])
 // 全选、不全选
 const checkAll = function(isChecked) {
-  if(isChecked) {
+  checkList.value = []
+  if (isChecked) {
     checked.indeterminate = false
-    checkList.value = userList.value.map(item => item.id)
+    userList.value.forEach(item => {
+      if(item.userState) checkList.value.push(item.id) 
+    })
   }
-  if(!isChecked) checkList.value = []
 }
 // 子选项的变化
 const changeCheckbox = function(arr, meta) {

@@ -1,6 +1,6 @@
 <template>
   <svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" version="1.1" viewBox="0 0 120 120"
-    height="120px" width="120px">
+  :height="`${props.height}px`" :width="`${props.width}px`">
     <title>查询不到该企业</title>
     <defs>
       <linearGradient id="linearGradient-1" y2="100%" x2="50%" y1="0%" x1="50%">
@@ -105,3 +105,16 @@
     </g>
   </svg>
 </template>
+
+<script setup>
+const props = defineProps({
+  height: {
+    type: Number,
+    default: 120
+  },
+  width: {
+    type: Number,
+    default: 120
+  }
+})
+</script>

@@ -4,7 +4,7 @@
       <!-- 左侧：部门列表 -->
       <div class="flex-shrink-0 w-64 h-full border-r relative">
         <div
-          class="w-full overflow-y-scroll pl-2 pr-1" 
+          class="w-full overflow-y-scroll pl-2 pr-1"
           :style="{ height: `${clientHeight - 225}px` }"
         >
           <div class="px-1.5 pt-2 pb-3 sticky top-0 bg-white z-20">
@@ -55,8 +55,8 @@
         <n-spin v-else :show=rightData.showLoading>
           <div class="px-8 py-4">
             <div class="flex items-center">
-              <h3 class="text-lg mr-2">{{ rightData.fullName }}</h3>
-              <n-dropdown :options="rightData.sectorOptions" placement="bottom-end" trigger="click" @select="SectorSelect">
+              <h3 class="text-lg mr-2 cursor-default">{{ rightData.fullName }}</h3>
+              <n-dropdown :options="rightData.sectorOptions" placement="bottom-end"  @select="SectorSelect">
                 <n-button quaternary size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                     <path d="M10 3a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM10 8.5a1.5 1.5 0 110 3 1.5 1.5 0 010-3zM11.5 15.5a1.5 1.5 0 10-3 0 1.5 1.5 0 003 0z" />
@@ -67,7 +67,7 @@
             <div class="mt-4 flex items-center">
               <!-- search -->
               <div class="w-72">
-                <n-input placeholder="搜索" clearable>
+                <n-input v-model:value="searchValue" placeholder="搜索" clearable @update:value="toSearch">
                   <template #prefix><n-icon :component="SearchIcon" /></template>
                 </n-input>
               </div>
@@ -88,9 +88,10 @@
               class="w-full flex flex-col items-center justify-center"
               :style="{ height: `${clientHeight - 330}px` }"
             >
-              <user-empty />
-              <p class="mt-3 text-sm text-gray-400">该部门暂未添加员工数据</p>
-              <div class="mt-4">
+              <user-empty v-if="searchValue.length === 0" />
+              <search-empty v-else :width="250" :height="250" />
+              <p class="mt-3 text-sm text-gray-400">{{ searchValue.length === 0 ? '该部门暂未添加员工数据' : '啥也没搜到' }}</p>
+              <div v-if="searchValue.length === 0" class="mt-4">
                 <n-button @click="addUser('create', '')">+添加员工</n-button>
               </div>
             </div>
@@ -118,16 +119,19 @@
                       v-for="(item, index) in userList" 
                       :key="index"
                       class="w-full h-14 px-4 group flex items-center border-b border-gray-100"
-                      :class="[item.userState === true ? 'cursor-default hover:bg-gray-100' : 'cursor-not-allowed',{ 
-                        'bg-gray-50': item.position.isTop && !item.position.isSectorHead, 
-                        'bg-red-50 hover:bg-primary/10': item.position.isSectorHead
-                      }]"
+                      :class="[
+                        {
+                          'bg-red-50 hover:bg-primary/10 hover:border-b-primary/30': item.position.isSectorHead  && !item.showDropdown,
+                          'bg-primary/10 border-b-primary/30 hover:bg-primary/10': item.position.isSectorHead && item.showDropdown,
+                          'hover:bg-gray-100 hover:border-b-gray-500/20' : !item.position.isSectorHead,
+                          'bg-gray-100 border-b-gray-500/20 hover:bg-gray-100': !item.position.isSectorHead && item.showDropdown,
+                          'bg-gray-50': item.position.isTop && !item.position.isSectorHead && !item.showDropdown
+                        }]"
                     >
                       <!-- 1-勾选框 -->
                       <n-checkbox 
                         :value="item.id" 
-                        :default-checked="item.checkout" 
-                        :disabled="!item.userState"
+                        :default-checked="item.checkout"
                         class="flex-grow flex items-center"
                       >
                         <!-- 2-信息区 -->
@@ -137,33 +141,42 @@
                         >
                           <div 
                             class="flex-shrink-0 w-10 h-10 rounded-md"
-                            :class="item.headshot ? '' : 'bg-primary py-1.5'"
+                            :class="{'bg-primary py-1.5': !item.headshot}"
                           >
                             <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
                             <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
                           </div>
                           <div>
                             <div class="flex items-center">
-                              <p class="text-base min-w-[40px]">{{ item.userName }}</p>
-                              <button v-if="item.position.isSectorHead" class="ml-4 px-1.5 text-white text-xs bg-primary leading-5 rounded">部门负责人</button>
-                              <button v-if="!item.userState" class="ml-4 px-1.5 text-white text-xs bg-gray-400 leading-5 rounded">已停用</button>
+                              <p class="text-base min-w-[40px]">{{ item.userName }}33</p>
+                              <button 
+                                v-if="item.position.isSectorHead" 
+                                class="ml-4 px-1.5 text-white text-xs bg-primary leading-5 rounded"
+                              >
+                                部门负责人
+                              </button>
+                              <button 
+                                v-if="!item.userState"
+                                class="ml-4 px-1.5 text-white text-xs bg-gray-400 leading-5 rounded"
+                              >
+                                已停用
+                              </button>
                             </div>
                             <p class="text-sm text-gray-400 text-left">{{ item.role }}</p>
                           </div>
                         </div>
                       </n-checkbox>
                       <!-- 3-操作区 -->
-                      <n-dropdown 
-                        v-if="item.userState === true" 
-                        trigger="click"
+                      <n-dropdown
                         placement="bottom-end" 
-                        :options="userOptions(item)" 
+                        :options="userOptions(item)"
                         class="ml-auto"
                         @select="userSelect"
+                        @update:show="(value) => userUpdateShow(value, index)"
                       >
-                        <button 
-                          class="pl-3 pr-1.5 h-8 rounded flex items-center text-sm text-gray-600"
-                          :class="item.position.isSectorHead ? 'hover:bg-gray-400/20' : 'hover:bg-gray-200'"
+                        <button
+                          class="pl-2 pr-1 leading-7 rounded flex items-center text-sm text-gray-600 hover:text-primary"
+                          :class="{'text-primary' : item.showDropdown}"
                         >
                           <span>更多</span>
                           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
@@ -189,11 +202,14 @@
   <register-user-modal ref="addUserRef" @refresh="getUserList(rightData.sectorId)" />
   <!-- 名片 -->
   <business-card-modal ref="cardRef" />
+  <!-- 离职提示 -->
+  <dimission-dialog-modal ref="dimissionDialogRef" @refresh="getUserList(rightData.sectorId)" />
 </template>
 
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
+import { debounce } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
 import { default as EditIcon } from "@vicons/ionicons5/Pencil"
 import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
@@ -230,6 +246,7 @@ const setPrefix = function (list, leave) {
 // 点击左侧部门
 const handleUpdateValue = function (keys, option) {
   if(keys.length > 0) {
+    searchValue.value = ''
     rightData.sectorId = option[0].sectorId
     rightData.fullName = option[0].sectorName   // 获取部门名
     rightData.showEmpty = false                 // 关闭空状态
@@ -249,28 +266,35 @@ const rightData = reactive({
   ]
 })
 const userList = ref([])
-const getUserList = function (id) {
+const getUserList = function (id, searchValue='') {
   rightData.showLoading = true
-  api.get('/addressBook/structure/getSectorEmployeeList', { sectorId: id }).then((res) => {
+  api.get('/addressBook/structure/getSectorEmployeeList', { sectorId: id, keyWord: searchValue }).then((res) => {
     userList.value = res.data.data
-    checked.disabled = res.data.data.filter(item => item.userState).length === 0
     checked.indeterminate = checked.state = false
     checkList.value = []
     setTimeout(() => rightData.showLoading = false, 100)
   })
 }
 
+// 搜索
+const searchValue = ref('')
+const toSearch = debounce((searchValue) => getUserList(rightData.sectorId, searchValue), 300, {
+  leading: false,  // 延长开始后调用
+	trailing: true  // 延长结束前调用
+})
+
 // 下拉菜单
 const SectorSelect = function(key) {
   if(key === 'edit') showCreateSectorModal('edit')
   if(key === 'remove') deleteSector()
 }
-
 // 人员操作区
-const userOptions = function({id, userName, position}) {
+const userOptions = function({id, userName, userState, position}) {
   return [
     {label: '编辑员工', key: 'edit', props: {id, userName, position}, show: true}, 
     {label: '操作离职', key: 'remove', props: {id, userName, position}, show: true},
+    {label: '停用账号', key: 'disabled', props: {id, userName, userState, position}, show: userState},
+    {label: '恢复账号', key: 'restore', props: {id, userName, userState, position}, show: !userState},
     {label: '上移', key: 'up', props: {id, userName, position}, show: Boolean(!position.isSectorHead && position.up)},
     {label: '下移', key: 'down', props: {id, userName, position}, show: Boolean(!position.isSectorHead && position.down)},
     {label: '取消置顶', key: 'cancelTop', props: {id, userName, position}, show: Boolean(!position.isSectorHead && position.isTop)},
@@ -278,11 +302,14 @@ const userOptions = function({id, userName, position}) {
   ]
 }
 const userSelect = function(key, option) {
-  console.log(key, option)
   if(key === 'edit') addUser('edit', option.props.id)
   if(key === 'remove') deleteUser(option.props.id, option.props.userName)
+  if(key === 'disabled' || key === 'restore') updateAccountState(option.props.id, option.props.userName, option.props.userState)
   if(key === 'up' || key === 'down') move(option.props.id, key)
   if(key === 'cancelTop' || key === 'toTop') settingTop(option.props.id, option.props.position.isTop)
+}
+const userUpdateShow = function(value, index) {
+  userList.value[index].showDropdown = value
 }
 
 /*** 选择器相关 ***/
@@ -299,9 +326,7 @@ const checkAll = function (isChecked) {
   checkList.value = []
   if (isChecked) {
     checked.indeterminate = false
-    userList.value.forEach(item => {
-      if(item.userState) checkList.value.push(item.id) 
-    })
+    checkList.value = userList.value.map(item => item.id)
   }
 }
 // 子选项的变化
@@ -376,16 +401,21 @@ const addUser = function (type, userId) {
 }
 
 /****** 操作离职 ******/
+const dimissionDialogRef = ref()
 const deleteUser = function (id, name) {
+  dimissionDialogRef.value.showModal(id, name)
+}
+/****** 账号停用/恢复 ******/
+const updateAccountState = function(id, name, state) {
   dialog.warning({
-    title: `你确定要将 “${name}” 的账号设为离职吗？`,
-    content: '离职后，该帐号将无法访问',
+    title: state ? `你确定要停用${name}的账号吗？` : `你确定要恢复${name}的账号吗？`,
+    content: state ? '停用后，该帐号将无法访问' : '恢复后，该帐号将正常访问',
     positiveText: '确定',
     negativeText: '不确定',
     onPositiveClick: () => {
-      api.put('/userManage/deleteUser', { userId: id }, false, false).then((res) => {
+      api.put('/userManage/updateUserState', { userId: id }, false, false).then((res) => {
         if (res.data.code === 20000) {
-          message.success('离职操作成功')
+          message.success('修改成功')
           getUserList(rightData.sectorId)
         }
         if (res.data.code !== 20000) message.warning(res.data.msg)

@@ -59,7 +59,6 @@
                 v-if="rightData.roleType !== 'SuperAdmin'"
                 :options="rightData.sectorOptions" 
                 placement="bottom-end" 
-                trigger="click" 
                 @select="SectorSelect"
               >
                 <n-button quaternary size="small">
@@ -77,12 +76,11 @@
                 </n-input>
               </div>
               <div class="ml-auto space-x-2">
-                <n-button>添加员工</n-button>
+                <n-button @click="showAddUserModal">添加员工</n-button>
                 <n-button 
                   :disabled="checkList.length === 0" 
                   :type="checkList.length === 0 ? 'default' : 'primary'" 
-                  ghost 
-                  @click="showChangePostModal"
+                  ghost
                 >
                   变更角色
                 </n-button>
@@ -122,18 +120,31 @@
                     v-for="(item, index) in userList" 
                     :key="index"
                     :value="item.id"
+                    :disabled="!item.userState"
                     :default-checked="item.checkout"
                     class="w-full h-14 px-4 flex items-center cursor-pointer group border-b border-b-gray-100 hover:bg-gray-100"
                   >
-                    <div class="ml-4 flex items-center space-x-2.5" @click.stop="showCard(item.id)">
+                    <div 
+                      class="ml-4 flex items-center cursor-pointer" 
+                      @click.stop="showCard(item.id)"
+                    >
                       <div 
                         class="flex-shrink-0 w-10 h-10 rounded-md"
-                        :class="item.headshot ? '' : 'bg-primary py-1.5'"
+                        :class="{
+                          'bg-primary py-1.5': !item.headshot,
+                          'opacity-60': !item.userState
+                        }"
                       >
                         <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
                         <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
                       </div>
-                      <p class="text-base text-left">{{ item.userName }}</p>
+                      <p class="ml-2.5 text-base text-left">{{ item.userName }}</p>
+                      <button 
+                        v-if="!item.userState"
+                        class="ml-4 px-1.5 text-white text-xs bg-gray-400/70 leading-5 rounded"
+                      >
+                        已停用
+                      </button>
                     </div>
                   </n-checkbox>
                 </n-checkbox-group>
@@ -146,6 +157,8 @@
   </base-card>
   <!-- 1、创建/编辑 角色 -->
   <create-role-modal ref="createRoleRef" @change="changeRole" />
+  <!-- 2，修改职位 -->
+  <change-role-modal ref="changeRoleRef" @refresh="refreshUserModal" />
   <!-- 3、添加员工 -->
   <add-user-modal ref="addUserRef" @confirm="confirmAddUser" />
   <!-- 名片 -->
@@ -256,11 +269,13 @@ const checked = reactive({
 const checkList = ref([])
 // 全选、不全选
 const checkAll = function(isChecked) {
-  if(isChecked) {
+  checkList.value = []
+  if (isChecked) {
     checked.indeterminate = false
-    checkList.value = userList.value.map(item => item.id)
+    userList.value.forEach(item => {
+      if(item.userState) checkList.value.push(item.id) 
+    })
   }
-  if(!isChecked) checkList.value = []
 }
 // 子选项的变化
 const changeCheckbox = function(arr, meta) {
@@ -298,5 +313,11 @@ const confirmAddUser = function(select) {
     if(res.data.code !== 20000) message.warning(res.data.msg)
     refreshUserModal()
   })
+}
+
+/******** 名片 ********/
+const cardRef = ref()
+const showCard = function(id) {
+  cardRef.value.showCard(id)
 }
 </script>
