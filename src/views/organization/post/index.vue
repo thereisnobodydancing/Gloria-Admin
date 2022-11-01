@@ -85,7 +85,7 @@
               </div>
             </div>
             <div 
-              v-if="userList.length === 0" 
+              v-if="rightData.showLoading === false && userList.length === 0" 
               class="w-full flex flex-col items-center justify-center"
               :style="{ height: `${clientHeight - 330}px` }"
             >
@@ -119,7 +119,6 @@
                     v-for="(item, index) in userList" 
                     :key="index"
                     :value="item.id"
-                    :disabled="!item.userState"
                     :default-checked="item.checkout"
                     class="w-full h-14 px-4 flex items-center group border-b border-b-gray-100 hover:bg-gray-100"
                   >
@@ -129,10 +128,7 @@
                     >
                       <div 
                         class="flex-shrink-0 w-10 h-10 rounded-md"
-                        :class="{
-                          'bg-primary py-1.5': !item.headshot,
-                          'opacity-60': !item.userState
-                        }"
+                        :class="{'bg-primary py-1.5': !item.headshot}"
                       >
                         <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
                         <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
@@ -253,7 +249,6 @@ const getUserList = function(id, searchValue='') {
   rightData.showLoading = true
   api.get('/position/getUserListByPositionId', {position: id, keyWord: searchValue}).then((res) => {
     userList.value = res.data.data
-    checked.disabled = res.data.data.filter(item => item.userState).length === 0
     checked.indeterminate = checked.state = false
     checkList.value = []
     setTimeout(() => rightData.showLoading = false, 100)
@@ -280,13 +275,11 @@ const checked = reactive({
 })
 const checkList = ref([])
 // 全选、不全选
-const checkAll = function(isChecked) {
+const checkAll = function (isChecked) {
   checkList.value = []
   if (isChecked) {
     checked.indeterminate = false
-    userList.value.forEach(item => {
-      if(item.userState) checkList.value.push(item.id) 
-    })
+    checkList.value = userList.value.map(item => item.id)
   }
 }
 // 子选项的变化

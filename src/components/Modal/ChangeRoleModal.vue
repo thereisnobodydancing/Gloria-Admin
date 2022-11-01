@@ -24,11 +24,11 @@
           class="pr-10 mt-4"
           label-width="90"
         >
-        <n-form-item path="roleId" label="职位">
+        <n-form-item path="roleId" label="角色">
           <n-select
             v-model:value="form.roleId"
             filterable
-            placeholder="请选择职位"
+            placeholder="请选择角色"
             label-field="roleName"
             value-field="id"
             clearable
@@ -65,7 +65,7 @@ const form = reactive({
   userIdList: []
 })
 const rules = {
-  roleId: [{required: true, message: "输入并选择职位"}]
+  roleId: [{required: true, message: "输入并选择角色"}]
 }
 
 // 弹出Modal
@@ -79,10 +79,10 @@ const showModal = function(id, arr) {
   getRoleOptions()
 }
 
-// 获取职位列表
+// 获取角色列表
 const roleOptions = ref([])
 const getRoleOptions = function() {
-  api.get('/position/getCompanyPositionList').then((res) => {
+  api.get('/adminRole/getCompanyRoleList').then((res) => {
     roleOptions.value = res.data.data
   })
 }
@@ -98,7 +98,7 @@ const handleValidateClick = function(e) {
     }
   })
 }
-// 修改职位
+// 修改角色
 const updatePositionUser = function() {
   dialog.warning({
     title: '提示',
@@ -106,7 +106,7 @@ const updatePositionUser = function() {
     positiveText: '确定',
     negativeText: '不确定',
     onPositiveClick: () => {
-      api.put('/userManage/updatePositonUser', form).then((res) => {
+      api.put('/adminRole/updateManageRoleUsers', form).then((res) => {
         if(res.data.code === 20000) message.success('修改角色成功')
         if(res.data.code !== 20000) message.warning(res.data.msg)
         emit('refresh')

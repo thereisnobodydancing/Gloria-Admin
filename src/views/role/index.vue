@@ -2,7 +2,7 @@
 <template>
   <base-card title="后台权限管理" :loading="showPageLoading">
     <div class="w-full h-full flex">
-      <!-- 左侧：职位列表 -->
+      <!-- 左侧：角色列表 -->
       <div class="flex-shrink-0 w-64 h-full border-r relative">
         <div
           class="w-full overflow-y-scroll pl-2 pr-1"
@@ -40,7 +40,7 @@
           <n-button type="primary" ghost size="large" block @click="showRoleModal('create')">新增角色</n-button>
         </div>
       </div>
-      <!-- 右侧：该职位下的成员 -->
+      <!-- 右侧：该角色下的成员 -->
       <div class="w-full h-full">
         <!-- empty -->
         <div 
@@ -81,6 +81,7 @@
                   :disabled="checkList.length === 0" 
                   :type="checkList.length === 0 ? 'default' : 'primary'" 
                   ghost
+                  @click="showChangeRoleModal"
                 >
                   变更角色
                 </n-button>
@@ -92,7 +93,7 @@
               :style="{ height: `${clientHeight - 330}px` }"
             >
               <user-empty />
-              <p class="mt-3 text-sm text-gray-400">该职位暂未添加员工数据</p>
+              <p class="mt-3 text-sm text-gray-400">该角色暂未添加员工数据</p>
               <div class="mt-4">
                 <n-button @click="showAddUserModal">+添加员工</n-button>
               </div>
@@ -116,37 +117,43 @@
                   v-model:value="checkList"
                   @update:value="changeCheckbox"
                 >
-                  <n-checkbox
+                  <div 
                     v-for="(item, index) in userList" 
                     :key="index"
-                    :value="item.id"
-                    :disabled="!item.userState"
-                    :default-checked="item.checkout"
-                    class="w-full h-14 px-4 flex items-center cursor-pointer group border-b border-b-gray-100 hover:bg-gray-100"
+                    class="w-full h-14 px-4 flex items-center border-b border-b-gray-100 hover:bg-gray-100"
                   >
-                    <div 
-                      class="ml-4 flex items-center cursor-pointer" 
-                      @click.stop="showCard(item.id)"
+                    <n-checkbox
+                      :value="item.id"
+                      :default-checked="item.checkout"
+                      class="flex-grow"
                     >
                       <div 
-                        class="flex-shrink-0 w-10 h-10 rounded-md"
-                        :class="{
-                          'bg-primary py-1.5': !item.headshot,
-                          'opacity-60': !item.userState
-                        }"
+                        class="ml-4 flex items-center cursor-pointer" 
+                        @click.stop="showCard(item.id)"
                       >
-                        <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
-                        <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
+                        <div 
+                          class="flex-shrink-0 w-10 h-10 rounded-md"
+                          :class="{'bg-primary py-1.5': !item.headshot}"
+                        >
+                          <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
+                          <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
+                        </div>
+                        <p class="ml-2.5 text-base text-left">{{ item.userName }}</p>
+                        <button 
+                          v-if="!item.userState"
+                          class="ml-4 px-1.5 text-white text-xs bg-gray-400/70 leading-5 rounded"
+                        >
+                          已停用
+                        </button>
                       </div>
-                      <p class="ml-2.5 text-base text-left">{{ item.userName }}</p>
-                      <button 
-                        v-if="!item.userState"
-                        class="ml-4 px-1.5 text-white text-xs bg-gray-400/70 leading-5 rounded"
-                      >
-                        已停用
-                      </button>
-                    </div>
-                  </n-checkbox>
+                    </n-checkbox>
+                    <button 
+                      class="ml-auto text-sm text-gray-500 hover:text-primary"
+                      @click="removeUser(item.userName, item.id)"
+                    >
+                      移除员工
+                    </button>
+                  </div>
                 </n-checkbox-group>
               </div>
             </div>
@@ -157,7 +164,7 @@
   </base-card>
   <!-- 1、创建/编辑 角色 -->
   <create-role-modal ref="createRoleRef" @change="changeRole" />
-  <!-- 2，修改职位 -->
+  <!-- 2，变更角色 -->
   <change-role-modal ref="changeRoleRef" @refresh="refreshUserModal" />
   <!-- 3、添加员工 -->
   <add-user-modal ref="addUserRef" @confirm="confirmAddUser" />
@@ -191,7 +198,7 @@ const getRoleList = function() {
   })
 }
 getRoleList()
-// 点击左侧职位
+// 点击左侧角色
 const handleUpdateValue = function (keys, option) {
   if(keys.length > 0) {
     rightData.roleId = option[0].id
@@ -202,7 +209,7 @@ const handleUpdateValue = function (keys, option) {
   }
 }
 
-// 删除职位
+// 删除角色
 const removeRole = function() {
   dialog.warning({
     title: '提示',
@@ -241,6 +248,8 @@ const getUserList = function(id) {
   rightData.showLoading = true
   api.get('/adminRole/getUserListByRoleId', {roleId: id}).then((res) => {
     userList.value = res.data.data
+    checked.indeterminate = checked.state = false
+    checkList.value = []
     setTimeout(() => rightData.showLoading = false, 100)
   })
 }
@@ -268,13 +277,11 @@ const checked = reactive({
 })
 const checkList = ref([])
 // 全选、不全选
-const checkAll = function(isChecked) {
+const checkAll = function (isChecked) {
   checkList.value = []
   if (isChecked) {
     checked.indeterminate = false
-    userList.value.forEach(item => {
-      if(item.userState) checkList.value.push(item.id) 
-    })
+    checkList.value = userList.value.map(item => item.id)
   }
 }
 // 子选项的变化
@@ -292,6 +299,12 @@ const changeCheckbox = function(arr, meta) {
     checked.state = true
     checked.indeterminate = false
   }
+}
+
+/******* 修改角色 *******/
+const changeRoleRef = ref()
+const showChangeRoleModal = function() {
+  changeRoleRef.value.showModal(rightData.roleId, checkList.value)
 }
 
 // 刷新列表
@@ -312,6 +325,26 @@ const confirmAddUser = function(select) {
     if(res.data.code === 20000) message.success('添加成功')
     if(res.data.code !== 20000) message.warning(res.data.msg)
     refreshUserModal()
+  })
+}
+
+/******* 移除员工 *******/
+const removeUser = function(name, id) {
+  dialog.warning({
+    title: `你确定要移除该员工吗？`,
+    content: `移除后，${name}将无法访问后台`,
+    positiveText: '确定',
+    negativeText: '不确定',
+    onPositiveClick: () => {
+      api.delete('/adminRole/deleteUserManageRole', {userId: id}).then((res) => {
+        if(res.data.code !== 20000) message.warning(res.data.msg)
+        if(res.data.code === 20000) {
+          message.success('移除角色成功')
+          getUserList(rightData.roleId)
+        }
+      })
+    },
+    onNegativeClick: () => {}
   })
 }
 

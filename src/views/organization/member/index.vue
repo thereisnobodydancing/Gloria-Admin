@@ -52,7 +52,7 @@
             <n-button @click="showCreateSectorModal('create')">+新建部门</n-button>
           </div>
         </div>
-        <n-spin v-else :show=rightData.showLoading>
+        <n-spin v-else :show="rightData.showLoading">
           <div class="px-8 py-4">
             <div class="flex items-center">
               <h3 class="text-lg mr-2 cursor-default">{{ rightData.fullName }}</h3>
@@ -84,7 +84,7 @@
               </div>
             </div>
             <div 
-              v-if="userList.length === 0" 
+              v-if="rightData.showLoading === false && userList.length === 0" 
               class="w-full flex flex-col items-center justify-center"
               :style="{ height: `${clientHeight - 330}px` }"
             >
@@ -100,9 +100,8 @@
                 <div class="w-full h-10 rounded bg-gray-100 flex items-center px-4">
                   <n-checkbox 
                     v-model:checked="checked.state"
-                    :disabled="checked.disabled"
                     :indeterminate="checked.indeterminate"
-                    class="flex-grow" 
+                    class="w-full" 
                     @update:checked="checkAll"
                   >
                     已选{{ checkList.length }}人（共{{ userList.length }}人）
@@ -118,7 +117,7 @@
                     <div 
                       v-for="(item, index) in userList" 
                       :key="index"
-                      class="w-full h-14 px-4 group flex items-center border-b border-gray-100"
+                      class="w-full h-14 px-4 flex items-center border-b border-b-gray-100"
                       :class="[
                         {
                           'bg-red-50 hover:bg-primary/10 hover:border-b-primary/30': item.position.isSectorHead  && !item.showDropdown,
@@ -148,7 +147,7 @@
                           </div>
                           <div>
                             <div class="flex items-center">
-                              <p class="text-base min-w-[40px]">{{ item.userName }}33</p>
+                              <p class="text-base min-w-[40px]">{{ item.userName }}</p>
                               <button 
                                 v-if="item.position.isSectorHead" 
                                 class="ml-4 px-1.5 text-white text-xs bg-primary leading-5 rounded"
