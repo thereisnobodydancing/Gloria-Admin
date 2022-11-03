@@ -4,10 +4,10 @@
     :style="{height: height + 'px'}"
   >
     <!-- 左侧：菜单栏部分 -->
-    <div class="flex-shrink-0 w-[300px] bg-white p-5 space-y-10 shadow-xl">
+    <div class="flex-shrink-0 w-[300px] bg-white p-5 space-y-8 shadow-xl">
       <!-- 基础控件 -->
       <div class="space-y-4">
-        <p class="text-sm text-gray-600">基础控件</p>
+        <p class="text-sm text-gray-500">基础控件</p>
         <draggable
           :list="baseComponents"
           :sort="false"
@@ -19,8 +19,33 @@
           class="grid grid-cols-2 gap-4"
         >
           <template #item="{element}">
+            <button
+              class="w-full h-10 bg-gray-100 text-sm rounded shadow hover:shadow-md hover:font-bold"
+              :class="{'border-l-2 border-primary': active !== null && element.type === formList[active].type }"
+              @click="selMenu(element)"
+            >
+              {{ element.name }}
+            </button>
+          </template>
+        </draggable>
+      </div>
+      <!-- 增强控件 -->
+      <div class="space-y-4">
+        <p class="text-sm text-gray-500">增强控件</p>
+        <draggable
+          :list="proComponents"
+          :sort="false"
+          animation=200
+          :group="{ name: 'people', pull: 'clone', put: false }"
+          item-key="name"
+          ghost-class="ghost"
+          chosen-class="chosen"
+          class="grid grid-cols-2 gap-4"
+        >
+          <template #item="{element}">
             <button 
               class="w-full h-10 bg-gray-100 text-sm rounded shadow hover:shadow-md hover:font-bold"
+              :class="{'border-l-2 border-primary': active !== null && element.type === formList[active].type }"
               @click="selMenu(element)"
             >
               {{ element.name }}
@@ -30,7 +55,7 @@
       </div>
     </div>
     <!-- 中间：表单渲染区 -->
-    <div class="w-[800px] mx-auto py-4">
+    <div class="min-w-[800px] max-w-[1280px] w-1/2 mx-auto py-4">
       <base-pc-mockup>
         <draggable
           id="formId"
@@ -46,7 +71,12 @@
           @update="updateList"
         >
           <template #header>
-            <div v-if="formList.length === 0" class="text-gray-400">点击或拖拽左侧控件至此处</div>
+            <div 
+              v-if="formList.length === 0" 
+              class="text-gray-500/60 px-2"
+            >
+              点击或拖拽左侧控件至此处
+            </div>
           </template>
           <template #item="{element, index}">
             <div 
@@ -63,6 +93,7 @@
                   <path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0" />
                 </svg>
               </div>
+              <!-- 表单组件渲染 -->
               <form-item :element="element" />
             </div>
           </template>
@@ -75,7 +106,7 @@
       :class="formList.length === 0 || active === null ? 'w-0' : 'w-[300px]'"
     >
       <div v-if="formList.length > 0 && active !== null" class="p-4">
-        <form-config :list="formList" :active="active" />
+        <form-config :data="formList[active]" />
       </div>
     </div>
   </div>
@@ -83,6 +114,7 @@
 
 <script setup>
 import draggable from 'vuedraggable'
+import { cloneDeep } from 'lodash'
 import { nanoid } from  'nanoid'
 import FormItem from '../components/FormItem.vue'
 import FormConfig from '../components/FormConfig.vue'
@@ -90,23 +122,8 @@ import useTemplateStore from '/src/store/template.js'
 
 const height = document.documentElement.clientHeight - 145
 
-// 左侧：菜单栏部分——基础控件
-const baseComponents = ref([
-  {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false }},
-  {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false }},
-  {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false }},
-  {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
-  {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
-  {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
-  {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false }},
-])
-// 左侧：菜单栏部分——增强控件
-const proComponents = ref([
-
-])
-
 // 中间：组件渲染区 const formList = ref([])
-const { formList }  = toRefs(useTemplateStore())
+const { formList, baseComponents, proComponents }  = toRefs(useTemplateStore())
 // 当前选中的
 const active = ref(null)
 // 点击左侧菜单
@@ -141,13 +158,174 @@ const updateList = function({newIndex}) {
 // 【生命归还】
 const initComponents = function() {
   baseComponents.value = [
-    {type: 'input', name: '单行输入框', options: {id: '', name: '单行文本', placeholder: '请输入', desc: '', required: false }},
-    {type: 'textarea', name: '多行输入框', options: {id: '', name: '多行文本', placeholder: '请输入', desc: '', required: false }},
-    {type: 'inputNumber', name: '数字输入框', options: {id: '', name: '数字文本', placeholder: '请输入', desc: '', required: false }},
-    {type: 'select', name: '选择器', options: {id: '', name: '选择器', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
-    {type: 'radio', name: '单选框组', options: {id: '', name: '单选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
-    {type: 'checkbox', name: '多选框组', options: {id: '', name: '多选框组', list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], desc: '', required: false }},
-    {type: 'datePicker', name: '日期选择器', options: {id: '', name: '选择日期',type: 'date', desc: '', required: false }},
+    {
+      type: 'input', 
+      name: '单行输入框', 
+      options: {
+        id: '', 
+        name: '单行文本', 
+        type: 'text', 
+        placeholder: '请输入', 
+        showCount: false, 
+        maxLength: '', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'textarea', 
+      name: '多行输入框', 
+      options: {
+        id: '', 
+        name: '多行文本', 
+        placeholder: '请输入', 
+        showCount: false, 
+        maxLength: '', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'inputNumber', 
+      name: '数字输入框', 
+      options: {
+        id: '', 
+        name: '数字文本', 
+        placeholder: '请输入', 
+        useMin: true, 
+        useMax: false, 
+        min: 0, 
+        max: null, 
+        width: '1/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'select', 
+      name: '选择器', 
+      options: {
+        id: '', 
+        name: '选择器', 
+        multiple: false,
+        placeholder: '请选择',
+        width: '1/3', 
+        list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'radio', 
+      name: '单选框组', 
+      options: {
+        id: '', 
+        name: '单选框组', 
+        list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'checkbox', 
+      name: '多选框组', 
+      options: {
+        id: '', 
+        name: '多选框组', 
+        list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'datePicker', 
+      name: '日期选择器', 
+      options: {
+        id: '', 
+        name: '选择日期',
+        type: 'date', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'upload',
+      name: '上传',
+      options: {
+        id: '',
+        name: '上传',
+        type: 'text',
+        btnText: '点击上传',
+        desc: '', 
+        required: false
+      }
+    }
+  ]
+  proComponents.value = [
+    {
+      type: 'inputPhone', 
+      name: '电话号码', 
+      options: {
+        id: '', 
+        name: '电话号码', 
+        placeholder: '请输入11位电话号码', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'inputId', 
+      name: '身份证号', 
+      options: {
+        id: '', 
+        name: '身份证号', 
+        placeholder: '请输入18位身份证号', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'selectPost',
+      name: '选择职位',
+      options: {
+        id: '',
+        name: '选择职位',
+        placeholder: '请选择职位',
+        multiple: false,
+        width: '1/3', 
+        desc: '',
+        required: false 
+      }
+    },
+    {
+      type: 'selectSector',
+      name: '选择部门',
+      options: {
+        id: '',
+        name: '选择部门',
+        multiple: false,
+        placeholder: '请选择部门',
+        width: '1/3', 
+        desc: '',
+        required: false 
+      }
+    },
+    {
+      type: 'selectUser',
+      name: '选择成员',
+      options: {
+        id: '',
+        name: '选择成员',
+        useMax: false,
+        max: 1,
+        desc: '',
+        required: false 
+      }
+    },
   ]
 }
 </script>

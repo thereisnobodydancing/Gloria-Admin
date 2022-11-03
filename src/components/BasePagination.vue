@@ -4,23 +4,11 @@
     class="w-full text-center relative"
     :style="{height: props.height + 'px'}"
   >
-    <div 
-      v-if="localList.length > 0" 
-      :style="{height: props.height + 'px'}"
-    >
-      <slot :list="localList" />
-    </div>
-    <div 
-      v-if="localList.length === 0 && !loading"
-      class="flex items-center justify-center"
-      :style="{height: props.height + 'px'}"
-    >
-      <n-empty size="large" :description="description" />
-    </div>
+    <slot v-if="localList.length === 0 && !loading" name="empty" />
+    <slot v-if="localList.length > 0" :list="localList" />
     <div 
       v-if="localList.length > 0"
-      class="bottom-0 z-50 px-4 pb-4 pt-6 w-full flex justify-end bg-white/80"
-      :class="props.useSticky ? 'sticky' : 'absolute'"
+      class="sticky bottom-0 z-50 px-4 pb-4 pt-6 w-full flex justify-end bg-white/80"
     >
       <n-pagination
         v-model:page="currentPage"
@@ -52,17 +40,9 @@ const  props = defineProps({
     type: Object,
     default: () => {}
   },
-  description: {
-    type: String,
-    default: '无数据'
-  },
   auto: {
     type: Boolean,
     default: true
-  },
-  useSticky: {
-    type: Boolean,
-    default: false
   }
 })
 const loading = ref(false)
@@ -85,6 +65,7 @@ const askApi = function(more = true) {
     }
     setTimeout(() => loading.value = false, 200)
   })
+  setTimeout(() => loading.value = false, 300)
 }
 onMounted(() => {
   if(props.auto) askApi()

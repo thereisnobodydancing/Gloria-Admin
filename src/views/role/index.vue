@@ -71,7 +71,7 @@
             <div class="mt-4 flex items-center">
               <!-- search -->
               <div class="w-72">
-                <n-input placeholder="搜索" clearable>
+                <n-input v-model:value="searchValue" placeholder="搜索" clearable @update:value="toSearch">
                   <template #prefix><n-icon :component="SearchIcon" /></template>
                 </n-input>
               </div>
@@ -92,9 +92,10 @@
               class="w-full flex flex-col items-center justify-center"
               :style="{ height: `${clientHeight - 330}px` }"
             >
-              <user-empty />
-              <p class="mt-3 text-sm text-gray-400">该角色暂未添加员工数据</p>
-              <div class="mt-4">
+              <user-empty v-if="searchValue.length === 0" />
+              <search-empty v-else :width="250" :height="250" />
+              <p class="mt-3 text-sm text-gray-400">{{ searchValue.length === 0 ? '该部门暂未添加员工数据' : '啥也没搜到' }}</p>
+              <div v-if="searchValue.length === 0" class="mt-4">
                 <n-button @click="showAddUserModal">+添加员工</n-button>
               </div>
             </div>
@@ -120,7 +121,7 @@
                   <div 
                     v-for="(item, index) in userList" 
                     :key="index"
-                    class="w-full h-14 px-4 flex items-center border-b border-b-gray-100 hover:bg-gray-100"
+                    class="w-full h-14 px-4 flex items-center border-b border-b-gray-100 hover:border-b-gray-500/20 hover:bg-gray-100"
                   >
                     <n-checkbox
                       :value="item.id"
@@ -176,6 +177,7 @@
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
+import { debounce } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
 import { default as EditIcon } from "@vicons/ionicons5/Pencil"
 import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
@@ -244,15 +246,25 @@ const rightData = reactive({
 })
 const userList = ref([])
 // 根据角色id获取人员列表
-const getUserList = function(id) {
+const getUserList = function(id, searchValue='') {
   rightData.showLoading = true
-  api.get('/adminRole/getUserListByRoleId', {roleId: id}).then((res) => {
+  api.get('/adminRole/getUserListByRoleId', {roleId: id, keyWord: searchValue}).then((res) => {
     userList.value = res.data.data
     checked.indeterminate = checked.state = false
     checkList.value = []
     setTimeout(() => rightData.showLoading = false, 100)
   })
 }
+
+// 搜索
+const searchValue = ref('')
+const toSearch = debounce((searchValue) => getUserList(rightData.roleId, searchValue), 300, {
+  leading: false,  // 延长开始后调用
+	trailing: true  // 延长结束前调用
+})
+onUnmounted(() => {
+  toSearch.cancel()
+})
 
 /** 创建/编辑 角色  **/
 const createRoleRef = ref()
@@ -331,8 +343,8 @@ const confirmAddUser = function(select) {
 /******* 移除员工 *******/
 const removeUser = function(name, id) {
   dialog.warning({
-    title: `你确定要移除该员工吗？`,
-    content: `移除后，${name}将无法访问后台`,
+    title: `移除成员`,
+    content: `移除后该员工将无法访问后台,确认将该成员移出角色？`,
     positiveText: '确定',
     negativeText: '不确定',
     onPositiveClick: () => {

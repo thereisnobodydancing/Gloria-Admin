@@ -281,6 +281,9 @@ const toSearch = debounce((searchValue) => getUserList(rightData.sectorId, searc
   leading: false,  // 延长开始后调用
 	trailing: true  // 延长结束前调用
 })
+onUnmounted(() => {
+  toSearch.cancel()
+})
 
 // 下拉菜单
 const SectorSelect = function(key) {

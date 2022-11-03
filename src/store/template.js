@@ -1,7 +1,9 @@
 import { defineStore } from 'pinia'
 import { nanoid } from  'nanoid'
 const user = JSON.parse(sessionStorage.getItem('user'))
+
 export default defineStore('template', () => {
+  /** 基础信息 **/
   const tabActive = ref('base')
   const id = ref('')
   const userId = ref(user.id)
@@ -25,9 +27,182 @@ export default defineStore('template', () => {
     }
   ])
   const templateAdministratorKeys = ref([`u${user.id}`])
-
+  /** 表单设计 **/
   const formList = ref([])
+  // 基础控件
+  const baseComponents = ref([
+    {
+      type: 'input', 
+      name: '单行输入框', 
+      options: {
+        id: '', 
+        name: '单行文本', 
+        type: 'text', 
+        placeholder: '请输入', 
+        showCount: false, 
+        maxLength: '', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'textarea', 
+      name: '多行输入框', 
+      options: {
+        id: '', 
+        name: '多行文本', 
+        placeholder: '请输入', 
+        showCount: false, 
+        maxLength: '', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'inputNumber', 
+      name: '数字输入框', 
+      options: {
+        id: '', 
+        name: '数字文本', 
+        placeholder: '请输入', 
+        useMin: true, 
+        useMax: false, 
+        min: 0, 
+        max: null, 
+        width: '1/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'select', 
+      name: '选择器', 
+      options: {
+        id: '', 
+        name: '选择器', 
+        multiple: false,
+        placeholder: '请选择',
+        width: '1/3', 
+        list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'radio', 
+      name: '单选框组', 
+      options: {
+        id: '', 
+        name: '单选框组', 
+        list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'checkbox', 
+      name: '多选框组', 
+      options: {
+        id: '', 
+        name: '多选框组', 
+        list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'datePicker', 
+      name: '日期选择器', 
+      options: {
+        id: '', 
+        name: '选择日期',
+        type: 'date', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'upload',
+      name: '上传',
+      options: {
+        id: '',
+        name: '上传',
+        type: 'text',
+        btnText: '点击上传',
+        desc: '', 
+        required: false
+      }
+    }
+  ])
+  // 增强控件
+  const proComponents = ref([
+    {
+      type: 'inputPhone', 
+      name: '电话号码', 
+      options: {
+        id: '', 
+        name: '电话号码', 
+        placeholder: '请输入11位电话号码', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'inputId', 
+      name: '身份证号', 
+      options: {
+        id: '', 
+        name: '身份证号', 
+        placeholder: '请输入18位身份证号', 
+        width: '3/3', 
+        desc: '', 
+        required: false 
+      }
+    },
+    {
+      type: 'selectPost',
+      name: '选择职位',
+      options: {
+        id: '',
+        name: '选择职位',
+        multiple: false,
+        placeholder: '请选择职位',
+        width: '1/3', 
+        desc: '',
+        required: false 
+      }
+    },
+    {
+      type: 'selectSector',
+      name: '选择部门',
+      options: {
+        id: '',
+        name: '选择部门',
+        multiple: false,
+        placeholder: '请选择部门',
+        width: '1/3', 
+        desc: '',
+        required: false 
+      }
+    },
+    {
+      type: 'selectUser',
+      name: '选择成员',
+      options: {
+        id: '',
+        name: '选择成员',
+        useMax: false,
+        max: 1,
+        desc: '',
+        required: false 
+      }
+    },
+  ])
 
+  /** 流程设计 **/
   const process = ref([
     {
       nodeId: `Activity_${nanoid()}`,  // 节点id
@@ -87,6 +262,8 @@ export default defineStore('template', () => {
     templateAdministratorOptions, // 选择的模板管理员列表（options）[不用提交]
     templateAdministratorKeys,    // 选择的模板管理员列表（keys）[不用提交]
     formList,                     // 表单
+    baseComponents,
+    proComponents,
     process,                      // 节点
     approvalsList,
     startNode,

@@ -1,62 +1,79 @@
 <template>
   <div class="flex">
+    <!-- 标题 -->
     <p class="text-sm w-28 flex-shrink-0 leading-8">
       <span v-if="element.options.required" class="text-primary font-bold">*</span>
       <span :class="element.options.required ? 'ml-0.5' : 'ml-2'">{{ element.options.name }}</span>
     </p>
+    
+    <!-- 基础控件 base -->
     <!-- 单行输入框 -->
-    <template v-if="element.type==='input'">
-      <div class="w-full">
-        <n-input type="text" :placeholder="element.options.placeholder" readonly />
-        <p v-if="element.options.desc" class="mt-1 text-xs text-gray-400">{{ element.options.desc }}</p>
-      </div>
-    </template>
+    <input-component 
+      v-if="element.type==='input'" 
+      :options="element.options" 
+    />
     <!-- 多行输入框 -->
-    <template v-if="element.type==='textarea'">
-      <div class="w-full">
-        <n-input type="textarea" :placeholder="element.options.placeholder" readonly />
-        <p v-if="element.options.desc" class="mt-1 text-xs text-gray-400">{{ element.options.desc }}</p>
-      </div>
-    </template>
+    <textarea-component 
+      v-if="element.type==='textarea'" 
+      :options="element.options" 
+    />
     <!-- 数字输入框 -->
-    <template v-if="element.type==='inputNumber'">
-      <div class="w-full">
-        <n-input-number :placeholder="element.options.placeholder" readonly />
-        <p v-if="element.options.desc" class="mt-1 text-xs text-gray-400">{{ element.options.desc }}</p>
-      </div>
-    </template>
+    <input-number-component 
+      v-if="element.type==='inputNumber'" 
+      :options="element.options" 
+    />
     <!-- 选择器 -->
-    <template v-if="element.type==='select'">
-      <n-select :options="element.options.list" />
-    </template>
-    <!-- 单选框组 -->
-    <template v-if="element.type==='radio'">
-      <n-radio-group name="radiogroup" class="leading-8">
-        <n-space>
-          <n-radio v-for="item in element.options.list" :key="item.value" :value="item.value">
-            {{ item.label }}
-          </n-radio>
-        </n-space>
-      </n-radio-group>
-    </template>
-    <!-- 多选框组 -->
-    <template v-if="element.type==='checkbox'">
-      <n-checkbox-group class="mt-1">
-        <n-space item-style="display: flex;">
-          <n-checkbox v-for="item in element.options.list" :key="item.value" :value="item.value">
-            {{ item.label }}
-          </n-checkbox>
-        </n-space>
-      </n-checkbox-group>
-    </template>
+    <select-component 
+      v-if="element.type==='select'" 
+      :options="element.options" 
+    />
+    <!-- 单选框 -->
+    <radio-component 
+      v-if="element.type==='radio'" 
+      :options="element.options" 
+    />
+    <!-- 多选框 -->
+    <checkbox-component 
+      v-if="element.type==='checkbox'" 
+      :options="element.options" 
+    />
     <!-- 日期选择器 -->
-    <template v-if="element.type==='datePicker'">
-      <n-date-picker 
-        :type="element.options.type" 
-        :start-placeholder="datePlaceholder[element.options.type] ? datePlaceholder[element.options.type].start : null" 
-        :end-placeholder="datePlaceholder[element.options.type] ? datePlaceholder[element.options.type].end : null"
-      />
-    </template>
+    <date-picker-component 
+      v-if="element.type==='datePicker'" 
+      :options="element.options" 
+    />
+    <!-- 上传 -->
+    <upload-component 
+      v-if="element.type==='upload'" 
+      :options="element.options" 
+    />
+
+    <!-- 增强控件 pro -->
+    <!-- 电话号码 -->
+    <input-phone-component
+      v-if="element.type==='inputPhone'" 
+      :options="element.options" 
+    />
+    <!-- 身份证号 -->
+    <input-id-component
+      v-if="element.type==='inputId'" 
+      :options="element.options" 
+    />
+    <!-- 选择职位 -->
+    <select-post-component
+      v-if="element.type==='selectPost'" 
+      :options="element.options" 
+    />
+    <!-- 选择部门 -->
+    <select-sector-component
+      v-if="element.type==='selectSector'" 
+      :options="element.options" 
+    />
+    <!-- 选择成员 -->
+    <add-user-component
+      v-if="element.type==='selectUser'" 
+      :options="element.options" 
+    />
   </div>
 </template>
 
@@ -64,13 +81,4 @@
 const props = defineProps({
   element: Object
 })
-
-// 日期选择器有关范围的 placeholder
-const datePlaceholder = {
-  daterange: { start: '开始日期', end: '结束日期' },
-  datetimerange: { start: '开始日期时间', end: '结束日期时间' },
-  monthrange: { start: '开始月份', end: '结束月份' },
-  yearrange: { start: '开始年份', end: '结束年份' },
-  quarterrange: { start: '开始季度', end: '结束季度' },
-}
 </script>

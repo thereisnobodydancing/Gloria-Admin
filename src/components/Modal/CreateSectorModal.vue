@@ -45,6 +45,7 @@
             :options="modal.parentOptions"
             :default-value="form.parentId"
             placeholder="选择上级部门" 
+            filterable
             children-field="list"
             key-field="sectorId"
             label-field="sectorName"

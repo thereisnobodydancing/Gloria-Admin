@@ -14,7 +14,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-7 h-5 cursor-pointer" @click="$router.back()">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
               </svg>
-              <p>新增模板</p>
+              <p class="font-bold text-gray-500">{{ route.query.id ? name : '新增模板' }}</p>
             </div>
           </div>
         </template>
@@ -91,11 +91,11 @@
     <template #header>
       <div class="flex items-center space-x-2">
         <div class="w-7 h-7 rounded-full text-primary font-bold border-2 border-primary flex items-center justify-center">✓</div>
-        <p>审批创建成功</p>
+        <p>{{ route.query.id ? '审批修改成功' : '审批创建成功' }}</p>
       </div>
     </template>
       <div class="pb-12 text-center">
-        审批创建成功，将自动返回审批类表 （{{ SuccessModal.timeout / 1000 }} 秒）
+        审批{{ route.query.id ? '修改' : '创建' }}成功，将自动返回审批类表 （{{ SuccessModal.timeout / 1000 }} 秒）
       </div>
     </n-card>
   </n-modal>
@@ -113,20 +113,70 @@ import { reactive } from 'vue'
 const message = useMessage()
 const dialog = useDialog()
 const useTemplate = useTemplateStore()
-const { 
-  tabActive, // tab实时位置
+const {
+  id,
+  tabActive,              // tab实时位置
   name,                   // 模板名称*
   groupId,                // 所在分组*
   remark,                 // 表单说明*
   submitType,             // 谁可以发起*
   submitUsers,            // 指定提交的人员*
+  submitOptions,
   templateAdministrators, // 模板管理员*
+  templateAdministratorOptions,
   formList,               // 表单模板信息（要转json）*
   process,                // 流程模板信息*
   startNode,
   endNode
 }  = toRefs(useTemplate)
+const route = useRoute()
 const showLoading = ref(false)
+
+/***** 编辑模板 *****/
+if(route.query.id && id.value.length === 0) {
+  api.get('/template/getTemplateDetail', {templateId: route.query.id}).then((res) => {
+    if(res.data.code === 20000) {
+      id.value = res.data.data.id
+      name.value = res.data.data.name
+      groupId.value = res.data.data.groupId
+      remark.value = res.data.data.remark
+      // 谁可以发起
+      submitType.value = res.data.data.submitType ? res.data.data.submitType : 'all'
+      submitUsers.value = res.data.data.submitUsers ? res.data.data.submitUsers.map(item => item.id) : []
+      submitOptions.value = res.data.data.submitUsers ? res.data.data.submitUsers.map(item => {
+        return {
+          checkboxDisabled: false,
+          id: item.id,
+          key: `u${item.id}`,
+          list: null,
+          name: item.userName,
+          picture: item.headshot,
+          type: 'user'
+        }
+      }) : []
+      // 模板管理员
+      templateAdministrators.value = res.data.data.templateAdministrators.map(item => item.id)
+      templateAdministratorOptions.value = res.data.data.templateAdministrators.map((item, index) => {
+        return {
+          checkboxDisabled: index === 0,
+          id: item.id,
+          key: `u${item.id}`,
+          list: null,
+          name: item.userName,
+          picture: item.headshot,
+          type: 'user'
+        }
+      })
+      // 表单设计
+      formList.value = res.data.data.form ? JSON.parse(res.data.data.form) : []
+      // 流程设计
+      let approvalTemplate = JSON.parse(res.data.data.process)
+      startNode.value = approvalTemplate[0]
+      endNode.value = approvalTemplate[approvalTemplate.length - 1]
+      process.value = approvalTemplate.slice(1, approvalTemplate.length - 1)
+    }
+  })
+}
 
 /***** 模板错误提示 *****/
 const popoverRef = ref()
@@ -141,7 +191,7 @@ const updateWarningData = function() {
   let noMember = false
   let noRule = false
   process.value.forEach((item, index) => {
-    if(index > 0) {
+    if(!route.query.id && index > 0 || route.query.id && index > 0 && index < process.value.length - 1) {
       noRead = item.formReadPerm.length === 0
       noMember = item.approvalUser === 0 && item.approvals.length === 0
       noRule = item.approvalUser === 4 && item.approvals.length === 0
@@ -176,7 +226,7 @@ const clearTemplate = function() {
     },
     onNegativeClick: () => {
       SuccessModal.show = true
-      SuccessModal.timeout = 6e3
+      SuccessModal.timeout = 4e3
       countdown()
     }
   })
@@ -185,7 +235,7 @@ const clearTemplate = function() {
 /***** 保存模板 *****/
 const SuccessModal = reactive({
   show: false,
-  timeout: 6000
+  timeout: 4000
 })
 const countdown = () => {
   if (SuccessModal.timeout <= 1e3) {
@@ -205,42 +255,50 @@ const submitTemplate = function() {
     }, 200)
     return
   } else {
-    let copyProcess = [].concat( startNode.value,process.value, endNode.value) 
     let data = {
+      id: route.query.id ? route.query.id : null,
       groupId: groupId.value,
       name: name.value,
       submitType: submitType.value,
-      submitUser: submitUsers.value,
+      submitUsers: submitUsers.value,
       form: JSON.stringify(formList.value),
-      process: JSON.stringify(copyProcess),
+      process: JSON.stringify([].concat( startNode.value,process.value, endNode.value)),
       templateAdministrators: templateAdministrators.value,
       remark: remark.value
     }
-    api.post('/template/create', data).then((res) => {
+    api.post(`${route.query.id ? '/template/updateTemplate' : '/template/create'}`, data).then((res) => {
       if(res.data.code !== 20000) message.warning(res.data.msg)
       if(res.data.code === 20000) {
-        setTimeout(() => { 
+        setTimeout(() => {
           SuccessModal.show = true
-          SuccessModal.timeout = 6e3
+          SuccessModal.timeout = 4e3
           countdown()
         }, 100)
       }
     })
   }
 }
+// 创建模板
+const createTemplate = function(data) {
+
+}
+
+onUnmounted(() => {
+  if(route.query.id) useTemplate.$reset()
+})
 </script>
 
 <style>
-  .n-tabs .n-tabs-nav {
-    @apply items-end
-  }
-  .n-tabs .n-tab-pane {
-    @apply p-0
-  }
-  .n-tabs .n-tabs-nav-scroll-wrapper {
-    @apply border-b
-  }
-  .n-tabs-nav-scroll-content {
-    border-bottom: none !important
-  }
-  </style>
+.n-tabs .n-tabs-nav {
+  @apply items-end
+}
+.n-tabs .n-tab-pane {
+  @apply p-0
+}
+.n-tabs .n-tabs-nav-scroll-wrapper {
+  @apply border-b
+}
+.n-tabs-nav-scroll-content {
+  border-bottom: none !important
+}
+</style>

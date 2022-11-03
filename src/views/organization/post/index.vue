@@ -120,7 +120,7 @@
                     :key="index"
                     :value="item.id"
                     :default-checked="item.checkout"
-                    class="w-full h-14 px-4 flex items-center group border-b border-b-gray-100 hover:bg-gray-100"
+                    class="w-full h-14 px-4 flex items-center group border-b border-b-gray-100 hover:border-b-gray-500/20 hover:bg-gray-100"
                   >
                     <div 
                       class="ml-4 flex items-center cursor-pointer" 
@@ -260,6 +260,9 @@ const searchValue = ref('')
 const toSearch = debounce((searchValue) => getUserList(rightData.postId, searchValue), 300, {
   leading: false,  // 延长开始后调用
 	trailing: true  // 延长结束前调用
+})
+onUnmounted(() => {
+  toSearch.cancel()
 })
 
 // 下拉菜单

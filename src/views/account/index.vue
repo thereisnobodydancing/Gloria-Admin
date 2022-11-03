@@ -12,6 +12,7 @@
             key-field="sectorId"
             label-field="sectorName"
             clearable
+            filterable
             @update:value="sectorUpdate"
           />
         </div>
@@ -32,17 +33,18 @@
           :loading="showTableLoading"
           :columns="columns"
           :data="accountList"
-          :max-height="clientHeight - 295"
+          :max-height="clientHeight - 285"
           :pagination="pagination"
         >
           <template #empty>
             <div 
               v-if="!showTableLoading"
               class="w-full flex flex-col items-center justify-center space-y-2" 
-              :style="{height: `${clientHeight - 295}px`}"
+              :style="{height: `${clientHeight - 285}px`}"
             >
-              <default-empty :width="200" :height="200" />
-              <p class="text-gray-400">数据为空</p>
+              <default-empty v-if="params.keyWord.length === 0" :width="200" :height="200" />
+              <search-empty v-else :width="200" :height="200" />
+              <p class="text-gray-400"> {{ params.keyWord.length === 0 ? '数据为空' : '啥也没搜到' }}</p>
             </div>
           </template>
         </n-data-table>
@@ -59,7 +61,6 @@ import api from '/src/api/index.js'
 import { pickBy, debounce } from 'lodash'
 import { NIcon, useDialog, useMessage } from "naive-ui"
 import { default as SearchIcon } from "@vicons/ionicons5/search"
-import { h, onMounted } from 'vue';
 
 const dialog = useDialog()
 const message = useMessage()
@@ -93,7 +94,6 @@ const toSearch = debounce((text) => {
 onUnmounted(() => {
   toSearch.cancel()
 })
-
 
 const columns = [
   { title: "编号", key: "id", width: '80'},
@@ -155,19 +155,16 @@ onMounted(() => {
 
 // 修改账号状态
 const updateAccountState = function(row) {
+  if(!row.userState) changeAccountState(row.id)
   if(row.userState) {
     dialog.warning({
-      title: `你确定要停用 “${row.userName}” 的账号吗？`,
+      title: `你确定要停用${row.userName}的账号吗？`,
       content: '停用后，该帐号将无法访问',
       positiveText: '确定',
       negativeText: '不确定',
-      onPositiveClick: () => {
-        changeAccountState(row.id)
-      },
-      onNegativeClick: () => { }
+      onPositiveClick: () => changeAccountState(row.id),
+      onNegativeClick: () => {}
     })
-  } else {
-    changeAccountState(row.id)
   }
 }
 const changeAccountState = function(id) {
@@ -185,23 +182,6 @@ const changeAccountState = function(id) {
 const dimissionDialogRef = ref()
 const removeAccount = function(row) {
   dimissionDialogRef.value.showModal(row.id, row.userName)
-  // dialog.warning({
-  //   title: `你确定要删除 “${row.userName}” 的账号吗？`,
-  //   content: '删除后，该帐号将无法访问',
-  //   positiveText: '确定',
-  //   negativeText: '不确定',
-  //   onPositiveClick: () => {
-  //     api.put('/userManage/deleteUser', { userId: row.id }, false, false).then((res) => {
-  //       if (res.data.code === 20000) {
-  //         showTableLoading.value = true
-  //         message.success('删除成功')
-  //         getAccountList()
-  //       }
-  //       if (res.data.code !== 20000) message.warning(res.data.msg)
-  //     })
-  //   },
-  //   onNegativeClick: () => { }
-  // })
 }
 </script>
 

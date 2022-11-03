@@ -152,7 +152,8 @@ const login = function () {
       message.error(res.data.msg)
       form.password = ''
     }
-    setTimeout(() => btnDisabled.value = false, 500)
+    setTimeout(() => btnDisabled.value = false, 200)
   })
+  setTimeout(() => btnDisabled.value = false, 2000)
 }
 </script>
