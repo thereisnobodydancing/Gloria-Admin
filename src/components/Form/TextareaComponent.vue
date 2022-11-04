@@ -8,11 +8,11 @@
     }"
   >
     <n-input 
-      type="textarea" 
+      type="textarea"
       :placeholder="props.options.placeholder" 
       :show-count="props.options.showCount" 
       :maxlength="props.options.maxLength" 
-      readonly 
+      clearable
     />
     <p 
       v-if="props.options.desc" 

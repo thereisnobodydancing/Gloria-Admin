@@ -1,6 +1,6 @@
 <!-- 日期选择器【组件】 -->
 <template>
-  <div class="w-full">
+  <div>
     <n-date-picker
       :type="props.options.type" 
       :start-placeholder="datePlaceholder[props.options.type] ? datePlaceholder[props.options.type].start : null" 

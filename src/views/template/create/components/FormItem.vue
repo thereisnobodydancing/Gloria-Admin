@@ -59,6 +59,11 @@
       v-if="element.type==='inputId'" 
       :options="element.options" 
     />
+    <!-- 金额 -->
+    <input-price-component
+      v-if="element.type==='inputPrice'" 
+      :options="element.options"
+    />
     <!-- 选择职位 -->
     <select-post-component
       v-if="element.type==='selectPost'" 
@@ -70,8 +75,13 @@
       :options="element.options" 
     />
     <!-- 选择成员 -->
-    <add-user-component
+    <select-user-component
       v-if="element.type==='selectUser'" 
+      :options="element.options" 
+    />
+    <!-- 选择省市区 -->
+    <select-city-component
+      v-if="element.type==='selectCity'" 
       :options="element.options" 
     />
   </div>

@@ -11,6 +11,7 @@
       :options="props.options.list" 
       :multiple=props.options.multiple
       :placeholder='props.options.placeholder'
+      clearable
     />
     <p
       v-if="props.options.desc" 

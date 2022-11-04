@@ -1,14 +1,13 @@
 <template>
   <n-spin
     :show="loading" 
-    class="w-full text-center relative"
-    :style="{height: props.height + 'px'}"
+    class="w-full relative"
   >
     <slot v-if="localList.length === 0 && !loading" name="empty" />
     <slot v-if="localList.length > 0" :list="localList" />
     <div 
       v-if="localList.length > 0"
-      class="sticky bottom-0 z-50 px-4 pb-4 pt-6 w-full flex justify-end bg-white/80"
+      class="px-4 pb-4 pt-6 w-full flex justify-end bg-white/80"
     >
       <n-pagination
         v-model:page="currentPage"

@@ -40,10 +40,10 @@ export default defineStore('template', () => {
         type: 'text', 
         placeholder: '请输入', 
         showCount: false, 
-        maxLength: '', 
+        maxLength: 10, 
         width: '3/3', 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -54,10 +54,10 @@ export default defineStore('template', () => {
         name: '多行文本', 
         placeholder: '请输入', 
         showCount: false, 
-        maxLength: '', 
+        maxLength: 30, 
         width: '3/3', 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -73,7 +73,7 @@ export default defineStore('template', () => {
         max: null, 
         width: '1/3', 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -87,7 +87,7 @@ export default defineStore('template', () => {
         width: '1/3', 
         list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -98,7 +98,7 @@ export default defineStore('template', () => {
         name: '单选框组', 
         list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -109,7 +109,7 @@ export default defineStore('template', () => {
         name: '多选框组', 
         list:[{label: '选项1', value: '选项1'}, {label: '选项2', value: '选项2'}], 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -120,7 +120,7 @@ export default defineStore('template', () => {
         name: '选择日期',
         type: 'date', 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -132,7 +132,7 @@ export default defineStore('template', () => {
         type: 'text',
         btnText: '点击上传',
         desc: '', 
-        required: false
+        required: true
       }
     }
   ])
@@ -147,7 +147,7 @@ export default defineStore('template', () => {
         placeholder: '请输入11位电话号码', 
         width: '3/3', 
         desc: '', 
-        required: false 
+        required: true 
       }
     },
     {
@@ -159,7 +159,22 @@ export default defineStore('template', () => {
         placeholder: '请输入18位身份证号', 
         width: '3/3', 
         desc: '', 
-        required: false 
+        required: true 
+      }
+    },
+    {
+      type: 'inputPrice', 
+      name: '金额', 
+      options: {
+        id: '', 
+        name: '金额', 
+        placeholder: '请输入金额', 
+        width: '3/3',
+        currency: [{label: 'CNY-人民币元', value: '1'}],
+        currencyValue: ['1'],
+        showUppercase: false,
+        desc: '', 
+        required: true 
       }
     },
     {
@@ -172,7 +187,7 @@ export default defineStore('template', () => {
         placeholder: '请选择职位',
         width: '1/3', 
         desc: '',
-        required: false 
+        required: true 
       }
     },
     {
@@ -185,7 +200,7 @@ export default defineStore('template', () => {
         placeholder: '请选择部门',
         width: '1/3', 
         desc: '',
-        required: false 
+        required: true 
       }
     },
     {
@@ -197,7 +212,19 @@ export default defineStore('template', () => {
         useMax: false,
         max: 1,
         desc: '',
-        required: false 
+        required: true 
+      }
+    },
+    {
+      type: 'selectCity',
+      name: '省/市/区',
+      options: {
+        id: '',
+        name: '省/市/区',
+        placeholder: '选择省/市/区',
+        width: '2/3', 
+        desc: '',
+        required: true 
       }
     },
   ])

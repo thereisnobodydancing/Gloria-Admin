@@ -12,6 +12,7 @@
     :placeholder="props.options.placeholder"
     :show-count="props.options.showCount"
     :maxlength="props.options.showCount ? props.options.maxLength : undefined"
+    clearable
   />
   <p v-if="props.options.desc" class="mt-1 text-xs text-gray-400">{{ props.options.desc }}</p>
 </div>

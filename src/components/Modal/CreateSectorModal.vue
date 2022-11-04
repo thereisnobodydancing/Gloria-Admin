@@ -68,7 +68,7 @@
     </n-card>
   </n-modal>
   <!-- 选择部门负责人 -->
-  <add-user-modal ref="addUserRef" :max="1" right-title="请选择一位部门负责人" :multiple="false" @confirm="changeHead" />
+  <add-user-modal ref="addUserRef" :max="1" right-title="请选择一位部门负责人" @confirm="changeHead" />
 </template>
 
 <script setup>

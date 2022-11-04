@@ -50,7 +50,7 @@ html { overflow-y: overlay }
 ::-webkit-scrollbar-thumb { @apply bg-gray-300 w-2 rounded-lg cursor-pointer }
 
 .n-tree-node-content {
-  @apply h-8 !important
+  @apply h-8 text-sm !important
 }
 .n-tree .n-tree-node {
   @apply items-center !important

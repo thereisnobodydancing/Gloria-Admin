@@ -13,6 +13,7 @@
       :placeholder="props.options.placeholder"
       :show-count="true"
       :maxlength="11"
+      clearable
       @update:value="handleChange"
     />
     <p v-if="showError" class="text-xs text-red-600 mt-1">手机号格式不正确</p>
@@ -24,8 +25,8 @@
   const props = defineProps({
     options: Object
   })
-  const showError = ref(true)
+  const showError = ref(false)
   const handleChange = function(value) {
-    showError.value = !/^1[3456789]\d{9}$/.test(value)
+    showError.value = value.length === 0 ? false : !/^1[3456789]\d{9}$/.test(value)
   }
   </script>

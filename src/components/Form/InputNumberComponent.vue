@@ -11,6 +11,7 @@
       :placeholder="props.options.placeholder"
       :min="props.options.useMin ? props.options.min : undefined"
       :max="props.options.useMax ? props.options.max : undefined"
+      clearable
     />
     <p 
       v-if="props.options.desc" 

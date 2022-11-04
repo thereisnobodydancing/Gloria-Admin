@@ -13,6 +13,7 @@
       :placeholder="props.options.placeholder"
       :show-count="true"
       :maxlength="18"
+      clearable
       @update:value="handleChange"
     />
     <p v-if="showError" class="text-xs text-red-600 mt-1">身份证号格式不正确</p>
@@ -24,8 +25,8 @@
   const props = defineProps({
     options: Object
   })
-  const showError = ref(true)
+  const showError = ref(false)
   const handleChange = function(value) {
-    showError.value = !/^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(value)
+    showError.value = value.length === 0 ? false : !/^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/.test(value)
   }
   </script>

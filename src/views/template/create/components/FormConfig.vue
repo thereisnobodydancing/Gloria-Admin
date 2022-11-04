@@ -20,8 +20,8 @@
         </div>
       </template>
 
-      <!-- 3-提示文字（单行输入框 || 多行输入框 || 数字输入框 || 电话号码 || 选择器 || 职位选择 || 选择部门） -->
-      <template v-if="['input', 'textarea', 'inputNumber', 'inputPhone', 'inputId', 'select', 'selectPost', 'selectSector'].includes(props.data.type)">
+      <!-- 3-提示文字（单行输入框 || 多行输入框 || 数字输入框 || 电话号码 || 身份证号 || 金额 || 选择器 || 职位选择 || 选择部门 || 省市区） -->
+      <template v-if="['input', 'textarea', 'inputNumber', 'inputPhone', 'inputId', 'inputPrice', 'select', 'selectPost', 'selectSector', 'selectCity'].includes(props.data.type)">
         <div class="space-y-2">
           <div class="flex items-center">
             <p class="text-sm">提示文字</p>
@@ -122,8 +122,8 @@
         </div>
       </template>
 
-      <!-- 8-组件宽度（单行输入框 || 多行输入框 || 数字输入框 || 选择器 || 选择职位 || 选择部门） -->
-      <template v-if="['input', 'textarea', 'inputNumber', 'select', 'inputPhone', 'inputId', 'selectPost', 'selectSector'].includes(props.data.type)">
+      <!-- 8-组件宽度（单行输入框 || 多行输入框 || 数字输入框 || 选择器 || 电话号 || 身份证号 || 金额 || 选择职位 || 选择部门 || 省市区） -->
+      <template v-if="['input', 'textarea', 'inputNumber', 'select', 'inputPhone', 'inputId', 'inputPrice', 'selectPost', 'selectSector', 'selectCity'].includes(props.data.type)">
         <div class="space-y-2">
           <p class="text-sm">组件宽度</p>
           <n-select v-model:value="props.data.options.width" :options="widthList" />
@@ -138,11 +138,52 @@
         </div>
       </template>
 
-      <!-- 10-多选（选择器 || 选择职位 || 选择部门） -->
-      <div v-if="['select', 'selectPost', 'selectSector'].includes(props.data.type)" class="space-y-2">
-        <p class="text-sm">多选</p>
-        <n-switch v-model:value="props.data.options.multiple" />
-      </div>
+      <!-- 10-多选（选择器 || 选择职位 || 选择部门 -->
+      <template v-if="['select', 'selectPost', 'selectSector'].includes(props.data.type)">
+        <div class="space-y-2">
+          <p class="text-sm">多选</p>
+          <n-switch v-model:value="props.data.options.multiple" />
+        </div>
+      </template>
+
+      <!-- 11-上限（选择成员） -->
+      <template v-if="props.data.type === 'selectUser'">
+        <div class="space-y-2">
+          <p class="text-sm">
+            <span>人数上限</span>
+            <span class="text-gray-400/80">（默认无上限）</span>
+          </p>
+          <div class="flex items-center space-x-4">
+            <n-switch v-model:value="props.data.options.useMax" />
+            <n-input-number 
+              v-model:value="props.data.options.max" 
+              :disabled="props.data.options.useMax === false" 
+            />
+          </div>
+        </div>
+      </template>
+
+      <!-- 12-币种\显示大写（金额） -->
+      <template v-if="props.data.type === 'inputPrice'">
+        <div class="space-y-2">
+          <p class="text-sm">币种</p>
+          <n-select 
+            v-model:value="props.data.options.currencyValue" 
+            multiple 
+            filterable
+            :options="currencyList"
+            @update:value="currencyUpdate" 
+          >
+            <template #action>
+              <n-checkbox @update:checked="checkedUpdate">全选（{{currencyList.length}}）</n-checkbox>
+            </template>
+          </n-select>
+          <span class="text-xs text-gray-500">选择多币种后，提交人可在该范围内自选</span>
+        </div>
+        <n-checkbox v-model:checked="props.data.options.showUppercase">
+          <p class="text-sm text-gray-500">显示大写数字</p>
+        </n-checkbox>
+      </template>
 
       <!-- 说明 -->
       <div class="space-y-2">
@@ -171,6 +212,8 @@
 </template>
 
 <script setup>
+import { template } from 'lodash';
+
 const props = defineProps({
   data: Object,
 })
@@ -218,4 +261,33 @@ const uploadTypeList = [
   { label: '上传文件', value: 'text' },
   { label: '上传图片', value: 'image-card' }
 ]
+
+// 币种
+const currencyList = [
+  {label: 'CNY-人民币元', value: '1'},
+  {label: 'JPY-日元', value: '2'},
+  {label: 'HKD-港元', value: '3'},
+  {label: 'USD-美元', value: '4'},
+  {label: 'EUR-欧元', value: '5'},
+  {label: 'GBP-英镑', value: '6'},
+  {label: 'CAD-加拿大元', value: '7'},
+  {label: 'SGD-新加坡元', value: '8'},
+  {label: 'AUD-澳大利亚元', value: '9'},
+  {label: 'KRW-韩元', value: '10'},
+  {label: 'TWD-新台币', value: '11'},
+  {label: 'THB-泰铢', value: '12'},
+  {label: 'RUB-俄罗斯卢布', value: '13'},
+  {label: 'INR-印度卢比', value: '14'},
+  {label: 'IDR-印尼盾', value: '15'},
+  {label: 'PHP-菲律宾比索', value: '16'},
+  {label: 'MYR-马来西亚令吉', value: '17'},
+  {label: 'VND-越南盾', value: '18'}
+]
+const currencyUpdate = function(value, option) {
+  props.data.options.currency = option
+}
+const checkedUpdate = function(checked) {
+  props.data.options.currency = checked ? currencyList : []
+  props.data.options.currencyValue = checked ? currencyList.map(item => item.value) : []
+}
 </script>

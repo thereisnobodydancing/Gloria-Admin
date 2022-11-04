@@ -21,6 +21,7 @@
       <base-pagination
         url="/announcement/getMyReceiveLogList"
         :params="params"
+        size="10"
         :style="{height: `${clientHeight - 150}px`}"
       >
         <template #empty>
@@ -31,7 +32,32 @@
           </div>
         </template>
         <template #default="slotProps">
-          {{ slotProps.list }}
+          <div 
+            class="w-full overflow-y-scroll p-5 space-y-3" 
+            :style="{height: `${clientHeight - 220}px`}"
+          >
+            <div 
+              v-for="(item, index) in slotProps.list" 
+              :key="index"
+              class="w-full h-32 cursor-pointer shadow-sm bg-gray-50/50 hover:shadow hover:bg-gray-50 p-2.5 flex items-center rounded"
+            >
+              <div class="w-full h-full flex flex-col items-start justify-around px-2">
+                <h3 class="text-base">{{ item.title }}</h3>
+                <div class="text-sm text-gray-400 w-2/3">
+                  <p v-html="item.contents" class="line-1" />
+                </div>
+                <div class="text-xs text-gray-400 space-x-7">
+                  <span>{{ item.companyName }}</span>
+                  <span>{{ item.createdTime }}</span>
+                  <div class="inline-block space-x-4 text-primary">
+                    <button class="hover:underline">编辑</button>
+                    <button class="hover:underline">删除</button>
+                  </div>
+                </div>
+              </div>
+              <div class="w-48 h-full bg-red-50 text-primary font-bold text-3xl text-center leading-[6.5rem] rounded font-serif">{{ item.type }}</div>
+            </div>
+          </div>
         </template>
       </base-pagination>
     </div>
