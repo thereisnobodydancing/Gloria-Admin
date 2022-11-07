@@ -22,8 +22,13 @@ const themeOverrides = {
   common: {
     primaryColor: '#FF432A',
     primaryColorHover: '#FF432A',
-    primaryColorPressed: '#FF432A'
+    primaryColorPressed: '#FF432A',
+    primaryColorSuppl: '#FF432A',
   },
+  Tree: {
+    fontSize: '14px',
+    nodeTextColor: '#666666'
+  }
 }
 const fangdou = debounce(() => { location.reload() }, 300, {
   leading: true,  // 延长开始后调用
@@ -50,7 +55,7 @@ html { overflow-y: overlay }
 ::-webkit-scrollbar-thumb { @apply bg-gray-300 w-2 rounded-lg cursor-pointer }
 
 .n-tree-node-content {
-  @apply h-8 text-sm !important
+  @apply h-8 !important
 }
 .n-tree .n-tree-node {
   @apply items-center !important

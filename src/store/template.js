@@ -178,6 +178,37 @@ export default defineStore('template', () => {
       }
     },
     {
+      type: 'contractTerms', 
+      name: '合同条款',
+      options: {
+        id: '',
+        name: '合同条款',
+        desc: '',
+        required: true
+      }
+    },
+    {
+      type: 'expenseDetails', 
+      name: '开销明细',
+      options: {
+        id: '',
+        name: '开销明细',
+        desc: '',
+        required: true
+      }
+    },
+    {
+      type: 'itemDetails', 
+      name: '物品明细',
+      options: {
+        id: '',
+        name: '物品明细',
+        showOptions: false,
+        desc: '',
+        required: true
+      }
+    },
+    {
       type: 'selectPost',
       name: '选择职位',
       options: {

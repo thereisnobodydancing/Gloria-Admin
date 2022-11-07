@@ -110,13 +110,27 @@ const routes= [
       },
 
        /** ------公告管理------ **/
-       {
+       // 公告列表
+      {
         path: '/bulletin',
         name: 'Bulletin',
         component:() => import('../views/bulletin/index.vue'),
         meta: { name: 'Bulletin'}
       },
-
+      // 公告详情
+      {
+        path: '/bulletin/detail/:id',
+        name: 'BulletinDetail',
+        component:() => import('../views/bulletin/detail/index.vue'),
+        meta: { name: 'Bulletin'}
+      },
+      // 编辑公告
+      {
+        path: '/bulletin/edit/:id',
+        name: 'BulletinEdit',
+        component:() => import('../views/bulletin/edit/index.vue'),
+        meta: { name: 'Bulletin'}
+      },
       /** ------模板管理------ **/
       {
         path: '/template',
@@ -124,6 +138,7 @@ const routes= [
         component:() => import('../views/template/index.vue'),
         meta: { name: 'Template'}
       },
+      // 创建模板
       {
         path: '/template/createTemplate',
         name: 'TemplateCreate',

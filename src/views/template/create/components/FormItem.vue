@@ -1,7 +1,10 @@
 <template>
   <div class="flex">
     <!-- 标题 -->
-    <p class="text-sm w-28 flex-shrink-0 leading-8">
+    <p
+      v-if="element.type !== 'itemDetails'" 
+      class="text-sm w-28 flex-shrink-0 leading-8"
+    >
       <span v-if="element.options.required" class="text-primary font-bold">*</span>
       <span :class="element.options.required ? 'ml-0.5' : 'ml-2'">{{ element.options.name }}</span>
     </p>
@@ -62,6 +65,21 @@
     <!-- 金额 -->
     <input-price-component
       v-if="element.type==='inputPrice'" 
+      :options="element.options"
+    />
+    <!-- 开销明细 -->
+    <expense-details-component
+      v-if="element.type==='expenseDetails'" 
+      :options="element.options"
+    />
+    <!-- 物品明细 -->
+    <item-details-component
+      v-if="element.type==='itemDetails'" 
+      :options="element.options"
+    />
+    <!-- 合同条款 -->
+    <contract-terms-component
+      v-if="element.type==='contractTerms'" 
       :options="element.options"
     />
     <!-- 选择职位 -->
