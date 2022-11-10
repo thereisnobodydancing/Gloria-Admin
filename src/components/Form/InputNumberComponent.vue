@@ -20,10 +20,10 @@
       {{ props.options.desc }}
     </p>
   </div>
-  </template>
-  
-  <script setup>
-  const props = defineProps({
-    options: Object
-  })
-  </script>
+</template>
+
+<script setup>
+const props = defineProps({
+  options: Object
+})
+</script>

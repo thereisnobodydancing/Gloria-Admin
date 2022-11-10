@@ -16,7 +16,7 @@
             block-line 
             :data="postList"
             key-field="id" 
-            label-field="roleName"
+            label-field="positionName"
             selectable
             :show-irrelevant-nodes="false"
             :pattern="postPattern"
@@ -53,10 +53,14 @@
             <n-button @click="showPostModal('create')">+新增职位</n-button>
           </div>
         </div>
-        <n-spin v-else :show=rightData.showLoading>
+        <n-spin 
+          v-else 
+          :show="rightData.showLoading" 
+          :style="{ height: `${clientHeight - 150}px` }"
+        >
           <div class="px-8 py-4">
             <div class="flex items-center">
-              <h3 class="text-lg mr-2">{{ rightData.roleName }}</h3>
+              <h3 class="text-lg mr-2">{{ rightData.positionName }}</h3>
               <n-dropdown :options="rightData.sectorOptions" placement="bottom-end" @select="SectorSelect">
                 <n-button quaternary size="small">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
@@ -96,7 +100,7 @@
                 <n-button @click="showAddUserModal">+添加员工</n-button>
               </div>
             </div>
-            <div v-else class="mt-5 space-y-2">
+            <div v-if="rightData.showLoading === false && userList.length > 0" class="mt-5 space-y-2">
               <div class="w-full h-10 rounded bg-gray-100 flex items-center px-4">
                 <n-checkbox 
                   v-model:checked="checked.state"
@@ -163,7 +167,7 @@
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
-import { debounce } from 'lodash'
+import { debounce, pickBy } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
 import { default as EditIcon } from "@vicons/ionicons5/Pencil"
 import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
@@ -196,7 +200,7 @@ const postRefresh = function(type, name) {
   getPostList()
   if(type === 'edit') {
     getUserList(rightData.postId)
-    rightData.roleName = name
+    rightData.positionName = name
   }
 }
 
@@ -205,7 +209,7 @@ const handleUpdateValue = function (keys, option) {
   if(keys.length > 0) {
     searchValue.value = ''
     rightData.postId = option[0].id
-    rightData.roleName = option[0].roleName     // 获取部门名
+    rightData.positionName = option[0].positionName     // 获取部门名
     rightData.showEmpty = false                 // 关闭空状态
     getUserList(option[0].id)                   // 获取成员列表
   }
@@ -236,7 +240,7 @@ const removePost = function() {
 const rightData = reactive({
   showLoading: false,
   showEmpty: true,
-  roleName: '',
+  positionName: '',
   postId: '',
   sectorOptions: [
     {label: '编辑职位', key: 'edit', icon: renderIcon(EditIcon)}, 
@@ -245,13 +249,13 @@ const rightData = reactive({
 })
 const userList = ref([])
 // 根据职位id获取人员列表
-const getUserList = function(id, searchValue='') {
-  rightData.showLoading = true
-  api.get('/position/getUserListByPositionId', {position: id, keyWord: searchValue}).then((res) => {
+const getUserList = function(id, searchValue='', loading=true) {
+  rightData.showLoading = loading
+  api.get('/position/getUserListByPositionId', pickBy({position: id, keyWord: searchValue})).then((res) => {
     userList.value = res.data.data
     checked.indeterminate = checked.state = false
     checkList.value = []
-    setTimeout(() => rightData.showLoading = false, 100)
+    rightData.showLoading = false
   })
 }
 
@@ -267,7 +271,7 @@ onUnmounted(() => {
 
 // 下拉菜单
 const SectorSelect = function(key) {
-  if(key === 'edit')  showPostModal('edit', rightData.roleName, rightData.postId)
+  if(key === 'edit')  showPostModal('edit', rightData.positionName, rightData.postId)
   if(key === 'remove') removePost()
 }
 
@@ -311,7 +315,7 @@ const showChangePostModal = function() {
 const refreshUserModal = function() {
   checked.state = checked.indeterminate = false
   checkList.value = []
-  getUserList(rightData.postId)
+  getUserList(rightData.postId, '', false)
 }
 
 
@@ -321,7 +325,7 @@ const showAddUserModal = function() {
   addUserRef.value.showModal()
 }
 const confirmAddUser = function(select) {
-  let data = { roleId: rightData.postId, userIdList: select.ids }
+  let data = { positionId: rightData.postId, userIdList: select.ids }
   api.put('/userManage/updatePositonUser', data).then((res) => {
     if(res.data.code === 20000) message.success('添加成功')
     if(res.data.code !== 20000) message.warning(res.data.msg)

@@ -1,32 +1,14 @@
 <template>
-  <div class="p-4">
-    {{ useTemplate }}
-  <div>
-    <p>名字</p>
-    {{ name }}
-  </div>
-  <div>
-    <p class="text-primary">备注</p>
-    {{ remark }}
-  </div>
-  <div>
-    <p class="text-blue-500">表单</p>
-    {{ formList }}
-  </div>
-  <div>
-    <p class="text-red-500">工作流</p>
-    {{ process }}
-  </div>
-  <n-button @click="useTemplate.$reset()">重置</n-button>
+  <div class="w-full h-full flex items-center justify-center relative">
+    <p class="absolute top-4 left-4 text-2xl">{{ user.userName }} 欢迎你</p>
+    <Vue3Lottie :animationData="HomeJson" :height="450" :width="450" />
   </div>
 </template>
 
 <script setup>
-import useTemplateStore from '/src/store/template.js'
-const useTemplate = useTemplateStore()
-const { name, remark, formList, process }  = toRefs(useTemplate)
+import { Vue3Lottie } from 'vue3-lottie'
+import 'vue3-lottie/dist/style.css'
+import HomeJson from '/src/assets/home.json'
+
+const user = JSON.parse(sessionStorage.getItem('user'))
 </script>
-
-<style>
-
-</style>

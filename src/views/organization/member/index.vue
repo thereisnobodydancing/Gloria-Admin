@@ -52,7 +52,11 @@
             <n-button @click="showCreateSectorModal('create')">+新建部门</n-button>
           </div>
         </div>
-        <n-spin v-else :show="rightData.showLoading">
+        <n-spin 
+          v-else 
+          :show="rightData.showLoading" 
+          :style="{ height: `${clientHeight - 150}px` }"
+        >
           <div class="px-8 py-4">
             <div class="flex items-center">
               <h3 class="text-lg mr-2 cursor-default">{{ rightData.fullName }}</h3>
@@ -95,7 +99,7 @@
                 <n-button @click="addUser('create', '')">+添加员工</n-button>
               </div>
             </div>
-            <div v-else>
+            <div v-if="rightData.showLoading === false && userList.length > 0">
               <div class="mt-5 space-y-2">
                 <div class="w-full h-10 rounded bg-gray-100 flex items-center px-4">
                   <n-checkbox 
@@ -196,19 +200,19 @@
   <!-- 创建部门/编辑部门 -->
   <create-sector-modal ref="createSectorRef" @refresh="sectorRefresh" />
   <!-- 变更部门 -->
-  <change-sector-modal ref="changeSectorRef" @refresh="getUserList(rightData.sectorId)" />
+  <change-sector-modal ref="changeSectorRef" @refresh="getUserList(rightData.sectorId, '', false)" />
   <!-- 添加员工/编辑员工 -->
-  <register-user-modal ref="addUserRef" @refresh="getUserList(rightData.sectorId)" />
+  <register-user-modal ref="addUserRef" @refresh="getUserList(rightData.sectorId, '', false)" />
   <!-- 名片 -->
   <business-card-modal ref="cardRef" />
   <!-- 离职提示 -->
-  <dimission-dialog-modal ref="dimissionDialogRef" @refresh="getUserList(rightData.sectorId)" />
+  <dimission-dialog-modal ref="dimissionDialogRef" @refresh="getUserList(rightData.sectorId, '', false)" />
 </template>
 
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
-import { debounce } from 'lodash'
+import { debounce, pickBy } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
 import { default as EditIcon } from "@vicons/ionicons5/Pencil"
 import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
@@ -265,13 +269,13 @@ const rightData = reactive({
   ]
 })
 const userList = ref([])
-const getUserList = function (id, searchValue='') {
-  rightData.showLoading = true
-  api.get('/addressBook/structure/getSectorEmployeeList', { sectorId: id, keyWord: searchValue }).then((res) => {
+const getUserList = function (id, searchValue='', loading=true) {
+  rightData.showLoading = loading
+  api.get('/addressBook/structure/getSectorEmployeeList',pickBy({ sectorId: id, keyWord: searchValue })).then((res) => {
     userList.value = res.data.data
     checked.indeterminate = checked.state = false
     checkList.value = []
-    setTimeout(() => rightData.showLoading = false, 100)
+    rightData.showLoading = false
   })
 }
 
@@ -418,7 +422,7 @@ const updateAccountState = function(id, name, state) {
       api.put('/userManage/updateUserState', { userId: id }, false, false).then((res) => {
         if (res.data.code === 20000) {
           message.success('修改成功')
-          getUserList(rightData.sectorId)
+          getUserList(rightData.sectorId, '', false)
         }
         if (res.data.code !== 20000) message.warning(res.data.msg)
       })
@@ -437,7 +441,7 @@ const settingTop = function (id, isTop) {
     api.post('/userManage/settingTop', data, true).then((res) => {
       if (res.data.code !== 20000) message.warning(res.data.msg)
       if (res.data.code === 20000) message.success('置顶成功')
-      getUserList(rightData.sectorId)
+      getUserList(rightData.sectorId, '', false)
       setTimeout(() => settingTopDisabled.value = false, 200)
     })
   }
@@ -447,7 +451,7 @@ const settingTop = function (id, isTop) {
     api.post('/userManage/removeTop', data, true).then((res) => {
       if (res.data.code !== 20000) message.warning(res.data.msg)
       if (res.data.code === 20000) message.success('取消置顶成功')
-      getUserList(rightData.sectorId)
+      getUserList(rightData.sectorId, '', false)
       setTimeout(() => settingTopDisabled.value = false, 200)
     })
   }
@@ -459,7 +463,7 @@ const move = function (id, direct) {
   api.put('/userManage/move', { userId: id, direct: direct }, false, false).then((res) => {
     if (res.data.code !== 20000) message.warning(res.data.msg)
     if (res.data.code === 20000) message.success('操作成功')
-    getUserList(rightData.sectorId)
+    getUserList(rightData.sectorId, '', false)
     setTimeout(() => moveDisabled.value = false, 200)
   })
 }

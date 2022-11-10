@@ -18,9 +18,13 @@
     >
       <!-- title -->
       <div class="p-7 border-b border-gray-100">
-        <div class="flex items-center text-base space-x-4">
-          <p class="text-gray-400">公告  发表于：{{ data.createdTime }} </p>
-          <p class="text-gray-400">类型：{{ data.typeName }}</p>
+        <div class="text-base space-x-4">
+          <p class="text-gray-400 space-x-4 inline-block">
+            <span>公告</span>
+            <span>发表于：{{ data.createdTime }} </span>
+            <span>发表人：{{ data.userName }}</span>
+            <span>类型：{{ data.typeName }}</span>
+          </p>
           <button class="text-primary hover:underline" @click="$router.push(`/bulletin/edit/${route.params.id}`)">编辑</button>
           <button class="text-primary hover:underline" @click.stop="removeBulletin()">删除</button>
         </div>
@@ -28,13 +32,13 @@
       </div>
       <!-- content -->
       <div 
-        class="px-7 p-9"  
+        class="p-9"  
         :style="{height: `${height - 305}px`}"
       >
         <div v-html="data.contents" />
         <div 
           v-if="data.fileList.length > 0"
-          class="mt-14"
+          class="mt-4 pb-9"
         >
           <p class="text-lg font-bold">附件：</p>
           <n-upload

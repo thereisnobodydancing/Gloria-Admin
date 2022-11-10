@@ -70,7 +70,7 @@
               </div>
             </n-popover>
             <n-button @click="clearTemplate">重置</n-button>
-            <n-button type="primary" @click="submitTemplate">保存模板</n-button>
+            <n-button type="primary" :disabled="submitBtnDisabled" @click="submitTemplate">保存模板</n-button>
           </div>
         </template>
       </n-tabs>
@@ -122,6 +122,7 @@ const {
   submitType,             // 谁可以发起*
   submitUsers,            // 指定提交的人员*
   submitOptions,
+  submitKeys,
   templateAdministrators, // 模板管理员*
   templateAdministratorOptions,
   formList,               // 表单模板信息（要转json）*
@@ -143,6 +144,7 @@ if(route.query.id && id.value.length === 0) {
       // 谁可以发起
       submitType.value = res.data.data.submitType ? res.data.data.submitType : 'all'
       submitUsers.value = res.data.data.submitUsers ? res.data.data.submitUsers.map(item => item.id) : []
+      submitKeys.value = res.data.data.submitUsers ? res.data.data.submitUsers.map(item => `u${item.id}`) : []
       submitOptions.value = res.data.data.submitUsers ? res.data.data.submitUsers.map(item => {
         return {
           checkboxDisabled: false,
@@ -239,12 +241,13 @@ const SuccessModal = reactive({
 })
 const countdown = () => {
   if (SuccessModal.timeout <= 1e3) {
-    SuccessModal.show = false;
+    SuccessModal.show = submitBtnDisabled.value = false;
   } else {
     SuccessModal.timeout -= 1e3;
     setTimeout(countdown, 1e3);
   }
 }
+const submitBtnDisabled = ref(false)
 const submitTemplate = function() {
   if(warningData.list.length > 0) {
     showLoading.value = true
@@ -255,6 +258,7 @@ const submitTemplate = function() {
     }, 200)
     return
   } else {
+    submitBtnDisabled.value = true
     let data = {
       id: route.query.id ? route.query.id : null,
       groupId: groupId.value,
@@ -267,7 +271,10 @@ const submitTemplate = function() {
       remark: remark.value
     }
     api.post(`${route.query.id ? '/template/updateTemplate' : '/template/create'}`, data).then((res) => {
-      if(res.data.code !== 20000) message.warning(res.data.msg)
+      if(res.data.code !== 20000) {
+        submitBtnDisabled.value = false
+        message.warning(res.data.msg)
+      }
       if(res.data.code === 20000) {
         setTimeout(() => {
           SuccessModal.show = true
@@ -277,10 +284,6 @@ const submitTemplate = function() {
       }
     })
   }
-}
-// 创建模板
-const createTemplate = function(data) {
-
 }
 
 onUnmounted(() => {

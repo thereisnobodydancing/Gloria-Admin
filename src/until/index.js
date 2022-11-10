@@ -1,4 +1,4 @@
-// 生成名字头像
+// 1, 生成名字头像
 export const toNameAvatar = (name) => {
   if(!isNaN(Number(name))) {
     if(name.length <= 3) return name
@@ -9,7 +9,7 @@ export const toNameAvatar = (name) => {
   }
 }
 
-// 数字金额转大写
+// 2, 字金额转大写
 export const numToCny=(money) => {
 	// 汉字的数字
 	let cnNums = new Array('零', '壹', '贰', '叁', '肆', '伍', '陆', '柒', '捌', '玖')

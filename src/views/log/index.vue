@@ -15,14 +15,15 @@
             </template>
           </n-input>
         </div>
-        <n-button type="primary">导出数据</n-button>
+        <n-button type="primary" @click="exportExcel" :disabled="btnDisabled">导出数据</n-button>
       </div>
     </template>
     <div class="w-full h-full overflow-y-scroll">
       <div class="w-[800px] h-full mx-auto">
         <base-infinite 
-          url="/log/getUserLogs" 
+          url="/log/getUserLogs"
           :params="params"
+          :size=3
           :style="{height: `${clientHeight - 150}px`}"
         >
           <template #empty>
@@ -36,17 +37,54 @@
             </div>
           </template>
           <template #default="slotProps">
-            {{ slotProps.list }}
+            <div
+              v-for="(item, index) in slotProps.list" 
+              :key="index"
+              class="mt-7"
+            >              
+              <!-- 1, title -->
+              <div class="flex items-center space-x-3.5">
+                <!-- left: avatar -->
+                <div 
+                  class="flex-shrink-0 w-11 h-11 rounded-md cursor-pointer hover:opacity-80" 
+                  :class="{'bg-primary': !item.headShot}"
+                  @click="showCard(item.userId)"
+                >
+                  <img v-if="item.headShot" :src="item.headShot" width="44" height="44" :alt="item.logName" class="rounded-md" />
+                  <p v-else class="text-center text-white leading-[2.75rem] text-base">{{ toNameAvatar(item.userName) }}</p>
+                </div>
+                <!-- right: info -->
+                <div class="flex-grow">
+                  <p class="text-lg">{{ item.logName }}</p>
+                  <p class="text-sm text-gray-400">{{ item.createdTime }}</p>
+                </div>
+              </div>
+              <!-- 2, content -->
+              <div 
+                class="ml-[3.625rem] w-full py-8"
+                :class="{'border-b': index < slotProps.list.length - 1}"
+              >
+                <!-- 周报 -->
+                <div v-if="item.logType === 2">
+                  <weekly-template :data="item" />
+                </div>
+              </div>
+            </div>
           </template>
         </base-infinite>
       </div>
     </div>
   </base-card>
+  <!-- 名片 -->
+  <business-card-modal ref="cardRef" />
 </template>
 
 <script setup>
-import { debounce } from 'lodash'
+import api from '/src/api/index.js'
+import downLoadXls from '/src/until/downLoadXls.js'
+import { debounce, pickBy } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
+import { toNameAvatar } from '/src/until/index.js'
 
 const clientHeight = ref(document.documentElement.clientHeight)
 const params = ref({
@@ -68,4 +106,20 @@ const searchUpdate = debounce((text) => {
 onUnmounted(() => {
   searchUpdate.cancel()
 })
+
+// 导出数据
+const btnDisabled = ref(false)
+const exportExcel = function() {
+  btnDisabled.value = true
+  api.getBlob('/log/toExcel', pickBy(params.value)).then((res) => {
+    downLoadXls(res)
+    setTimeout(() => btnDisabled.value = false, 300)
+  })
+}
+/******** 名片 ********/
+const cardRef = ref()
+const showCard = function(id) {
+  cardRef.value.showCard(id)
+}
 </script>
+

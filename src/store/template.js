@@ -263,7 +263,7 @@ export default defineStore('template', () => {
   /** 流程设计 **/
   const process = ref([
     {
-      nodeId: `Activity_${nanoid()}`,  // 节点id
+      nodeId: `Activity_${nanoid(10)}`,  // 节点id
       nodeName: '提交',                // 节点名称
       nodeType: '5',                  // 节点类型
       showMask: false,                // 是否显示删除遮罩 【原创】
@@ -301,7 +301,7 @@ export default defineStore('template', () => {
   })
 
   const endNode = ref({
-    nodeId: `Event_${nanoid()}`,
+    nodeId: `Event_${nanoid(10)}`,
     nodeName: '',
     nodeType: '4',
   })

@@ -25,12 +25,14 @@
           <template #empty>
             <div
               v-if="!showTableLoading"
-              class="w-full flex flex-col items-center justify-center space-y-2" 
+              class="w-full flex flex-col items-center justify-center space-y-2"
               :style="{height: `${clientHeight - 285}px`}"
             >
-              <default-empty v-if="params.keyWord.length === 0" :width="200" :height="200" />
-              <search-empty v-else :width="200" :height="200" />
-              <p class="text-gray-400"> {{ params.keyWord.length === 0 ? '数据为空' : '啥也没搜到' }}</p>
+              <template v-if="!showPageLoading">
+                <default-empty v-if="params.keyWord.length === 0" :width="200" :height="200" />
+                <search-empty v-else :width="200" :height="200" />
+                <p class="text-gray-400"> {{ params.keyWord.length === 0 ? '数据为空' : '啥也没搜到' }}</p>
+              </template>
             </div>
           </template>
         </n-data-table>
@@ -72,13 +74,13 @@ const addTemplate = function() {
       onPositiveClick: () => router.push('/template/createTemplate'),
       onNegativeClick: () => {
         useTemplate.$reset()
-        id.value = `template_${nanoid()}`
+        id.value = `template_${nanoid(10)}`
         router.push('/template/createTemplate')
       }
     }) 
   } else {
     useTemplate.$reset()
-    id.value = `template_${nanoid()}`
+    id.value = `template_${nanoid(10)}`
     router.push('/template/createTemplate')
   }
 }

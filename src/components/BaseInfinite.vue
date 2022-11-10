@@ -13,9 +13,7 @@
             <n-spin size="small" />
           </span>
           <!-- 没有更多了 -->
-          <n-divider v-show="finished && localList.length > props.finishednum" dashed class="pt-4 pb-6 text-xs text-gray-400">
-            没有更多了
-          </n-divider>
+          <n-divider v-show="finished" dashed class="pt-4 pb-6 text-3xl text-gray-400">没有更多了</n-divider>
         </template>
       </InfiniteLoading>
     </div>
@@ -62,10 +60,12 @@ const askApi = function(more = true) {
   let newParams = {}
   Object.assign(newParams, props.params, { page: currentPage.value, pageSize: props.size })
   api.get(props.url, pickBy(newParams)).then((res) => {
-    showEmpty.value = res.data.data.data.length === 0
-    if(more) localList.value.push(...res.data.data.data); currentPage.value++
-    if(!more) localList.value = res.data.data.data
-    if (res.data.data.current * res.data.data.pageSize >= res.data.data.total) finished.value = true
+    if(res.data.data.data) {
+      showEmpty.value = res.data.data.data.length === 0
+      if(more) localList.value.push(...res.data.data.data); currentPage.value++
+      if(!more) localList.value = res.data.data.data
+      if (res.data.data.current * res.data.data.pageSize >= res.data.data.total) finished.value = true
+    }
     loading.value = showSpin.value = false
   })
   setTimeout(() => loading.value = showSpin.value = false, 300)
@@ -91,3 +91,9 @@ defineExpose({
   askApi
 })
 </script>
+
+<style>
+.n-divider__title {
+  @apply text-sm text-gray-400
+}
+</style>

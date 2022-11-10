@@ -51,7 +51,11 @@
           <role-empty />
           <p class="mt-4 text-sm text-gray-400">选个角色看看吧</p>
         </div>
-        <n-spin v-else :show=rightData.showLoading>
+        <n-spin 
+          v-else 
+          :show="rightData.showLoading" 
+          :style="{ height: `${clientHeight - 150}px` }"
+        >
           <div class="px-8 py-4">
             <div class="flex items-center">
               <h3 class="text-lg mr-2">{{ rightData.roleName }}</h3>
@@ -88,7 +92,7 @@
               </div>
             </div>
             <div 
-              v-if="userList.length === 0" 
+              v-if="rightData.showLoading === false && userList.length === 0" 
               class="w-full flex flex-col items-center justify-center"
               :style="{ height: `${clientHeight - 330}px` }"
             >
@@ -99,7 +103,7 @@
                 <n-button @click="showAddUserModal">+添加员工</n-button>
               </div>
             </div>
-            <div v-else class="mt-5 space-y-2">
+            <div v-if="rightData.showLoading === false && userList.length > 0" class="mt-5 space-y-2">
               <div class="w-full h-10 rounded bg-gray-100 flex items-center px-4">
                 <n-checkbox 
                   v-model:checked="checked.state"
@@ -177,7 +181,7 @@
 <script setup>
 import api from '/src/api/index.js'
 import { NIcon } from "naive-ui"
-import { debounce } from 'lodash'
+import { debounce, pickBy } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
 import { default as EditIcon } from "@vicons/ionicons5/Pencil"
 import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
@@ -246,13 +250,13 @@ const rightData = reactive({
 })
 const userList = ref([])
 // 根据角色id获取人员列表
-const getUserList = function(id, searchValue='') {
-  rightData.showLoading = true
-  api.get('/adminRole/getUserListByRoleId', {roleId: id, keyWord: searchValue}).then((res) => {
+const getUserList = function(id, searchValue='', loading=true) {
+  rightData.showLoading = loading
+  api.get('/adminRole/getUserListByRoleId', pickBy({roleId: id, keyWord: searchValue})).then((res) => {
     userList.value = res.data.data
     checked.indeterminate = checked.state = false
     checkList.value = []
-    setTimeout(() => rightData.showLoading = false, 100)
+    rightData.showLoading = false
   })
 }
 
@@ -323,7 +327,7 @@ const showChangeRoleModal = function() {
 const refreshUserModal = function() {
   checked.state = checked.indeterminate = false
   checkList.value = []
-  getUserList(rightData.roleId)
+  getUserList(rightData.roleId, '', false)
 }
 
 /******* 添加员工 *******/
@@ -352,7 +356,7 @@ const removeUser = function(name, id) {
         if(res.data.code !== 20000) message.warning(res.data.msg)
         if(res.data.code === 20000) {
           message.success('移除角色成功')
-          getUserList(rightData.roleId)
+          getUserList(rightData.roleId, '', false)
         }
       })
     },

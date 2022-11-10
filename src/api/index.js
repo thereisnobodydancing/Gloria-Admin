@@ -44,6 +44,12 @@ api.get = function(url, params={}) {
   })
 }
 
+api.getBlob = function(url, params) {
+  return new Promise((resolve) => {
+    http({ method: "get", url: url, params:params, responseType: "blob"}).then((res) => { resolve(res) })
+  })
+}
+
 api.post = function(url, params, useQs=false) {
   let data
   useQs ? data = qs.stringify(params) : data = params

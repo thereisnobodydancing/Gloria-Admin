@@ -128,7 +128,7 @@ const active = ref(null)
 // 点击左侧菜单
 const selMenu = function(item) {
   formList.value.push(item)
-  formList.value[formList.value.length - 1].options.id = `${formList.value[formList.value.length - 1].type}_${nanoid()}`
+  formList.value[formList.value.length - 1].options.id = `${formList.value[formList.value.length - 1].type}_${nanoid(10)}`
   initComponents()
   active.value = formList.value.length - 1
   const centerHTML = document.querySelector('#formId')
@@ -142,7 +142,7 @@ const removeItem = function(index) {
 // 添加单元的回调函数 [要么从0开始，要么变成你的指数]
 const addList = function({newIndex}) {
   const index = formList.value.length === 1 ? 0 : newIndex
-  if(!formList.value[index].options.id) formList.value[index].options.id = `${formList.value[index].type}_${nanoid()}`
+  if(!formList.value[index].options.id) formList.value[index].options.id = `${formList.value[index].type}_${nanoid(10)}`
   initComponents()
   active.value = index
 }

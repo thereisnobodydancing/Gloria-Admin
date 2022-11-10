@@ -79,7 +79,7 @@ const showPopover = ref(false)
 const addNode = debounce((type, name, nodeText) => {
   showPopover.value = false
   let nodeObj = {
-    nodeId: `Activity_${nanoid()}`, // 节点id
+    nodeId: `Activity_${nanoid(10)}`, // 节点id
     nodeName: name,                 // 节点名称
     nodeType: type,                 // 节点类型
     showMask: false,                // 是否显示删除遮罩

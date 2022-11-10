@@ -74,6 +74,9 @@ const onFinish = function({file, event}) {
 const onChange = function({file, fileList, event}) {
   if(file.url) {
     let arr = []
+    console.log('file', file)
+    console.log('fileList', fileList)
+    console.log('event', event)
       fileList.forEach((item, index) => {
         arr[index] = {}
         arr[index].id = item.id

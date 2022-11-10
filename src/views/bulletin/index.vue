@@ -37,7 +37,7 @@
         </template>
         <template #default="slotProps">
           <div 
-            class="w-full overflow-y-scroll p-5 space-y-3" 
+            class="w-full overflow-y-scroll p-5 space-y-3"
             :style="{height: `${clientHeight - 220}px`}"
           >
             <div 
@@ -52,8 +52,11 @@
                   <p v-html="item.contents" class="line-1" />
                 </div>
                 <div class="text-xs text-gray-400 space-x-7">
-                  <span>{{ item.companyName }}</span>
-                  <span>{{ item.createdTime }}</span>
+                  <p class="inline-block space-x-4">
+                    <span>{{ item.companyName }}</span>
+                    <span>{{ item.userName }}</span>
+                    <span>{{ item.createdTime }}</span>
+                  </p>
                   <div class="inline-block space-x-4 text-primary">
                     <button class="hover:underline" @click.stop="$router.push(`/bulletin/edit/${item.id}`)">编辑</button>
                     <button class="hover:underline" @click.stop="removeBulletin(item.id)">删除</button>

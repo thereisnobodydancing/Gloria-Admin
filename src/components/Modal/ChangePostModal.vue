@@ -24,15 +24,15 @@
           class="pr-10 mt-4"
           label-width="90"
         >
-        <n-form-item path="roleId" label="职位">
+        <n-form-item path="positionId" label="职位">
           <n-select
-            v-model:value="form.roleId"
+            v-model:value="form.positionId"
             filterable
             placeholder="请选择职位"
-            label-field="roleName"
+            label-field="positionName"
             value-field="id"
             clearable
-            :options="roleOptions"
+            :options="postOptions"
           >
             <template #empty>
               <div />
@@ -61,11 +61,11 @@ const message = useMessage()
 // 表单
 const formRef = ref()
 const form = reactive({
-  roleId: '',
+  positionId: '',
   userIdList: []
 })
 const rules = {
-  roleId: [{required: true, message: "输入并选择职位"}]
+  positionId: [{required: true, message: "输入并选择职位"}]
 }
 
 // 弹出Modal
@@ -73,17 +73,17 @@ const modal = reactive({
   show: false
 })
 const showModal = function(id, arr) {
-  form.roleId = id
+  form.positionId = id
   form.userIdList = arr
   modal.show = true
-  getRoleOptions()
+  getPostOptions()
 }
 
 // 获取职位列表
-const roleOptions = ref([])
-const getRoleOptions = function() {
+const postOptions = ref([])
+const getPostOptions = function() {
   api.get('/position/getCompanyPositionList').then((res) => {
-    roleOptions.value = res.data.data
+    postOptions.value = res.data.data
   })
 }
 

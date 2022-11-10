@@ -1,18 +1,11 @@
-export function useOrganizationChecked(userList) {
-
-  const checkList = ref([])
-  const checked = reactive({
-    state: false,
-    indeterminate: false
-  })
-
+export function useOrganizationChecked(userList, checkList, checked) {
   // 全选、不全选
   const checkAll = function (isChecked) {
-    alert(isChecked)
+    console.log(userList, checkList, checked)
     checkList.value = []
     if (isChecked) {
       checked.indeterminate = false
-      checkList.value = userList.map(item => item.id)
+      checkList.value = userList.value.map(item => item.id)
     }
   }
 
@@ -23,15 +16,15 @@ export function useOrganizationChecked(userList) {
       checked.state = checked.indeterminate = false
       return
     }
-    if(0 < arr.length < userList.length) {
+    if(0 < arr.length < userList.value.length) {
       checked.state = false
       checked.indeterminate = true
     }
-    if(arr.length === userList.length) {
+    if(arr.length === userList.value.length) {
       checked.state = true
       checked.indeterminate = false
     }
   }
 
-  return { checkList, checked, checkAll, changeCheckbox }
+  return { checkAll, changeCheckbox }
 }
