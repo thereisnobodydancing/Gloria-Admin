@@ -61,7 +61,6 @@ const showSelUserModal = function() {
 }
 // 人员变化
 const changeUser = function({options, keys, ids}) {
-  console.log(options, keys, ids)
   addUser.options = options
   addUser.keys = keys
   addUser.ids = ids

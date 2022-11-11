@@ -137,7 +137,6 @@ const renderSourceList = function({
     defaultExpandAll: true,
     checkedKeys: form.permIdList,
     onUpdateCheckedKeys: (checkedKeys) => {
-      console.log('ccc', checkedKeys)
       onCheck(checkedKeys)
     }
   })

@@ -1,7 +1,6 @@
 export function useOrganizationChecked(userList, checkList, checked) {
   // 全选、不全选
   const checkAll = function (isChecked) {
-    console.log(userList, checkList, checked)
     checkList.value = []
     if (isChecked) {
       checked.indeterminate = false
