@@ -15,8 +15,8 @@
     @close="modal.show = false"
   >
     <n-form 
-      ref="formRef" 
-      :model="form" 
+      ref="formRef"
+      :model="form"
       :rules="rules" 
       label-placement="left"
       require-mark-placement="left"
@@ -27,7 +27,6 @@
         <n-tree-select
           :options="modal.options"
           placeholder="请选择要变更的部门" 
-          check-strategy="child"
           children-field="list"
           key-field="sectorId"
           label-field="sectorName"

@@ -142,13 +142,7 @@
                           class="ml-4 flex items-center space-x-2.5 cursor-pointer"
                           @click.stop="showCard(item.id)"
                         >
-                          <div 
-                            class="flex-shrink-0 w-10 h-10 rounded-md"
-                            :class="{'bg-primary py-1.5': !item.headshot}"
-                          >
-                            <img v-if="item.headshot" :src="item.headshot" :alt="item.userName" width="40" height="40" class="rounded-md">
-                            <p v-else class="text-center text-white leading-7 text-sm">{{ toNameAvatar(item.userName) }}</p>
-                          </div>
+                          <base-avatar :image="item.headshot" :name="item.userName" />
                           <div>
                             <div class="flex items-center">
                               <p class="text-base min-w-[40px]">{{ item.userName }}</p>
@@ -216,7 +210,6 @@ import { debounce, pickBy } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
 import { default as EditIcon } from "@vicons/ionicons5/Pencil"
 import { default as TrashIcon } from "@vicons/ionicons5/TrashOutline"
-import { toNameAvatar } from '/src/until/index.js'
 import { renderPrefix, renderIcon } from '/src/until/render.js'
 import { useDialog, useMessage } from 'naive-ui'
 

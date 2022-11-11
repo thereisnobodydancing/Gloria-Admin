@@ -15,7 +15,7 @@
       @close="closeModal"
     >
       <n-form
-        ref="formRef" 
+        ref="formRef"
         :model="form" 
         :rules="rules" 
         label-placement="left"

@@ -148,7 +148,6 @@ const showModal = function(id, type, userId) {
   if(type === 'create') formInit()
   if(type === 'edit') getFormData(userId)
   form.sectorId = id
-  form.parentId = null
   searchName.value = ''
   modal.show = true
 }
@@ -194,8 +193,8 @@ const rules = {
 // 表单初始化
 const formInit = function() {
   form.userName = form.mobile = form.landlineNumber = form.workNumber = form.emailNumber = form.headshot = ''
-  form.userPermIds = []
-  form.position = null
+  form.userPermIds = parentOptions.value = []
+  form.position = form.parentId = null
 }
 // 获取表单数据（编辑模式）
 const getFormData = function(id) {
@@ -207,6 +206,13 @@ const getFormData = function(id) {
     form.landlineNumber = res.data.data.landlineNumber
     form.workNumber = res.data.data.workNumber
     form.emailNumber = res.data.data.emailNumber
+    if(res.data.data.leader) {
+      toSearch(res.data.data.leader)
+      form.parentId = res.data.data.parentId
+    } else {
+      form.parentId = null
+      parentOptions.value = []
+    }
   })
 }
 

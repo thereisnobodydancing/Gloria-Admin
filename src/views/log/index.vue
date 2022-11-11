@@ -45,14 +45,7 @@
               <!-- 1, title -->
               <div class="flex items-center space-x-3.5">
                 <!-- left: avatar -->
-                <div 
-                  class="flex-shrink-0 w-11 h-11 rounded-md cursor-pointer hover:opacity-80" 
-                  :class="{'bg-primary': !item.headShot}"
-                  @click="showCard(item.userId)"
-                >
-                  <img v-if="item.headShot" :src="item.headShot" width="44" height="44" :alt="item.logName" class="rounded-md" />
-                  <p v-else class="text-center text-white leading-[2.75rem] text-base">{{ toNameAvatar(item.userName) }}</p>
-                </div>
+                <base-avatar :image="item.headShot" :name="item.logName" :width="44" :height="44" :font-size="16" />
                 <!-- right: info -->
                 <div class="flex-grow">
                   <p class="text-lg">{{ item.logName }}</p>

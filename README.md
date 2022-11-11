@@ -1,7 +1,30 @@
-# Vue 3 + Vite
+# 光大OA管理后台
 
-This template should help get you started developing with Vue 3 in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+技术框架：[vue3](https://cn.vuejs.org/) + [vite](https://vitejs.dev/) + [Naive UI](https://www.naiveui.com/zh-CN/light) + [Tailwind CSS](https://tailwindcss.com/)
 
-## Recommended IDE Setup
+## 更新日志
 
-- [VS Code](https://code.visualstudio.com/) + [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar)
+### v1.0.0-alpha.1
+
+2022-11-11
+
+#### Feature
+
+- 更新登录界面ui，看起来也许会比以前高大上一丢丢
+- 写了一个公共头像组件 BaseAvatar
+
+#### Bug Fixes
+
+- 技术部门下有数据的情况下，添加员工不能添加到上级技术部门
+- 上级领导选择完成确定后，再次打开未保存
+- 置顶功能异常
+- 头像渲染闪烁异常
+- 模块不能保存
+- 编辑后台角色Modal勾选异常
+- 账号被停用 仍然能登录、操作
+
+### v1.0.0-alpha.0
+
+2022-11-10
+
+- 提交最初的版本

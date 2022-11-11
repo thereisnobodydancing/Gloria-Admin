@@ -88,12 +88,10 @@
             <div
               v-for="(item, index) in templateAdministratorOptions"
               :key="index"
-              class="mr-6 mb-8 w-10 h-10 rounded-md cursor-pointer hover:opacity-80 relative"
-              :class="{'bg-primary': !item.picture}"
+              class="mr-6 mb-8 w-10 h-10 rounded-md cursor-pointer relative"
               @click="showCard(item.id)"
             >
-              <img v-if="item.picture" :src="item.picture" :alt="item.name" width="40" height="40" class="rounded-md">
-              <p v-else class="text-center text-white leading-10 text-sm">{{ toNameAvatar(item.name) }}</p>
+              <base-avatar :image="item.picture" :name="item.name" :width="40" :height="40" />
               <div 
                 v-if="item.id !== user.id"
                 class="absolute -top-3 -right-4" 
