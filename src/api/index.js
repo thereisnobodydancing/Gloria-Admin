@@ -32,6 +32,12 @@ http.interceptors.response.use(
     return res
   },
   error => {
+    if(error.response.status === 302) {
+      window.sessionStorage.removeItem("token")
+      alert('您的账号被停用。如有疑问，请联系管理员。')
+      router.push('/login')
+      location.reload()
+    }
     return Promise.reject(error)
   }
 )
@@ -40,7 +46,7 @@ const api = {}
 
 api.get = function(url, params={}) {
   return new Promise((resolve) => {
-    http({ method: "get", url: url, params:params }).then((res)=>{ resolve(res ) })
+    http({ method: "get", url: url, params:params }).then((res)=>{ resolve(res) })
   })
 }
 

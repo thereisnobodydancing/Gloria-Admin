@@ -8,7 +8,6 @@
     <div class="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
       <div class="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl  z-10">
         <div class="self-start hidden lg:flex flex-col  text-white">
-          <img src="" class="mb-3">
           <h1 class="mb-3 font-bold text-5xl">欢迎登录光大OA后台</h1>
           <p class="pr-3">Welcome to log in to the office automation management background of Everbright, if you encounter the situation of unable to log in, please press Ctrl+F5 to refresh the page, or cannot log in, please change the browser and try again.</p>
         </div>
