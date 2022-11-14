@@ -29,9 +29,14 @@
                 class="w-full flex flex-col items-center justify-center space-y-2" 
                 :style="{ height: `${clientHeight - 300}px` }"
               >
-                <default-empty v-if="rolePattern.length === 0" />
-                <search-empty v-else />
-                <p class="text-xs text-gray-400">{{ rolePattern.length === 0 ? '列表数据异常' : '啥也没搜到' }}</p>
+              <default-empty v-if="showPageLoading === false && sectorPattern.length === 0" />
+                <search-empty v-if="showPageLoading === false && sectorPattern.length > 0" />
+                <p 
+                  v-if="showPageLoading === false" 
+                  class="text-xs text-gray-400"
+                >
+                  {{ rolePattern.length === 0 ? '列表数据异常' : '啥也没搜到' }}
+                </p>
               </div>
             </template>
           </n-tree>

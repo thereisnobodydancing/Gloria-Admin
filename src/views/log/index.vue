@@ -77,7 +77,6 @@ import api from '/src/api/index.js'
 import downLoadXls from '/src/until/downLoadXls.js'
 import { debounce, pickBy } from 'lodash'
 import { default as SearchIcon } from "@vicons/ionicons5/search"
-import { toNameAvatar } from '/src/until/index.js'
 
 const clientHeight = ref(document.documentElement.clientHeight)
 const params = ref({

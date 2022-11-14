@@ -80,7 +80,7 @@
           <p class="text-base font-bold">
             <span class="text-primary mr-0.5">*</span>
             <span>模板管理员</span>
-            <span class="ml-5 text-gray-500 text-sm font-normal">可编辑模板并导出数据</span>
+            <span class="ml-5 text-gray-500 text-sm font-normal">模板管理员可编辑模板</span>
           </p>
           <!-- content -->
           <!-- 添加状态 -->
@@ -129,7 +129,6 @@
 import api from '/src/api/index.js'
 import useTemplateStore from '/src/store/template.js'
 import BusinessCardModal from '/src/components/Modal/BusinessCardModal.vue'
-import { toNameAvatar } from '/src/until/index.js'
 
 const user = JSON.parse(sessionStorage.getItem('user'))
 const useTemplate = useTemplateStore()

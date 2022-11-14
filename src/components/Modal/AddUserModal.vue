@@ -117,6 +117,7 @@
 <script setup>
 import api from '/src/api/index.js'
 import { default as SearchIcon} from "@vicons/ionicons5/search"
+import { renderPrefix } from '/src/until/render.js'
 
 const emit = defineEmits(['confirm', 'cancel'])
 const props = defineProps({
@@ -154,8 +155,16 @@ const select = reactive({
 const getOptions = function() {
   api.get('/addressBook/structure/getSectorAndUser').then((res) => {
     modal.options = res.data.data
+    setSuffix(modal.options)
   })
 }
+const setSuffix = function(list) {
+  list.forEach(item => {
+    if(item.type === 'sector') item.suffix = renderPrefix('sector_sub')
+    if (item.list && item.list.length > 0) setSuffix(item.list)
+  })
+}
+
 // 白名单id
 const whiteList = ref([])
 
@@ -172,6 +181,7 @@ const showModal = function(options=[], keys=[], ids=[], wList=[]) {
 
 // 	节点勾选项发生变化时的回调函数
 const handleChedkedKeysChange = function(keys, option) {
+  console.log(option)
   modal.btnDisabled = props.max ? option.length > props.max : option.length === 0
   select.options = option
   

@@ -28,9 +28,14 @@
                 class="w-full flex flex-col items-center justify-center space-y-2" 
                 :style="{ height: `${clientHeight - 300}px` }"
               >
-                <default-empty v-if="postPattern.length === 0" />
-                <search-empty v-else />
-                <p class="text-xs text-gray-400">{{ postPattern.length === 0 ? '列表为空，请先创建职位' : '啥也没搜到' }}</p>
+                <default-empty v-if="showPageLoading === false && sectorPattern.length === 0" />
+                <search-empty v-if="showPageLoading === false && sectorPattern.length > 0" />
+                <p 
+                  v-if="showPageLoading === false"
+                  class="text-xs text-gray-400"
+                >
+                  {{ postPattern.length === 0 ? '列表为空，请先创建职位' : '啥也没搜到' }}
+                </p>
               </div>
             </template>
           </n-tree>

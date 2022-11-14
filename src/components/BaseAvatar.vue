@@ -1,6 +1,6 @@
 <template>
   <!-- 有头像 -->
-  <template v-if="props.image.length > 0">
+  <template v-if="props.image && props.image.length > 0">
     <img 
       :src="props.image" 
       :alt="props.name" 
@@ -29,10 +29,7 @@
 import { toNameAvatar } from '/src/until/index.js'
 const props = defineProps({
   name: String,
-  image: {
-    type: String,
-    default: ''
-  },
+  image: [String, null],
   radius: {
     type: Number,
     default: 6

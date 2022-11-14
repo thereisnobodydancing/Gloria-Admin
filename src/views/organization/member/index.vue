@@ -24,13 +24,18 @@
             @update:selected-keys="handleUpdateValue"
           >
             <template #empty>
-              <div 
+              <div
                 class="w-full flex flex-col items-center justify-center space-y-2" 
                 :style="{ height: `${clientHeight - 300}px` }"
               >
-                <default-empty v-if="sectorPattern.length === 0" />
-                <search-empty v-else />
-                <p class="text-xs text-gray-400">{{ sectorPattern.length === 0 ? '列表为空，请先创建部门' : '啥也没搜到' }}</p>
+                <default-empty v-if="showPageLoading === false && sectorPattern.length === 0" />
+                <search-empty v-if="showPageLoading === false && sectorPattern.length > 0" />
+                <p 
+                  v-if="showPageLoading === false"
+                  class="text-xs text-gray-400"
+                >
+                  {{ sectorPattern.length === 0 ? '列表为空，请先创建部门' : '啥也没搜到' }}
+                </p>
               </div>
             </template>
           </n-tree>

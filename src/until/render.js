@@ -9,7 +9,7 @@ export const renderIcon = (icon) => {
   }
 }
 
-export const renderPrefix = function (type) {
+export const renderPrefix = function (type, color=null) {
   // 部门
   if (type === 'sector') {
     return () => h('div', {
@@ -46,7 +46,7 @@ export const renderPrefix = function (type) {
         strokeLinecap: 'round',
         strokeLinejoin: 'round',
         d: 'M961.5 700.5H889V512c0-24-19.5-43.5-43.5-43.5H541v-145h72.5c24 0 43.5-19.5 43.5-43.5V77c0-24-19.5-43.5-43.5-43.5h-203C386.5 33.5 367 53 367 77v203c0 24 19.5 43.5 43.5 43.5H483v145H178.5c-24 0-43.5 19.5-43.5 43.5v188.5H62.5C38.5 700.5 19 720 19 744v203c0 24 19.5 43.5 43.5 43.5h203c24 0 43.5-19.5 43.5-43.5V744c0-24-19.5-43.5-43.5-43.5H193v-174h290v174h-72.5c-24 0-43.5 19.5-43.5 43.5v203c0 24 19.5 43.5 43.5 43.5h203c24 0 43.5-19.5 43.5-43.5V744c0-24-19.5-43.5-43.5-43.5H541v-174h290v174h-72.5c-24 0-43.5 19.5-43.5 43.5v203c0 24 19.5 43.5 43.5 43.5h203c24 0 43.5-19.5 43.5-43.5V744c0-24-19.5-43.5-43.5-43.5zM425 91.5h174v174H425v-174zm-174 667v174H77v-174h174zm348 174H425v-174h174v174zm348 0H773v-174h174v174z',
-        fill: '#FF432A'
+        fill: color ? color : '#FF432A'
       })
     ])
   }

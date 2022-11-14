@@ -60,7 +60,6 @@
 
 <script setup>
 import api from '/src/api/index.js'
-import { toNameAvatar } from '/src/until/index.js'
 
 const showModal = ref(false)
 const employeeInfo = ref({})
