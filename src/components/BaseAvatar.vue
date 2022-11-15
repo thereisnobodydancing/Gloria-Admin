@@ -16,8 +16,8 @@
       :style="{ width: `${props.width}px`, height: `${props.height}px`, borderRadius: `${props.radius}px` }"
     >
       <p
-        class="text-center text-white"
-        :style="{ fontSize: `${props.fontSize}px` }"
+        class="text-center text-white leading-none"
+        :style="{fontSize: `${props.fontSize}px`}"
       >
         {{ toNameAvatar(props.name) }}
       </p>

@@ -52,7 +52,6 @@ const confirmModal = function() {
       emit('refresh')
       modal.show = false
     }
-    if (res.data.code !== 20000) message.warning(res.data.msg)
   })
 }
 

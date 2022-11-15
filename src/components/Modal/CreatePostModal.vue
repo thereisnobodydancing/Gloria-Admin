@@ -91,7 +91,6 @@ const addRoleData = function() {
       emit('refresh', modal.type, form.roleName)
       modal.show = false
     }
-    if(res.data.code !== 20000) message.error(res.data.msg)
     setTimeout(() => modal.disabled = false, 200)
   })
 }
@@ -105,7 +104,6 @@ const editRoleData = function() {
       emit('refresh', modal.type, form.roleName)
       modal.show = false
     }
-    if(res.data.code !== 20000) message.error(res.data.msg)
     setTimeout(() => modal.disabled = false, 200)
   })
 }

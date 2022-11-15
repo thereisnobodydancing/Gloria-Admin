@@ -101,7 +101,6 @@ const updateSectorUser = function() {
     onPositiveClick: () => {
       api.put('/userManage/updateSectorUser', form).then((res) => {
         if(res.data.code === 20000) message.success('变更部门成功')
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         emit('refresh')
         modal.show = false
       })

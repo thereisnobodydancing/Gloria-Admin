@@ -222,7 +222,6 @@ const removeRole = function() {
     negativeText: '不确定',
     onPositiveClick: () => {
       api.delete('/adminRole/deleteRoleInfo', {roleId: rightData.roleId}).then((res) => {
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         if(res.data.code === 20000) {
           message.success('删除角色成功')
           rightData.showEmpty = true
@@ -337,7 +336,6 @@ const confirmAddUser = function(select) {
   let data = { roleId: rightData.roleId, userIdList: select.ids }
   api.put('/adminRole/updateManageRoleUsers', data).then((res) => {
     if(res.data.code === 20000) message.success('添加成功')
-    if(res.data.code !== 20000) message.warning(res.data.msg)
     refreshUserModal()
   })
 }
@@ -351,7 +349,6 @@ const removeUser = function(name, id) {
     negativeText: '不确定',
     onPositiveClick: () => {
       api.delete('/adminRole/deleteUserManageRole', {userId: id}).then((res) => {
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         if(res.data.code === 20000) {
           message.success('移除角色成功')
           getUserList(rightData.roleId, '', false)

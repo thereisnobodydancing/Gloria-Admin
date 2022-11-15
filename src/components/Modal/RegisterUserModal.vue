@@ -293,7 +293,6 @@ const handleValidateClick = function(e) {
 // 添加员工
 const confirmAddUser = function() {
   api.put('/userManage/addUser', form).then((res) => {
-    if(res.data.code !== 20000) message.error(res.data.msg)
     if(res.data.code === 20000) {
       message.success('添加成功')
       modal.show = false
@@ -312,7 +311,6 @@ const confirmEditUser = function() {
     negativeText: '不确定',
     onPositiveClick: () => {
       api.put('/userManage/updateUser', form).then((res) => {
-        if(res.data.code !== 20000) message.error(res.data.msg)
         if(res.data.code === 20000) {
           message.success('编辑成功')
           modal.show = false

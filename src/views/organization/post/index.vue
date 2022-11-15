@@ -222,7 +222,6 @@ const removePost = function() {
     negativeText: '不确定',
     onPositiveClick: () => {
       api.delete('/position/deletePositionInfo', {positionId: rightData.postId}).then((res) => {
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         if(res.data.code === 20000) {
           message.success('删除职位成功')
           rightData.showEmpty = true
@@ -326,7 +325,6 @@ const confirmAddUser = function(select) {
   let data = { positionId: rightData.postId, userIdList: select.ids }
   api.put('/userManage/updatePositonUser', data).then((res) => {
     if(res.data.code === 20000) message.success('添加成功')
-    if(res.data.code !== 20000) message.warning(res.data.msg)
     refreshUserModal()
   })
 }

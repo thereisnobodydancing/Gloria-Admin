@@ -182,10 +182,7 @@ const updateComponentState = function(row) {
 const changeComponentState = function(id, state) {
   showTableLoading.value = true
   api.put('/template/updateTemplateState', { templateId: id, state: !state }, false, false).then((res) => {
-    if (res.data.code !== 20000) {
-      message.warning(res.data.msg)
-      showTableLoading.value = false
-    }
+    if (res.data.code !== 20000) showTableLoading.value = false
     if (res.data.code === 20000) {
       message.success('修改成功')
       getTemplateList()
@@ -202,7 +199,7 @@ const removeComponent = function(row) {
     onPositiveClick: () => {
       showTableLoading.value = true
       api.delete('/template/delete', { templateId: row.id }).then((res) => {
-        if (res.data.code !== 20000) message.warning(res.data.msg)
+        if (res.data.code !== 20000) showTableLoading.value = false
         if (res.data.code === 20000) {
           message.success('删除成功')
           getTemplateList()

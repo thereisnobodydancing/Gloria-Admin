@@ -1,13 +1,14 @@
 import axios from 'axios'
 import router from '../router'
 import qs from 'qs'
-const baseURL = import.meta.env.VITE_APP_URL
 
+import { createDiscreteApi } from 'naive-ui'
+const { message } = createDiscreteApi(['message'])
+const baseURL = import.meta.env.VITE_APP_URL
 const http = axios.create({
   baseURL,
   timeout: 20000,
 })
-
 
 // 在发起请求时进行拦截，获取token
 http.interceptors.request.use(
@@ -15,31 +16,22 @@ http.interceptors.request.use(
     req.headers.Authorization = window.sessionStorage.getItem("token")
     return req
   },
-  error => {
-    return Promise.reject(error)
-  }
+  error => Promise.reject(error)
 )
 
 // 当获取服务器返回的信息时进行的处理
 http.interceptors.response.use(
   res => {
-    if(res.data.code === 30000) {
+    if(res.data.code === 20001) message.warning(res.data.msg)
+    if(res.data.code === 20002) {
       window.sessionStorage.removeItem("token")
-      alert('登录超时，请重新登录')
+      alert(res.data.msg)
       router.push('/login')
       location.reload()
     }
     return res
   },
-  error => {
-    if(error.response.status === 302) {
-      window.sessionStorage.removeItem("token")
-      alert('您的账号被停用。如有疑问，请联系管理员。')
-      router.push('/login')
-      location.reload()
-    }
-    return Promise.reject(error)
-  }
+  error => Promise.reject(error)
 )
 
 const api = {}

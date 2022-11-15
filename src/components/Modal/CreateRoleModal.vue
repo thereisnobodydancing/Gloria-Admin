@@ -170,7 +170,6 @@ const handleValidateClick = function(e) {
 const confirmCreateRole = function() {
   modal.btnDisabled = true
   api.post('/adminRole/addAdminRoleInfo', form).then((res) => {
-    if(res.data.code !== 20000) message.warning(res.data.msg)
     if(res.data.code === 20000) {
       message.success('新增角色成功')
       emit('change', 'create', form)
@@ -182,7 +181,6 @@ const confirmCreateRole = function() {
 // 编辑角色
 const confirmEditRole = function() {
   api.put('/adminRole/updateRoleInfo', form).then((res) => {
-    if(res.data.code !== 20000) message.warning(res.data.msg)
     if(res.data.code === 20000) {
       message.success('编辑角色成功')
       emit('change', 'edit', form)

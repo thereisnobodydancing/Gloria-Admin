@@ -271,10 +271,7 @@ const submitTemplate = function() {
       remark: remark.value
     }
     api.post(`${route.query.id ? '/template/updateTemplate' : '/template/create'}`, data).then((res) => {
-      if(res.data.code !== 20000) {
-        submitBtnDisabled.value = false
-        message.warning(res.data.msg)
-      }
+      if(res.data.code !== 20000) submitBtnDisabled.value = false
       if(res.data.code === 20000) {
         setTimeout(() => {
           SuccessModal.show = true

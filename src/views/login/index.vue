@@ -23,7 +23,7 @@
               <label class="text-sm font-medium text-gray-700 tracking-wide">账号</label>
               <input
                 v-model="form.mobile"
-                class=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                class=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-primary"
                 placeholder="请输入您的账号"
               >
             </div>
@@ -32,7 +32,7 @@
               <input
                 v-model="form.password"
                 type="password"
-                class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-orange-400"
+                class="w-full content-center text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-primary"
                 placeholder="请输入您的密码"
               >
             </div>
@@ -79,16 +79,13 @@ const login = function () {
   if (!form.mobile || !form.password) { message.warning('请填写完整信息!'); return }
   btnDisabled.value = true
   api.post('/open/login', form).then((res) => {
+    if (res.data.code !== 20000) form.password = ''
     if (res.data.code === 20000) {
       sessionStorage.setItem('token', res.data.data.token)
       localStorage.setItem('mobile', res.data.data.user.mobile)
       sessionStorage.setItem('user', JSON.stringify(res.data.data.user))
       message.success(`欢迎你，${res.data.data.user.userName}`)
       router.push('/')
-    }
-    if (res.data.code !== 20000) {
-      message.error(res.data.msg)
-      form.password = ''
     }
     setTimeout(() => btnDisabled.value = false, 200)
   })

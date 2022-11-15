@@ -81,7 +81,6 @@ const removeBulletin = function() {
     negativeText: '不确定',
     onPositiveClick: () => {
       api.delete('/announcement/deleteAnnounce', {announceId: route.params.id}).then((res) => {
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         if(res.data.code === 20000) {
           message.success('删除公告成功')
           router.back()

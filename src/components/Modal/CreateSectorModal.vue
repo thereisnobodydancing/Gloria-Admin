@@ -14,7 +14,7 @@
       style="width: 600px"
       @close="closeModal"
     >
-      <n-form 
+      <n-form
         ref="formRef" 
         :model="form" 
         :rules="rules" 
@@ -191,7 +191,6 @@ const confirmCreateSector = function() {
   if(!form.sectorName) { message.warning('请填写部门名称'); return }
   if(!form.parentId) form.parentId = 0
   api.put('/addressBook/structure/addSectorStructure', form).then((res) => {
-    if(res.data.code !== 20000) message.warning(res.data.msg)
     if(res.data.code === 20000) {
       message.success('新建部门成功')
       emit('refresh', 'create', form)
@@ -211,7 +210,6 @@ const confirmEditSector = function() {
     onPositiveClick: () => {
       if(!form.parentId) form.parentId = 0
       api.put('/addressBook/structure/updateSectorStructure', form).then((res) => {
-        if(res.data.code !== 20000) message.error(res.data.msg)
         if(res.data.code === 20000) {
           message.success('编辑成功')
           modal.show = false

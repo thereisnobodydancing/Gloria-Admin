@@ -391,7 +391,6 @@ const deleteSector = function () {
           getSectorList()
           rightData.showEmpty = true
         }
-        if (res.data.code !== 20000) message.warning(res.data.msg)
       })
     },
     onNegativeClick: () => { }
@@ -422,7 +421,6 @@ const updateAccountState = function(id, name, state) {
           message.success('修改成功')
           getUserList(rightData.sectorId, '', false)
         }
-        if (res.data.code !== 20000) message.warning(res.data.msg)
       })
     },
     onNegativeClick: () => { }
@@ -437,7 +435,6 @@ const settingTop = function (id, isTop) {
   if (!isTop) {
     let data = { userId: id }
     api.post('/userManage/settingTop', data, true).then((res) => {
-      if (res.data.code !== 20000) message.warning(res.data.msg)
       if (res.data.code === 20000) message.success('置顶成功')
       getUserList(rightData.sectorId, '', false)
       setTimeout(() => settingTopDisabled.value = false, 200)
@@ -447,7 +444,6 @@ const settingTop = function (id, isTop) {
   if (isTop) {
     let data = { userId: id }
     api.post('/userManage/removeTop', data, true).then((res) => {
-      if (res.data.code !== 20000) message.warning(res.data.msg)
       if (res.data.code === 20000) message.success('取消置顶成功')
       getUserList(rightData.sectorId, '', false)
       setTimeout(() => settingTopDisabled.value = false, 200)
@@ -459,7 +455,6 @@ const moveDisabled = ref(false)
 const move = function (id, direct) {
   moveDisabled.value = true
   api.put('/userManage/move', { userId: id, direct: direct }, false, false).then((res) => {
-    if (res.data.code !== 20000) message.warning(res.data.msg)
     if (res.data.code === 20000) message.success('操作成功')
     getUserList(rightData.sectorId, '', false)
     setTimeout(() => moveDisabled.value = false, 200)

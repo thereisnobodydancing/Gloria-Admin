@@ -108,7 +108,6 @@ const updatePositionUser = function() {
     onPositiveClick: () => {
       api.put('/userManage/updatePositonUser', form).then((res) => {
         if(res.data.code === 20000) message.success('修改职位成功')
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         emit('refresh')
         modal.show = false
       })

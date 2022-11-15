@@ -108,7 +108,6 @@ const updatePositionUser = function() {
     onPositiveClick: () => {
       api.put('/adminRole/updateManageRoleUsers', form).then((res) => {
         if(res.data.code === 20000) message.success('修改角色成功')
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         emit('refresh')
         modal.show = false
       })

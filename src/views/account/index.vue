@@ -107,7 +107,7 @@ const columns = [
   { title: "职位", key: "roleName", width: '150', ellipsis: {tooltip: true}, render(row) { return row.roleName ? row.roleName : '-' }},
   { title: "所属部门", key: "sectorName", width: '150', ellipsis: {tooltip: true}},
   { title: "上级部门", key: "parentSector", width: '150', ellipsis: {tooltip: true}, render(row) { return row.parentSector ? row.parentSector : '-' }},
-  { 
+  {
     title: "账号存续", 
     key: "address",
     width: '120',
@@ -176,7 +176,6 @@ const changeAccountState = function(id) {
       message.success('修改成功')
       getAccountList()
     }
-    if (res.data.code !== 20000) message.warning(res.data.msg)
   })
 }
 
