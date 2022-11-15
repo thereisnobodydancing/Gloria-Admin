@@ -21,7 +21,7 @@
           <div class="w-full h-7 rounded-t-md text-xs text-white flex items-center">
             <p class="px-2">{{ item.nodeName }}</p>
             <div 
-              v-if="item.nodeType !== '0'"
+              v-if="item.nodeType !== '5'"
               class="ml-auto px-2 hidden group-hover:block"
               @click.prevent.stop="item.showMask = true"  
             >

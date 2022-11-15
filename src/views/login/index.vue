@@ -53,7 +53,7 @@
               </button>
             </div>
           </div>
-          <div class="pt-5 text-center text-gray-400 text-xs">Copyright © 2021-2022</div>
+          <div class="pt-5 text-center text-gray-400 text-xs">Copyright ©Everbright 2021-2022</div>
         </div>
       </div>
     </div>

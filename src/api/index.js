@@ -1,8 +1,8 @@
 import axios from 'axios'
 import router from '../router'
 import qs from 'qs'
-
 import { createDiscreteApi } from 'naive-ui'
+
 const { message } = createDiscreteApi(['message'])
 const baseURL = import.meta.env.VITE_APP_URL
 const http = axios.create({
