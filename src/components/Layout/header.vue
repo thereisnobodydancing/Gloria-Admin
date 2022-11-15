@@ -48,7 +48,7 @@ const LogOut = function() {
     positiveText: '确定',
     negativeText: '不确定',
     onPositiveClick: () => {
-      sessionStorage.removeItem('token')
+      ['token', 'user'].forEach(item => sessionStorage.removeItem(item))
       router.replace('/login')
       message.success('已成功退出登录')
     },
