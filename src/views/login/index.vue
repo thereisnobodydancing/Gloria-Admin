@@ -4,11 +4,11 @@
     class="bg-no-repeat bg-cover bg-center relative"
     style="background-image: url(https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1951&amp;q=80)"
   >
-    <div class="absolute bg-gradient-to-b from-gray-900 to-orange-100/50 opacity-80 inset-0 z-0" />
+    <div class="absolute bg-gradient-to-b from-gray-800 to-orange-100/50 opacity-70 inset-0 z-0" />
     <div class="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
       <div class="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl  z-10">
         <div class="self-start hidden lg:flex flex-col  text-white">
-          <h1 class="mb-3 font-bold text-5xl">欢迎登录光大OA后台</h1>
+          <h1 class="mb-3 font-bold text-5xl">欢迎登录光大管理后台</h1>
           <p class="pr-3">Welcome to log in to the office automation management background of Everbright, if you encounter the situation of unable to log in, please press Ctrl+F5 to refresh the page, or cannot log in, please change the browser and try again.</p>
         </div>
       </div>
@@ -23,7 +23,7 @@
               <label class="text-sm font-medium text-gray-700 tracking-wide">账号</label>
               <input
                 v-model="form.mobile"
-                class=" w-full text-base px-4 py-2 border  border-gray-300 rounded-lg focus:outline-none focus:border-primary"
+                class="w-full text-base px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:border-primary"
                 placeholder="请输入您的账号"
               >
             </div>
@@ -53,7 +53,7 @@
               </button>
             </div>
           </div>
-          <div class="pt-5 text-center text-gray-400 text-xs">Copyright ©Everbright 2021-2022</div>
+          <div class="pt-5 text-center text-gray-400 text-xs">Copyright ©Everbright 2022</div>
         </div>
       </div>
     </div>

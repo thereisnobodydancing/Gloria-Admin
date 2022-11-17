@@ -91,7 +91,7 @@ api.get('/permissions/navigation').then((res) => {
   if(res.data.code === 20000) {
     sessionStorage.setItem('sr', JSON.stringify(res.data.data))    // sr --- sider role
     menuOptions2.forEach(item => {
-      if(res.data.data[item.key] || [item.children && item.children.length > 0 && item.children.find(i => res.data.data[i.key])]) {
+      if(res.data.data[item.key] || item.children && item.children.length > 0 && item.children.find(i => res.data.data[i.key])) {
         menuOptions.value.push({
           label: item.label, 
           key: item.key,

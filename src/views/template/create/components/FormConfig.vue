@@ -55,14 +55,14 @@
       </template>
 
       <!-- 5-最大值、最小值（数字输入框） -->
-      <template v-if="props.data.type === 'inputNumber'">
+      <template v-if="['inputNumber', 'inputPrice'].includes(props.data.type)">
         <div class="space-y-4">
           <div class="space-y-2">
             <p class="text-sm">设置最小值</p>
             <div class="flex items-center space-x-4">
               <n-switch v-model:value="props.data.options.useMin" />
-              <n-input-number 
-                v-model:value="props.data.options.min" 
+              <n-input-number
+                v-model:value="props.data.options.min"
                 :disabled="props.data.options.useMin === false" 
               />
             </div>

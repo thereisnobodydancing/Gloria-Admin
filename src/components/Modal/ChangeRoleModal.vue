@@ -82,7 +82,7 @@ const showModal = function(id, arr) {
 // 获取角色列表
 const roleOptions = ref([])
 const getRoleOptions = function() {
-  api.get('/adminRole/getCompanyRoleList').then((res) => {
+  api.get('/adminRole/getChangeRoleList').then((res) => {
     roleOptions.value = res.data.data
   })
 }

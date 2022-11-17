@@ -4,10 +4,10 @@
     <!-- logo -->
     <img :src="logoImg" alt="logo" width="101" height="36">
     <!-- avatar -->
-    <div class="ml-auto p-1 rounded-lg hover:bg-gray-100">
+    <div class="ml-auto p-1 rounded-lg hover:bg-gray-600/10">
       <n-dropdown 
         :options="options" 
-        trigger="click" 
+        trigger="hover" 
         placement="bottom-end"
         @select="handleSelect"
       >
@@ -26,7 +26,9 @@
 <script setup>
 import logoImg from '/src/assets/logo.png'
 import { NIcon } from "naive-ui"
-import { HomeOutline as HomeOutIcon, LogOutOutline as LogOutIcon } from "@vicons/ionicons5"
+import { default as HomeOutIcon} from "@vicons/ionicons5/HomeOutline"
+import { default as ReaderOutIcon} from "@vicons/ionicons5/ReaderOutline"
+import { default as LogOutIcon} from "@vicons/ionicons5/LogOutOutline"
 import { useDialog, useMessage } from 'naive-ui'
 
 const router = useRouter()
@@ -36,10 +38,11 @@ const user = JSON.parse(sessionStorage.getItem('user'))
 const renderIcon = function (icon) {
   return () => h(NIcon, null, { default: () => h(icon) })
 }
-const options = [
-  { label: '首页', key: "HomeOut", icon: renderIcon(HomeOutIcon)},
-  { label: '退出登录', key: "LogOut", icon: renderIcon(LogOutIcon) }
-]
+const options = ref([
+  {label: '首页', key: "HomeOut", icon: renderIcon(HomeOutIcon)},
+  {label: '退出登录', key: "LogOut", icon: renderIcon(LogOutIcon)}
+])
+if(user.roleType === 'SuperAdmin') options.value.splice(1, 0, {label: '活动记录', key: "ReaderOut", icon: renderIcon(ReaderOutIcon)})
 // 退出登录
 const LogOut = function() {
   dialog.warning({
@@ -57,6 +60,7 @@ const LogOut = function() {
 }
 const handleSelect = function(key) {
   if(key === 'HomeOut') router.push('/')
+  if(key === 'ReaderOut') router.push('/activity')
   if(key === 'LogOut') LogOut()
 }
 </script>

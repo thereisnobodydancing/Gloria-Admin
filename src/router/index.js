@@ -145,7 +145,13 @@ const routes= [
         component:() => import('../views/template/create/index.vue'),
         meta: { name: 'Template'}
       },
-
+      // 活动记录 activity
+      {
+        path: '/activity',
+        name: 'Activity',
+        component:() => import('../views/activity/index.vue'),
+        meta: { name: 'Activity', common: true }
+      },
       /** --------404-------- **/
       {
         path: '/:pathMatch(.*)*',

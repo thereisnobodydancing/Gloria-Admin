@@ -56,8 +56,8 @@
           <role-empty />
           <p class="mt-4 text-sm text-gray-400">选个角色看看吧</p>
         </div>
-        <n-spin 
-          v-else 
+        <n-spin
+          v-else
           :show="rightData.showLoading" 
           :style="{ height: `${clientHeight - 150}px` }"
         >
@@ -84,7 +84,10 @@
                   <template #prefix><n-icon :component="SearchIcon" /></template>
                 </n-input>
               </div>
-              <div class="ml-auto space-x-2">
+              <div 
+                v-if="rightData.roleType !== 'SuperAdmin'" 
+                class="ml-auto space-x-2"
+              >
                 <n-button @click="showAddUserModal">添加员工</n-button>
                 <n-button 
                   :disabled="checkList.length === 0" 
@@ -111,6 +114,7 @@
             <div v-if="rightData.showLoading === false && userList.length > 0" class="mt-5 space-y-2">
               <div class="w-full h-10 rounded bg-gray-100 flex items-center px-4">
                 <n-checkbox 
+                  v-if="rightData.roleType !== 'SuperAdmin'"
                   v-model:checked="checked.state"
                   :indeterminate="checked.indeterminate"
                   class="w-full"
@@ -118,12 +122,13 @@
                 >
                   已选{{ checkList.length }}人（共{{ userList.length }}人）
                 </n-checkbox>
+                <p v-else class="text-sm text-gray-600">超级管理员（共{{ userList.length }}人）</p>
               </div>
               <div 
                 class="overflow-y-scroll overflow-x-hidden" 
                 :style="{ height: `${clientHeight - 330}px` }"
               >
-                <n-checkbox-group 
+                <n-checkbox-group
                   v-model:value="checkList"
                   @update:value="changeCheckbox"
                 >
@@ -152,6 +157,7 @@
                       </div>
                     </n-checkbox>
                     <button 
+                      v-if="rightData.roleType !== 'SuperAdmin'" 
                       class="ml-auto text-sm text-gray-500 hover:text-primary"
                       @click="removeUser(item.userName, item.id)"
                     >
