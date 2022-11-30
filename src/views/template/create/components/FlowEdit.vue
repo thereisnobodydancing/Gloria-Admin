@@ -66,14 +66,15 @@
               </div>
             </div>
           </template>
-          <!-- 添加角色 -->
+          <!-- 添加职位 -->
           <template v-if="process[props.active].approvalUser === 4">
-            <p class="mt-2 text-sm font-bold">选择角色</p>
+            <p class="mt-2 text-sm font-bold">选择职位</p>
             <n-select 
               v-model:value="process[props.active].approvals" 
-              label-field="roleName"
+              label-field="positionName"
               value-field="id"
-              multiple  clearable
+              multiple  
+              clearable
               :options="roleList" 
               class="mt-2"
             />
@@ -179,7 +180,7 @@ const removeApprovalOption = function(key, id, index) {
   process.value[props.active].approvalOptions.splice(index, 1)
 }
 
-/***** 添加角色 *****/
+/***** 添加职位 *****/
 const roleList = ref([])
 const getRoleList = function() {
   api.get('/position/getCompanyPositionList').then((res) => {
@@ -190,6 +191,7 @@ if(process.value[props.active].approvalUser === 4 && roleList.value.length === 0
 
 /**** 多人审批时采用的审批方式 *****/
 const showMultiple = computed(() => {
+  if(process.value[props.active].approvalUser === 1) return true
   if(process.value[props.active].approvalUser === 0 && process.value[props.active].approvals.length > 1) return true
   if(process.value[props.active].approvalUser === 4 && process.value[props.active].approvals.length > 0) return true
   return false

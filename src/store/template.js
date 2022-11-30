@@ -281,7 +281,7 @@ export default defineStore('template', () => {
       formUpdatePerm: '',             // 表单编辑权限 ids
       // 流程【原创】
       prem: {
-        readCheckAll: false,               // 表单可读全选状态
+        readCheckAll: false,              // 表单可读全选状态
         readChedkIndeterminate: false,    // 表单可读部分选中状态
         updateCheckAll: false,            // 表单可编辑全选状态
         updateChedkIndeterminate: false,  // 表单可编辑部分选中状态

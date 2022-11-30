@@ -9,7 +9,7 @@
   >
     <n-select 
       :options="postList" 
-      label-field="roleName"
+      label-field="positionName"
       value-field="id" 
       filterable
       :multiple="props.options.multiple"

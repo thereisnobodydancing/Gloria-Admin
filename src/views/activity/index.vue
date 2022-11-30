@@ -25,7 +25,7 @@
               >              
                 <div class="w-full h-10 bg-gray-100 rounded px-4 flex items-center">
                   <p>{{ item.userName }}</p>
-                  <p class="ml-auto text-gray-400 text-xs">ip：{{ item.ip }}</p>
+                  <p class="ml-auto text-gray-400 text-xs">IP：{{ item.ip }}</p>
                 </div>
                 <div class="p-4">
                   <p class="space-x-1">

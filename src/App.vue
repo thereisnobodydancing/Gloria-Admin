@@ -21,9 +21,9 @@ import { debounce } from 'lodash'
 const themeOverrides = {
   common: {
     primaryColor: '#FF432A',
-    primaryColorHover: '#FF432A',
-    primaryColorPressed: '#FF432A',
-    primaryColorSuppl: '#FF432A',
+    primaryColorHover: '#FF6652',
+    primaryColorPressed: '#FF391F',
+    primaryColorSuppl: '#FF6652',
   },
   Tree: {
     fontSize: '14px',

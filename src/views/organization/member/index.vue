@@ -127,14 +127,13 @@
                       v-for="(item, index) in userList" 
                       :key="index"
                       class="w-full h-14 px-4 flex items-center border-b border-b-gray-100"
-                      :class="[
-                        {
-                          'bg-red-50 hover:bg-primary/10 hover:border-b-primary/30': item.position.isSectorHead  && !item.showDropdown,
-                          'bg-primary/10 border-b-primary/30 hover:bg-primary/10': item.position.isSectorHead && item.showDropdown,
-                          'hover:bg-gray-100 hover:border-b-gray-500/20' : !item.position.isSectorHead,
-                          'bg-gray-100 border-b-gray-500/20 hover:bg-gray-100': !item.position.isSectorHead && item.showDropdown,
-                          'bg-gray-50': item.position.isTop && !item.position.isSectorHead && !item.showDropdown
-                        }]"
+                      :class="[{
+                        'bg-red-50 hover:bg-primary/10 hover:border-b-primary/30': item.position.isSectorHead  && !item.showDropdown,
+                        'bg-primary/10 border-b-primary/30 hover:bg-primary/10': item.position.isSectorHead && item.showDropdown,
+                        'hover:bg-gray-100 hover:border-b-gray-500/20' : !item.position.isSectorHead,
+                        'bg-gray-100 border-b-gray-500/20 hover:bg-gray-100': !item.position.isSectorHead && item.showDropdown,
+                        'bg-gray-50': item.position.isTop && !item.position.isSectorHead && !item.showDropdown
+                      }]"
                     >
                       <!-- 1-勾选框 -->
                       <n-checkbox 

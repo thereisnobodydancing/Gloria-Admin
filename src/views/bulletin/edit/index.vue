@@ -127,7 +127,6 @@ import '@wangeditor/editor/dist/css/style.css' // 引入 css
 import { Editor, Toolbar } from '@wangeditor/editor-for-vue'
 import { useDialog, useMessage } from 'naive-ui'
 import { useEditor } from '/src/composables/useEditor.js'
-import { reactive } from 'vue'
 
 // 路由
 const route = useRoute()
@@ -195,7 +194,6 @@ const recipientData = reactive({
 })
 
 // 1 全公司、 2 部门、 3 个人
-
 const changeRecipientType = function(value) {
   if(value === 'all') {
     recipientData.options = recipientData.keys = recipientData.ids = []
@@ -260,7 +258,6 @@ const updateAnnounce = function() {
         })
       }
       api.put('/announcement/updateAnnounce', data).then((res) => {
-        if(res.data.code !== 20000) message.warning(res.data.msg)
         if(res.data.code === 20000) {
           message.success('修改成功')
           router.back()

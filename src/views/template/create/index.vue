@@ -222,14 +222,10 @@ const clearTemplate = function() {
     content: '你确定要重置已填写的模板吗？',
     positiveText: '确定',
     negativeText: '不确定',
+    onNegativeClick: () => {},
     onPositiveClick: () => {
       useTemplate.$reset()
       message.success('重置模板成功')
-    },
-    onNegativeClick: () => {
-      SuccessModal.show = true
-      SuccessModal.timeout = 4e3
-      countdown()
     }
   })
 }
@@ -266,7 +262,7 @@ const submitTemplate = function() {
       submitType: submitType.value,
       submitUsers: submitUsers.value,
       form: JSON.stringify(formList.value),
-      process: JSON.stringify([].concat( startNode.value,process.value, endNode.value)),
+      process: JSON.stringify([].concat( startNode.value, process.value, endNode.value)),
       templateAdministrators: templateAdministrators.value,
       remark: remark.value
     }

@@ -30,7 +30,7 @@
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v12m6-6H6" />
       </svg>
     </button>
-    <p v-if="props.options.desc" class="text-xs text-gray-400">{{ props.options.desc }}</p>
+    <p v-if="props.options.desc" class="text-xs text-gray-400 w-full">{{ props.options.desc }}</p>
   </div>
   <!-- 选择人员Modal -->
   <add-user-modal 

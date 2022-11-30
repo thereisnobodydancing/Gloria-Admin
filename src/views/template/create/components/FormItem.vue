@@ -21,7 +21,7 @@
       :options="element.options" 
     />
     <!-- 数字输入框 -->
-    <input-number-component 
+    <input-number-component
       v-if="element.type==='inputNumber'" 
       :options="element.options" 
     />
@@ -41,7 +41,7 @@
       :options="element.options" 
     />
     <!-- 日期选择器 -->
-    <date-picker-component 
+    <date-picker-component
       v-if="element.type==='datePicker'" 
       :options="element.options" 
     />

@@ -59,7 +59,7 @@
               >
                 <!-- 周报 -->
                 <div v-if="item.logType === 2">
-                  <weekly-template :data="item" />
+                  <weekly-log :data="item" />
                 </div>
               </div>
             </div>

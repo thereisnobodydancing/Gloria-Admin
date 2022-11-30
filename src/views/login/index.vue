@@ -4,7 +4,7 @@
     class="bg-no-repeat bg-cover bg-center relative"
     style="background-image: url(https://images.unsplash.com/photo-1579621970563-ebec7560ff3e?ixlib=rb-1.2.1&amp;ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&amp;auto=format&amp;fit=crop&amp;w=1951&amp;q=80)"
   >
-    <div class="absolute bg-gradient-to-b from-gray-800 to-orange-100/50 opacity-70 inset-0 z-0" />
+    <div class="absolute bg-gradient-to-b from-gray-800/80 via-gray-600 to-orange-200/80 opacity-70 inset-0 z-0" />
     <div class="min-h-screen sm:flex sm:flex-row mx-0 justify-center">
       <div class="flex-col flex  self-center p-10 sm:max-w-5xl xl:max-w-2xl  z-10">
         <div class="self-start hidden lg:flex flex-col  text-white">
