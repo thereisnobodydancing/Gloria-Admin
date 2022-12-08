@@ -21,7 +21,7 @@
       </template>
 
       <!-- 3-提示文字（单行输入框 || 多行输入框 || 数字输入框 || 电话号码 || 身份证号 || 金额 || 选择器 || 职位选择 || 选择部门 || 省市区） -->
-      <template v-if="['input', 'textarea', 'inputNumber', 'inputPhone', 'inputId', 'inputPrice', 'select', 'selectPost', 'selectSector', 'selectCity'].includes(props.data.type)">
+      <template v-if="['input', 'textarea', 'inputNumber', 'inputPhone', 'inputId', 'inputPrice', 'select', 'selectPost', 'selectSector', 'selectAddress'].includes(props.data.type)">
         <div class="space-y-2">
           <div class="flex items-center">
             <p class="text-sm">提示文字</p>
@@ -43,8 +43,12 @@
       <template v-if="['input', 'textarea'].includes(props.data.type)">
         <div class="space-y-2">
           <p class="text-sm">限制文字长度</p>
+          {{ props.data.options.maxLength }}
           <div class="flex items-center space-x-4">
-            <n-switch v-model:value="props.data.options.showCount" />
+            <n-switch 
+              v-model:value="props.data.options.showCount" 
+              @update:value="(value) => { if(!value) props.data.options.maxLength = undefined }"
+            />
             <n-input-number 
               v-model:value="props.data.options.maxLength" 
               :disabled="props.data.options.showCount === false" 
@@ -123,7 +127,7 @@
       </template>
 
       <!-- 8-组件宽度（单行输入框 || 多行输入框 || 数字输入框 || 选择器 || 电话号 || 身份证号 || 金额 || 选择职位 || 选择部门 || 省市区） -->
-      <template v-if="['input', 'textarea', 'inputNumber', 'select', 'inputPhone', 'inputId', 'inputPrice', 'selectPost', 'selectSector', 'selectCity'].includes(props.data.type)">
+      <template v-if="['input', 'textarea', 'inputNumber', 'select', 'inputPhone', 'inputId', 'inputPrice', 'selectPost', 'selectSector', 'selectAddress'].includes(props.data.type)">
         <div class="space-y-2">
           <p class="text-sm">组件宽度</p>
           <n-select v-model:value="props.data.options.width" :options="widthList" />

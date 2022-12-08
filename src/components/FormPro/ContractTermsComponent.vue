@@ -31,7 +31,7 @@ const list = ref([{content: ''}])
 
 // 增加条款
 const addExpenlist = function() {
-  list.value.push({ text: '' })
+  list.value.push({ content: '' })
 }
 // 删除条款
 const deleteExpenlist = function(index) {

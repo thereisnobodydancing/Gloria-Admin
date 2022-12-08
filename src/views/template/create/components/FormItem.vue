@@ -1,14 +1,10 @@
 <template>
   <div class="flex">
     <!-- 标题 -->
-    <p
-      v-if="element.type !== 'itemDetails'" 
-      class="text-sm w-28 flex-shrink-0 leading-8"
-    >
+    <p class="text-sm w-28 flex-shrink-0 leading-8">
       <span v-if="element.options.required" class="text-primary font-bold">*</span>
-      <span :class="element.options.required ? 'ml-0.5' : 'ml-2'">{{ element.options.name }}</span>
+      <span :class="element.options.required ? 'ml-0.5' : 'ml-2'">{{ element.options.name }}：</span>
     </p>
-    
     <!-- 基础控件 base -->
     <!-- 单行输入框 -->
     <input-component 
@@ -99,7 +95,7 @@
     />
     <!-- 选择省市区 -->
     <select-city-component
-      v-if="element.type==='selectCity'" 
+      v-if="element.type==='selectAddress'" 
       :options="element.options" 
     />
   </div>

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vite",
     "build-dev": "vite build --mode development",
+    "NAT": "vite --mode NAT",
     "test": "vite --mode test",
     "build-test": "vite build --mode test",
     "build": "vite build",

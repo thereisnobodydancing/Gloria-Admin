@@ -251,11 +251,11 @@ export default defineStore('template', () => {
       }
     },
     {
-      type: 'selectCity',
-      name: '省/市/区',
+      type: 'selectAddress',
+      name: '选择地址',
       options: {
         id: '',
-        name: '省/市/区',
+        name: '选择地址',
         placeholder: '选择省/市/区',
         width: '2/3', 
         desc: '',

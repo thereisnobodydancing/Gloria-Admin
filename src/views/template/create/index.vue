@@ -203,6 +203,7 @@ const updateWarningData = function() {
     { type: 'base', name: '基础设置', text: '名称为空，请填写', show: !name.value },
     { type: 'base',name: '基础设置', text: '分组为空，请选择', show: !groupId.value },
     { type: 'form',name: '表单设计', text: '至少需要一个控件', show: formList.value.length === 0},
+    // { type: 'flow',name: '流程设计', text: '至少需要一个审批节点', show: !process.value.find(item => item.nodeType === '1')},
     { type: 'flow',name: '流程设计', text: '至少添加一名成员', show: noMember},
     { type: 'flow',name: '流程设计', text: '至少添加一个角色', show: noRule},
     { type: 'flow',name: '流程设计', text: '至少设置一个控件可读', show: noRead}
@@ -245,8 +246,8 @@ const countdown = () => {
 }
 const submitBtnDisabled = ref(false)
 const submitTemplate = function() {
+  showLoading.value = true
   if(warningData.list.length > 0) {
-    showLoading.value = true
     warningData.show = true
     setTimeout(() => {
       showLoading.value = false
@@ -275,6 +276,7 @@ const submitTemplate = function() {
           countdown()
         }, 100)
       }
+      showLoading.value = false
     })
   }
 }
