@@ -43,7 +43,6 @@
       <template v-if="['input', 'textarea'].includes(props.data.type)">
         <div class="space-y-2">
           <p class="text-sm">限制文字长度</p>
-          {{ props.data.options.maxLength }}
           <div class="flex items-center space-x-4">
             <n-switch 
               v-model:value="props.data.options.showCount" 
