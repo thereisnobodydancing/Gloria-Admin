@@ -59,6 +59,7 @@
                   </p>
                   <div class="inline-block space-x-4 text-primary">
                     <button class="hover:underline" @click.stop="$router.push(`/bulletin/edit/${item.id}`)">编辑</button>
+                    <button class="hover:underline" @click.stop="setTop(item.id)">{{ item.setTop ? '取消置顶' : '置顶' }}</button>
                     <button class="hover:underline" @click.stop="removeBulletin(item.id)">删除</button>
                   </div>
                 </div>
@@ -100,6 +101,14 @@ const searchUpdate = debounce((text) => {
 onUnmounted(() => {
   searchUpdate.cancel()
 })
+
+// 置顶公告
+const setTop = (id) => {
+  api.put('/announcement/setTop', {announcementId: id}, false, false).then((res) => {
+    console.log(res)
+    basePaginationRef.value.askApi(false)
+  })
+}
 
 // 删除公告
 const removeBulletin = function(id) {

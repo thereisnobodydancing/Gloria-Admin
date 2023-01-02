@@ -61,7 +61,7 @@
           id="formId"
           :list="formList"
           group="people"
-          item-key="name"
+          item-key="options.id"
           ghost-class="ghost"
           chosen-class="chosen"
           class="w-full overflow-y-scroll rounded-xl space-y-2 pl-2 pr-1 py-4 bg-gray-50/20"
