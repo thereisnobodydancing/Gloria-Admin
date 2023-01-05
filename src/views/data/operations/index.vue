@@ -1,9 +1,4 @@
 <!-- 业务数据 -->
 <template>
-  <base-card title="业务数据" :loading="showPageLoading">
-  </base-card>
+  <base-data title="业务数据" :group-id="3" />
 </template>
-
-<script setup>
-const showPageLoading = ref(false)
-</script>

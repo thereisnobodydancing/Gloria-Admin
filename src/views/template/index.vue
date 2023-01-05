@@ -155,7 +155,13 @@ const columns = [
     render(row) {
       return h('div', { class: 'flex items-center space-x-4'}, [
         h('div', { class: 'text-primary cursor-pointer hover:underline', onClick: () => updateComponentState(row)}, { default: () => row.state ? '停用' : '恢复' }),
-        h('div', { class: 'text-primary cursor-pointer hover:underline', onClick: () => editComponent(row)}, { default: () => '编辑' }),
+        h('div', { 
+          class: row.canEditor ? 'text-primary cursor-pointer hover:underline' : 'text-gray-400 cursor-not-allowed', 
+          onClick: () => editComponent(row)},
+          { 
+            default: () => '编辑' 
+          }
+        ),
         h('div', { class: 'text-primary cursor-pointer hover:underline', onClick: () => removeComponent(row)}, { default: () => '删除' })
       ])
     }
@@ -211,6 +217,10 @@ const removeComponent = function(row) {
 }
 // 编辑
 const editComponent = function(row) {
+  // if(row.canEditor) {
+  //   useTemplate.$reset()
+  //   router.push(`/template/createTemplate?id=${row.id}`)
+  // }
   useTemplate.$reset()
   router.push(`/template/createTemplate?id=${row.id}`)
 }

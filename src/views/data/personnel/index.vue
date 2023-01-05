@@ -1,9 +1,4 @@
 <!-- 人事数据 -->
 <template>
-  <base-card title="人事数据" :loading="showPageLoading">
-  </base-card>
+  <base-data title="人事数据" :group-id="2" />
 </template>
-
-<script setup>
-const showPageLoading = ref(false)
-</script>

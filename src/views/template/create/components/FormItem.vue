@@ -1,7 +1,7 @@
 <template>
   <div class="flex">
     <!-- 标题 -->
-    <p class="text-sm w-28 flex-shrink-0 leading-8">
+    <p class="text-sm w-48 flex-shrink-0 leading-8">
       <span v-if="element.options.required" class="text-primary font-bold">*</span>
       <span :class="element.options.required ? 'ml-0.5' : 'ml-2'">{{ element.options.name }}：</span>
     </p>

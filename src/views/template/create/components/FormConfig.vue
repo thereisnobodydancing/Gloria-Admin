@@ -7,9 +7,9 @@
       <div class="space-y-2">
         <div class="flex items-center">
           <p class="text-sm">标题</p>
-          <p class="ml-auto text-xs text-gray-500">最多6字</p>
+          <p class="ml-auto text-xs text-gray-500">最多10字</p>
         </div>
-        <n-input v-model:value="props.data.options.name" type="text" placeholder="请输入" maxlength="6" show-count clearable />
+        <n-input v-model:value="props.data.options.name" type="text" placeholder="请输入" maxlength="10" show-count clearable />
       </div>
 
       <!-- 2-显示类型（单行输入框专用） -->
@@ -25,14 +25,14 @@
         <div class="space-y-2">
           <div class="flex items-center">
             <p class="text-sm">提示文字</p>
-            <p class="ml-auto text-xs text-gray-500">最多30字</p>
+            <p class="ml-auto text-xs text-gray-500">最多300字</p>
           </div>
           <n-input 
             v-model:value="props.data.options.placeholder" 
             type="textarea" 
             :autosize="{minRows: 3}"
             placeholder="请输入" 
-            maxlength="30"
+            maxlength="300"
             show-count
             clearable 
           />
@@ -192,14 +192,14 @@
       <div class="space-y-2">
         <div class="flex items-center">
           <p class="text-sm">说明</p>
-          <p class="ml-auto text-xs text-gray-500">最多50字</p>
+          <p class="ml-auto text-xs text-gray-500">最多300字</p>
         </div>
         <n-input
           v-model:value="props.data.options.desc" 
           type="textarea" 
           :autosize="{minRows: 5}"
           placeholder="请输入" 
-          maxlength="50" 
+          maxlength="300" 
           show-count 
           clearable 
         />

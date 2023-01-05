@@ -7,6 +7,7 @@
       :width="props.width" 
       :height="props.height"
       :style="{ borderRadius: `${props.radius}px` }"
+      :class="{border: props.border}"
     />
   </template>
   <!-- 没有头像 -->
@@ -30,6 +31,10 @@ import { toNameAvatar } from '/src/until/index.js'
 const props = defineProps({
   name: String,
   image: [String, null],
+  border: {
+    type: Boolean,
+    default: true
+  },
   radius: {
     type: Number,
     default: 6

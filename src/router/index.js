@@ -12,13 +12,19 @@ const routes= [
     component:() => import('../views/login/index.vue'),
     meta: { name: 'Login', common: true }
   },
+  // 导出数据 export
+  {
+    path: '/export',
+    name: 'Export',
+    component:() => import('../views/export/index.vue'),
+    meta: { name: 'Export', common: true }
+  },
   /** ----- 业务管理（首页） ----- **/
   {
     path: '/main',
     component: Layout,
     redirect: '/home',
     children: [
-
       /** -------首页------- **/
       {
         path: '/home',

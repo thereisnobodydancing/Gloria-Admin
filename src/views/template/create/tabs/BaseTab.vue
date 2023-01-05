@@ -19,6 +19,11 @@
           <p class="text-base font-bold"><span class="text-primary mr-0.5">*</span>所在分组</p>
           <n-select v-model:value="groupId" :options="groupList" label-field="groupName" value-field="id" />
         </div>
+        <!-- 模板编号 -->
+        <div class="space-y-4">
+          <p class="text-base font-bold">固定编号</p>
+          <n-input v-model:value="templateNum" type="text" placeholder="请输入模板固定编号" clearable />
+        </div>
         <!-- 表单说明 -->
         <div class="space-y-4">
           <p class="text-base font-bold">
@@ -39,7 +44,7 @@
               class="mr-2.5 mb-2 h-8 rounded bg-gray-100 flex items-center px-1 cursor-default"
             >
               <!-- 头像 -->
-              <div 
+              <div
                 class="flex-shrink-0 w-[26px] h-[26px] rounded"
                 :class="item.picture ? '' : 'py-[3px] bg-primary'"
               >
@@ -134,6 +139,7 @@ const user = JSON.parse(sessionStorage.getItem('user'))
 const useTemplate = useTemplateStore()
 const { 
   name,                         // 模板名称
+  templateNum,                   // 固定编号
   groupId,                      // 分组id
   remark,                       // 表单说明
   submitType,                   // 谁可以发起（全员all，指定人员select）

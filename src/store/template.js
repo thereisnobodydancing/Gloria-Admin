@@ -9,6 +9,7 @@ export default defineStore('template', () => {
   const userId = ref(user.id)
   const groupId = ref(null)
   const name = ref('')
+  const templateNum = ref('')
   const remark = ref('')
   const submitType = ref('all')
   const submitUsers = ref([])
@@ -53,7 +54,7 @@ export default defineStore('template', () => {
         id: '', 
         name: '多行文本', 
         placeholder: '请输入', 
-        showCount: false, 
+        showCount: false,
         maxLength: 30, 
         width: '3/3', 
         desc: '', 
@@ -314,6 +315,7 @@ export default defineStore('template', () => {
     id,                           // 模板id
     userId,
     name,                         // 模板名称
+    templateNum,                  // 模板固定编号
     groupId,                      // 分组id
     remark,                       // 表单说明
     submitType,                   // 谁可以发起（全员all，指定人员select）
